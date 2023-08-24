@@ -1,3 +1,8 @@
+<script>
+
+
+</script>
+
 <section class="about-me red centered">
     <h1>About Me</h1>
     <p>Here's some example text. Some showing off will go here. </p>
@@ -10,3 +15,7 @@
       </svg>
   </div>
 </section>
+
+<style>
+  
+</style>
