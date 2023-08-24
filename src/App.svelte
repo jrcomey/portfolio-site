@@ -1,14 +1,11 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
   import Nested from './lib/Nested.svelte';
   import Header from './lib/Header.svelte';
   import Landing from './lib/Landing.svelte';
   import Blizzard from './lib/Blizzard.svelte';
   import About from './lib/About.svelte';
   import Education from './lib/Education.svelte';
-    import ProjectHighlights from './lib/ProjectHighlights.svelte';
+  import ProjectHighlights from './lib/ProjectHighlights.svelte';
   import ProjectGallery from './lib/ProjectGallery.svelte';
 
 
@@ -43,6 +40,8 @@ window.onmouseup = () => {
 </svelte:head>
 
 <main>
+
+  <h1>DEPRECATED PAGE</h1>
   <Header/>
 
   <Landing/>

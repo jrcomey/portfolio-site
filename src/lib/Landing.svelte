@@ -69,7 +69,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(110deg, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.1) 80%, rgba(0, 0, 0, 0.1));
+        background: linear-gradient(110deg, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.0) 80%, rgba(0, 0, 0, 0.0));
         z-index: -1;
     }
 
