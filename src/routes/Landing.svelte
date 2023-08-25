@@ -33,8 +33,8 @@
         <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>Placeholder Text</p>
-        <p>Placeholder Text</p>
+        <p>2 Years of Industry Experience</p>
+        <p>Committed to Space Technology Development</p>
     </div>
     <div class="landing-page-icon-grid">
         <img width=40% src={gear_pic} alt={gear_alt}/>
@@ -69,7 +69,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(110deg, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.0) 80%, rgba(0, 0, 0, 0.0));
+        background: linear-gradient(110deg, rgba(15, 17, 18, 1) 40%, rgba(15, 17, 18, 0.0) 80%, rgba(15, 17, 18, 0.0));
         z-index: -1;
     }
 
@@ -79,7 +79,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(-5deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2), 20%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0));
+        background: linear-gradient(-5deg, rgba(15, 17, 18, 1), rgba(15, 17, 18, 0.2), 20%, rgba(15, 17, 18, 0) 25%, rgba(15, 17, 18, 0));
         z-index: -1;
     }
 
