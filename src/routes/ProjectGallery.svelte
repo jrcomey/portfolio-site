@@ -55,7 +55,8 @@
 
         <div class="project">
             <a href="/projects/waveprop"><img src="./src/assets/Prob1b.png" alt=""></a>
-            <a href="/projects/waveprop"><h3>Wave Propagation Analysis</h3></a>
+            <a href="/projects/waveprop"><h2>Wave Propagation Analysis</h2></a>
+            <a href="/projects/waveprop"><h3>2D Discrete Differential Equation Solutions</h3></a>
             <a href="/projects/waveprop"><p>A three-dimensional study of wave propagation and subsonic/supersonic airflow</p></a>
         </div>
 
@@ -63,6 +64,7 @@
         <div class="project">
             <a href="/projects/basins"><img src="./src/assets/basinsofattraction.png" alt="Project 4"></a>
             <a href="/projects/basins"><h2>Basins of Attraction</h2></a>
+            <div></div>
             <a href="/projects/basins"><h3>Iterative Convergence Study</h3></a>
             <a href="/projects/basins"><p>Fractal convergence study for system using imaginary numbers</p></a>
         </div>
@@ -97,6 +99,14 @@
   grid-gap: 20px;
 }
 
+.project:hover {
+    scale: 1.02;
+}
+
+.project:hover img {
+    opacity: 100%;
+}
+
 .project {
     display: flex;
     justify-content: flex-start;
@@ -111,6 +121,7 @@
   aspect-ratio: 1 / 1;
   border-radius: 5px;
   width: 100%;
+  opacity: 80%;
   object-fit: cover;
   /* height: 50%; */
 }
