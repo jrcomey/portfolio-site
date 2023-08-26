@@ -6,7 +6,7 @@
 </script>
 
 
-<div class="spacer layer1 centered"></div>
+<div class="spacer centered"></div>
   <section class="education">
     <h1>Education</h1>
     <div class="education-box">

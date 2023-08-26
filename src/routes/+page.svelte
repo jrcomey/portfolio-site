@@ -18,7 +18,7 @@
 
 <About/>
 
-<Education/>
+<!-- <Education/> -->
 
 <ProjectHighlights/>
 

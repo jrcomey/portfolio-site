@@ -15,67 +15,62 @@
 
 
         <div class="project">
-                <a href="/projects/UAVsim"><img src="./src/assets/newplot.png" alt="Project 3"></a>
-                <h2>UAVSim</h2>
-                <h3>Rotorcraft Dynamics Simulation Package</h3>
-                <p>A package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p>            
+            <a href="/projects/UAVsim"><img src="./src/assets/newplot.png" alt="UAVSim Plot"></a>
+            <a href="/projects/UAVsim"><h2>UAVSim</h2></a>
+            <a href="/projects/UAVsim"><h3>Rotorcraft Dynamics Simulation Package</h3></a>
+            <a href="/projects/UAVsim"><p>A package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
         </div>
 
         <div class="project">
-            <img src="./src/assets/poster_req_review.png" alt="Project 3">
-            <h2>Clementine</h2>
-            <h3>Space Systems Engineering</h3>
-            <p>
-                As part of a team of 5, I was tasked with reverse-engineering the 1993 Clementine lunar flyby probe in order to modify the spacecraft to prevent an ADCS error that caused mission failure.
-            </p>    
-        </div>
-
-
-        <div class="project">
-            <img src="./src/assets/mozziepic.png" alt="Project 3">
-            <h2>Aerobrick</h2>
-            <h3>Fixed-wing Aircraft Design</h3>
-            <p>
-                I was Team Captain of a heavy-lift aircraft design team that competed in SAE Aero Design West's Regular division. 
-            </p>    
+            <a href="/projects/clementine"><img src="./src/assets/poster_req_review.png" alt="Clementine"></a>
+            <a href="/projects/clementine"><h2>Clementine</h2></a>
+            <a href="/projects/clementine"><h3>Space Systems Engineering</h3></a>
+            <a href="/projects/clementine"><p>As part of a team of 5, I was tasked with reverse-engineering the 1993 Clementine lunar flyby probe in order to modify the spacecraft to prevent an ADCS error that caused mission failure.</p></a>    
         </div>
 
 
         <div class="project">
-            <img src="./src/assets/Undeformed.png" alt="Project 3">
-            <h2>Launch Simulation</h2>
-            <h3>Satellite Inertial Loading and Thermal Analysis</h3>
-            <p>Analysis of satellite superstructure experiencing inertial loading during launch, and thermal loading during operation</p>
+            <a href="/projects/aerobrick"><img src="./src/assets/mozziepic.png" alt="Aerobrick"></a>
+            <a href="/projects/aerobrick"><h2>Aerobrick</h2></a>
+            <a href="/projects/aerobrick"><h3>Fixed-wing Aircraft Design</h3></a>
+            <a href="/projects/aerobrick"><p>I was Team Captain of a heavy-lift aircraft design team that competed in SAE Aero Design West's Regular division. </p></a>
         </div>
 
 
         <div class="project">
-            <img src="./src/assets/Prob1bResults1.png" alt="Project 4">
-            <h2>Flat Plate Drag</h2>
-            <h3>CFD | Fluid Flow Analysis</h3>
-            <p>Two-dimensional analysis of subsonic fluid flow over a flat plate using numerical methods</p>
+            <a href="/projects/launchsim"><img src="./src/assets/Undeformed.png" alt="Deformed Satellite"></a>
+            <a href="/projects/launchsim"><h2>Launch Simulation</h2></a>
+            <a href="/projects/launchsim"><h3>Satellite Inertial Loading and Thermal Analysis</h3></a>
+            <a href="/projects/launchsim"><p>Analysis of satellite superstructure experiencing inertial loading during launch, and thermal loading during operation</p></a>
         </div>
 
 
         <div class="project">
-            <img src="./src/assets/Prob1b.png" alt="Project 3">
-            <h3>Wave Propagation Analysis</h3>
-            <p>A three-dimensional study of wave propagation and subsonic/supersonic airflow</p>
+            <a href="/projects/flat-plate-drag"><img src="./src/assets/Prob1bResults1.png" alt="Reynolds Flow Pic"></a>
+            <a href="/projects/flat-plate-drag"><h2>Flat Plate Drag</h2></a>
+            <a href="/projects/flat-plate-drag"><h3>CFD & Fluid Flow Analysis</h3></a>
+            <a href="/projects/flat-plate-drag"><p>Two-dimensional analysis of subsonic fluid flow over a flat plate using numerical methods</p></a>
         </div>
 
 
         <div class="project">
-            <img src="./src/assets/basinsofattraction.png" alt="Project 4">
-            <h3>Basins of Attraction</h3>
-            <p>Convergence study for system using imaginary numbers</p>
+            <a href="/projects/waveprop"><img src="./src/assets/Prob1b.png" alt=""></a>
+            <a href="/projects/waveprop"><h3>Wave Propagation Analysis</h3></a>
+            <a href="/projects/waveprop"><p>A three-dimensional study of wave propagation and subsonic/supersonic airflow</p></a>
         </div>
 
 
+        <div class="project">
+            <a href="/projects/basins"><img src="./src/assets/basinsofattraction.png" alt="Project 4"></a>
+            <a href="/projects/basins"><h2>Basins of Attraction</h2></a>
+            <a href="/projects/basins"><h3>Iterative Convergence Study</h3></a>
+            <a href="/projects/basins"><p>Fractal convergence study for system using imaginary numbers</p></a>
+        </div>
 
         <div class="project">
-            <img src="./src/assets/Prob2bResults.png" alt="Project 3">
-            <h3>Supersonic Flow</h3>
-            <p>Two-dimensional analysis of supersonic flow over a symmetric biconvex airfoil</p>
+            <a href="/projects/supersonic"><img src="./src/assets/Prob2bResults.png" alt="Project 3"></a>
+            <a href="/projects/supersonic"><h3>Supersonic Flow</h3></a>
+            <a href="/projects/supersonic"><p>Two-dimensional analysis of supersonic flow over a symmetric biconvex airfoil</p></a>
         </div>
 
     </div>
@@ -118,6 +113,15 @@
   width: 100%;
   object-fit: cover;
   /* height: 50%; */
+}
+
+.project a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.project a:hover {
+    /* text-decoration: underline; */
 }
 
 .project p {
