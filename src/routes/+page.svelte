@@ -6,6 +6,7 @@
     import Header from "./Header.svelte";
     import ProjectHighlights from "./ProjectHighlights.svelte";
     import ProjectGallery from "./ProjectGallery.svelte";
+    import LandingTakeTwo from "./LandingTakeTwo.svelte";
     // import '../app.css';
 
 
@@ -15,6 +16,8 @@
 <Header/>
 
 <Landing/>
+
+<!-- <LandingTakeTwo/> -->
 
 <About/>
 
