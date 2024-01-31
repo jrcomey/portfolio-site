@@ -43,6 +43,7 @@
 
 <p>I selected a motor for the aircraft based on power and weight requirements to meet requirements set out by the competition statement and further requirements by our team. I then developed a propeller under the motors' given operating characteristics using Blade Element Momentum (BEM) theory using a self-developed Python program. I analyzed the propeller and the aircraft as a whole and determined Hover Efficiency/Figure of Merit for the aircraft.</p>
 
+<p> Among many other things, I designed the propellers and selected motors for the aircraft, but my biggest contribution to the project was a full autopilot system for the aircraft. This system included guidance, navigation, and control components, and aircraft dynamic behavior was verified through the multirotor simulator I had designed the previous summer. To verify our flight controller, I ran Monte Carlo simulations to verify aircraft stability under randomized conditions.</p>
 <style>
 
     section {

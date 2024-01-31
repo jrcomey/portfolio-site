@@ -20,7 +20,7 @@
     
     <div class="landing-background-gradient-overlay"></div>
     <div class="landing-background-gradient-overlay-bottom"></div>
-    <div use:scramble={{scrambleDuration: 2000, scrambleSlowdown: true}}>
+    <div>
             <h1>Better Landing Tag</h1>
             <h4>Jack Rhys Comey</h4>
             <h4>Guidance, Navigation, and Controls Engineer</h4>
@@ -29,11 +29,11 @@
     </div>
 
     
-    <div use:cascade={{ interval: 30}} DelayNode>
+    <div >
         <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>2 Years of Industry Experience</p>
+        <p>2 years of Industry Experience</p>
         <p>Committed to Space Technology Development</p>
     </div>
     <div class="landing-page-icon-grid">
@@ -112,15 +112,18 @@
         font-family: 'Helvetica', italics;
         font-weight: 700;
         font-variant: small-caps;
+        color: #FFFFFF;
     }
 
     .landing-page h4 {
         line-height: 0%;
         /* font-family: 'Helvetica', monospace; */
+        color: #FFFFFF;
     }
 
     .landing-page p {
         /* font-family: 'Helvetica', monospace; */
+        color: #FFFFFF;
     }
    
 </style>
