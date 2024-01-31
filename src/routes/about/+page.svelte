@@ -17,6 +17,7 @@ TO DO:
     import WorkExperience from './WorkExperience.svelte';
     import PersonalInfo from './PersonalInfo.svelte';
     import WhyAWebsite from './WhyAWebsite.svelte';
+    import Skills from './Skills.svelte';
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -28,6 +29,8 @@ TO DO:
 <About/>
 
 <PersonalInfo/>
+
+<Skills/>
 
 <Academics/>
 
