@@ -1,7 +1,7 @@
 <script>
     import Typewriter from 'svelte-typewriter';
     import {concurrent, cascade, scramble} from 'svelte-typewriter';
-    let background_animation = "src/assets/demo_2.gif"
+    let background_animation = "src/assets/blizzard_loop_centered.webp"
 
     let gear_pic = "src/assets/gear2.svg";
     let gear_alt = "Gear pic";
@@ -21,20 +21,19 @@
     <div class="landing-background-gradient-overlay"></div>
     <div class="landing-background-gradient-overlay-bottom"></div>
     <div>
-            <h1>Better Landing Tag</h1>
-            <h4>Jack Rhys Comey</h4>
+            <h1>JACK RHYS COMEY</h1>
+            <!-- <h4>Jack Rhys Comey</h4> -->
             <h4>Guidance, Navigation, and Controls Engineer</h4>
             <h4>Currently at: Lockheed Martin Space</h4>
         
     </div>
 
     
-    <div >
+    <div>
         <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>2 years of Industry Experience</p>
-        <p>Committed to Space Technology Development</p>
+        <p>3 years of Industry Experience</p>
     </div>
     <div class="landing-page-icon-grid">
         <img width=40% src={gear_pic} alt={gear_alt}/>
@@ -109,9 +108,9 @@
 
     .landing-page h1 {
         line-height: 1.5;
-        font-family: 'Helvetica', italics;
+        font-family: 'Helvetica', sans-serif;
         font-weight: 700;
-        font-variant: small-caps;
+        /* font-variant: small-caps; */
         color: #FFFFFF;
     }
 
