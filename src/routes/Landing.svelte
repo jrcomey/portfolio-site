@@ -16,7 +16,8 @@
 
 <section class="landing-page" id="landing">
 
-    <img class="landing-background-animation" src={background_animation}/>
+    <!-- <img class="landing-background-animation" src={background_animation}/> -->
+     <canvas id="bg"></canvas>
     
     <div class="landing-background-gradient-overlay"></div>
     <div class="landing-background-gradient-overlay-bottom"></div>
@@ -61,6 +62,16 @@
         z-index: -2;
         
     }
+
+    canvas {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        display: block;
+        z-index: -9999;
+    }
     
     .landing-background-gradient-overlay {
         position: absolute;
@@ -68,7 +79,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(110deg, rgba(15, 17, 18, 1) 40%, rgba(15, 17, 18, 0.0) 80%, rgba(15, 17, 18, 0.0));
+        background: linear-gradient(110deg, rgba(15, 17, 18, 0.8) 40%, rgba(15, 17, 18, 0.0) 80%, rgba(15, 17, 18, 0.0));
         z-index: -1;
     }
 
@@ -93,6 +104,10 @@
         color: #ffffff;      
         overflow: hidden;        
         /* font-variant: small-caps; */
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
     
 

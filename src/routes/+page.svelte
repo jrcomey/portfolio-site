@@ -12,6 +12,8 @@
 
 </script>
 
+<!-- <canvas id="bg"></canvas> -->
+
 <Header/>
 
 <Landing/>

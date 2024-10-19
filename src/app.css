@@ -51,7 +51,13 @@ body {
   min-height: 100vh; */
 }
 
+/* canvas {
+  position: relative;
+} */
 
+main {
+  position: absolute;
+}
 
 /* .education-image {
   width: 100%;
@@ -102,9 +108,9 @@ body {
 
 
 
-.layer2 {
+/* .layer2 {
   background-image: url('./assets/layer2.svg');
-}
+} */
 
 
 h1 {
