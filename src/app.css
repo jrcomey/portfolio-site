@@ -4,7 +4,7 @@
 
 :root {
     /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
-    font-family: 'Futura';
+    font-family: 'JetBrains Mono';
     line-height: 1.5;
     font-weight: 400;
   
@@ -52,61 +52,17 @@ body {
 }
 
 /* canvas {
-  position: relative;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: block;
+  z-index: -9999;
 } */
-
 main {
   position: absolute;
 }
-
-/* .education-image {
-  width: 100%;
-} */
-.blue {
-  background: #3c31dd;
-}
-
-.red {
-  background: #dd3f31;
-}
-
-.pink {
-  background: #ff0066;
-}
-
-.dark {
-  background: #0f0f10;
-}
-
-.flip {
-  transform: rotate(180deg);
-}
-
-
-
-.wave {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.wave svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 150px;
-}
-
-.wave .shape-fill {
-  fill: #0F0F10;
-}
-
-
-
-
 
 /* .layer2 {
   background-image: url('./assets/layer2.svg');
@@ -173,6 +129,40 @@ nav ul li {
   top: 50%;
   transform: translate(50%, -50%);
 }
+
+h1 {
+  line-height: 1.5;
+  font-family: 'JetBrains Mono', sans-serif;
+  font-weight: 700;
+  /* font-variant: small-caps; */
+  color: #FFFFFF;
+}
+
+h2 {
+  font-family: 'JetBrains Mono', sans-serif;
+  color: #FFFFFF;
+}
+
+h4 {
+  line-height: 0%;
+  font-family: 'JetBrains Mono', monospace;
+  color: #FFFFFF;
+}
+
+p {
+  font-family: 'JetBrains Mono', monospace;
+  color: #FFFFFF;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.boxtext {
+  text-decoration: underline overline;
+}
+
+
 
 /* #app {
   max-width: 1280px;

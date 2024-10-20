@@ -17,25 +17,37 @@
 <section class="landing-page" id="landing">
 
     <!-- <img class="landing-background-animation" src={background_animation}/> -->
-     <canvas id="bg"></canvas>
-    
+    <!-- <canvas id="bg"></canvas> -->
     <div class="landing-background-gradient-overlay"></div>
     <div class="landing-background-gradient-overlay-bottom"></div>
     <div>
-            <h1>JACK RHYS COMEY</h1>
-            <!-- <h4>Jack Rhys Comey</h4> -->
-            <h4>Guidance, Navigation, and Controls Engineer</h4>
+            <!-- <h1>JACK RHYS COMEY</h1> -->
+            <h1>Jack Rhys Comey</h1>
+            <hr>
+            <h4>Guidance, Navigation, and Control Engineer</h4>
             <h4>Currently at: Lockheed Martin Space</h4>
-        
+            <hr>
     </div>
 
     
     <div>
+        <hr width="100%">
+        <h2 class="underline">EDUCATION</h2>
         <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
         <p>3 years of Industry Experience</p>
+        <hr>
     </div>
+
+    <div>
+        <hr>
+        <h2 class="underline">KEY SKILLS</h2>
+        <p>Rust | C | C++ | Python | MATLAB | Simulink </p>
+        <!-- <p>Modern Controller/Navigation Design</p> -->
+        <hr>
+    </div>
+        
     <div class="landing-page-icon-grid">
         <img width=40% src={gear_pic} alt={gear_alt}/>
         <img width=40% src={rocket_pic} alt={rocket_alt}/>
@@ -53,6 +65,11 @@
 
 <style>
 
+    div {
+        min-width: 35%;
+        /* max-width: 40%; */
+    }
+
     .landing-background-animation {
         position: absolute;
         top: 0;
@@ -63,14 +80,8 @@
         
     }
 
-    canvas {
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        display: block;
-        z-index: -9999;
+    hr {
+        align: left;
     }
     
     .landing-background-gradient-overlay {
@@ -123,7 +134,7 @@
 
     .landing-page h1 {
         line-height: 1.5;
-        font-family: 'Helvetica', sans-serif;
+        font-family: 'JetBrains Mono', sans-serif;
         font-weight: 700;
         /* font-variant: small-caps; */
         color: #FFFFFF;
@@ -131,13 +142,22 @@
 
     .landing-page h4 {
         line-height: 0%;
-        /* font-family: 'Helvetica', monospace; */
+        font-family: 'JetBrains Mono', monospace;
         color: #FFFFFF;
     }
 
     .landing-page p {
-        /* font-family: 'Helvetica', monospace; */
+        font-family: 'JetBrains Mono', monospace;
         color: #FFFFFF;
+    }
+
+    @font-face {
+        font-family: 'JetBrains Mono';
+        src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Bold.woff2') format('woff2'),
+            url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Bold.woff') format('woff');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
     }
    
 </style>
