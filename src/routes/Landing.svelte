@@ -1,7 +1,6 @@
 <script>
     import Typewriter from 'svelte-typewriter';
     import {concurrent, cascade, scramble} from 'svelte-typewriter';
-    let background_animation = "src/assets/blizzard_loop_centered.webp"
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
@@ -179,12 +178,12 @@
 
     // Modified loading sequence
     loader.load(
-        'src/assets/prop.obj',
+        './src/assets/prop.obj',
         function(propObj) {
             propellerGeometry = propObj;
             
             loader.load(
-                'src/assets/blizzard.obj',
+                './src/assets/blizzard.obj',
                 function(aircraftBody) {
                     const aircraftGroup = new THREE.Group();
                     

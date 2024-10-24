@@ -1,23 +1,22 @@
 import adapter from '@sveltejs/adapter-static';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
-const config = {
-
-    precompress: vitePreprocess(),
+export default {
     kit: {
         adapter: adapter({
             pages: 'build',
             assets: 'build',
-            fallback: '404.html',
+            fallback: undefined,
             precompress: false,
             strict: true
         }),
         paths: {
-            // Important: replace 'your-repo-name' with your actual repository name
-            base: process.env.NODE_ENV === 'production' ? '/portfolio-site' : ''
-        }
-    }
+            base: '',  // No base path for GitHub Pages
+          },
+          prerender: {
+            handleMissingId: 'ignore',
+          },
+    },
+    preprocess: [vitePreprocess()]
 };
-
-export default config;

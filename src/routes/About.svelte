@@ -1,6 +1,6 @@
 <script>
 
-let profile_pic = "src/assets/profile.JPG";
+import profile_pic from "$lib/assets/profile.JPG";
 </script>
 
 <section class="about-me">
@@ -43,7 +43,7 @@ let profile_pic = "src/assets/profile.JPG";
 <style>
 
   .about-me {
-    background-image: url("src/assets/windy_hill_forest_1.jpg");
+    background-image: url("static/assets/windy_hill_forest_1.jpg");
     align-content: center;
     background-size: cover;
     position: relative;

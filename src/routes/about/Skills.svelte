@@ -1,7 +1,7 @@
 <script>
 
-    let profile_pic = "src/assets/profile.JPG";
-    let moon_pic = "src/assets/moon_pic.jpg";
+    let profile_pic = "./src/assets/profile.JPG";
+    let moon_pic = "./src/assets/moon_pic.jpg";
 
 </script>
 
