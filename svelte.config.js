@@ -1,7 +1,10 @@
 import adapter from '@sveltejs/adapter-static';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+
+    precompress: vitePreprocess(),
     kit: {
         adapter: adapter({
             pages: 'build',
@@ -12,7 +15,7 @@ const config = {
         }),
         paths: {
             // Important: replace 'your-repo-name' with your actual repository name
-            base: process.env.NODE_ENV === 'production' ? '/your-repo-name' : ''
+            base: process.env.NODE_ENV === 'production' ? '/portfolio-site' : ''
         }
     }
 };
