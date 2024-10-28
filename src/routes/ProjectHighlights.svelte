@@ -8,7 +8,7 @@
     <div class="big-project-title-page">
 
         <div class="project-image-backdrop-white">
-            <img src="src/assets/BlockDiagTransparent4.png" class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
+            <img src="/assets/BlockDiagTransparent4.png" class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
         </div>
         <div class="big-project-description">
             <h1>Multirotor Gust Reduction System</h1>
@@ -24,7 +24,7 @@
 
     <div class="big-project-title-page">
         <div class="project-image-backdrop-white">
-            <img src="src/assets/blizz.png" class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
+            <img src="/assets/blizz.png" class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
         </div>
         
         <div class="big-project-description">

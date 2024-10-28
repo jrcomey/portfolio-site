@@ -1,7 +1,7 @@
 <script>
-    let gear_pic = "src/assets/gear2.svg";
+    let gear_pic = "/assets/gear2.svg";
     let gear_alt = "Gear pic";
-    let rocket_pic = "src/assets/rocket.svg";
+    let rocket_pic = "/assets/rocket.svg";
     let rocket_alt = "Rocket Pic";
 </script>
 
@@ -30,7 +30,7 @@
 }
 
 .layer1 {
-  background-image: url('./assets/layer1.svg');
+  background-image: url('/assets/layer1.svg');
 }
 
 .centered {
