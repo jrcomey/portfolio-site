@@ -7,16 +7,16 @@ export default {
         adapter: adapter({
             pages: 'build',
             assets: 'build',
-            fallback: undefined,
+            fallback: '404.html',
             precompress: false,
             strict: true
         }),
         paths: {
-            base: '',  // No base path for GitHub Pages
-          },
-          prerender: {
+            base: process.env.NODE_ENV === 'production' ? '/portfolio-site' : '',
+        },
+        prerender: {
             handleMissingId: 'ignore',
-          },
+        },
     },
     preprocess: [vitePreprocess()]
 };
