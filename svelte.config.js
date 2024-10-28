@@ -14,9 +14,5 @@ export default {
         paths: {
             base: process.env.NODE_ENV === 'production' ? '/portfolio-site' : '',
         },
-        prerender: {
-            handleMissingId: 'ignore',
-        },
     },
-    preprocess: [vitePreprocess()]
 };
