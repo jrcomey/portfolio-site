@@ -4,13 +4,13 @@
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-    import gear_pic from '$lib/assets/gear2.svg';
+    // import gear_pic from '$lib/assets/gear2.svg';
     // import blizzard_file from '$lib/assets/blizzard.obj';
 
 
-    // let gear_pic = "src/assets/gear2.svg";
+    // let gear_pic = "/assets/gear2.svg";
     let gear_alt = "Gear pic";
-    let rocket_pic = "/assets/rocket.svg";
+    // let rocket_pic = "/assets/rocket.svg";
     let rocket_alt = "Rocket Pic";
 
     
@@ -336,8 +336,8 @@
     </div>
         
     <div class="landing-page-icon-grid">
-        <img width=40% src={gear_pic} alt={gear_alt}/>
-        <img width=40% src={rocket_pic} alt={rocket_alt}/>
+        <!-- <img width=40% src={gear_pic} alt={gear_alt}/>
+        <img width=40% src={rocket_pic} alt={rocket_alt}/> -->
         <div class="empty"></div>
         <p>Stat 1</p>
         <p>Stat 2</p>
