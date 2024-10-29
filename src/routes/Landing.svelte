@@ -15,13 +15,14 @@
     // let rocket_pic = "/assets/rocket.svg";
     let rocket_alt = "Rocket Pic";
 
-    
 
     let gifIndex = 1;
     let totalGifs = 3; // Total number of GIFs
 
     let container;
     let scene, camera, renderer, animationFrameId;
+
+    
 
     onMount(() => {
     // Initialize scene
@@ -112,6 +113,15 @@
             clockwise: true
         },
     ];
+
+    function handleResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.addEventListener('resize', handleResize);
+
 
 
     // Function to create materials for a specific color
@@ -259,19 +269,6 @@
 
     animate()
 
-    // Handle resize
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    
-    window.addEventListener('resize', handleResize);
-
-    // Return cleanup function
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   });
 
   onDestroy(() => {
@@ -297,6 +294,7 @@
       });
     }
   });
+
 </script>
 
 
