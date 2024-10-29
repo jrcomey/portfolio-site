@@ -4,6 +4,8 @@
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+    import { base } from '$app/paths';
+
     // import gear_pic from '$lib/assets/gear2.svg';
     // import blizzard_file from '$lib/assets/blizzard.obj';
 
@@ -181,12 +183,12 @@
 
     // Modified loading sequence
     loader.load(
-        '/assets/prop.obj',
+        `${base}/assets/prop.obj`,
         function(propObj) {
             propellerGeometry = propObj;
             
             loader.load(
-                '/assets/blizzard.obj',
+                `${base}/assets/blizzard.obj`,
                 function(aircraftBody) {
                     const aircraftGroup = new THREE.Group();
                     

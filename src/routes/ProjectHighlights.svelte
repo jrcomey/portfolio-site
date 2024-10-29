@@ -1,5 +1,7 @@
 <script>
-
+    import { base } from '$app/paths';
+    const blizz_render_path = `${base}/assets/blizz.png`;
+    const GRS = `${base}/assets/BlockDiagTransparent4.png`;
 </script>
 
 <section class="dark centered">
@@ -8,7 +10,7 @@
     <div class="big-project-title-page">
 
         <div class="project-image-backdrop-white">
-            <img src="/assets/BlockDiagTransparent4.png" class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
+            <img src={GRS} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
         </div>
         <div class="big-project-description">
             <h1>Multirotor Gust Reduction System</h1>
@@ -24,7 +26,7 @@
 
     <div class="big-project-title-page">
         <div class="project-image-backdrop-white">
-            <img src="/assets/blizz.png" class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
+            <img src={blizz_render_path} class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
         </div>
         
         <div class="big-project-description">
