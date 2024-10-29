@@ -1,11 +1,7 @@
 <script>
     import { base } from '$app/paths';
-<<<<<<< HEAD
     const blizz_render_path = `${base}/assets/blizz.png`;
     const GRS = `${base}/assets/BlockDiagTransparent4.png`;
-=======
-    const blizz_render_path = `${base}/assets/blizz.png`
->>>>>>> b75edd28f0701d22bfd457b12d5b07be4764904d
 </script>
 
 <section class="dark centered">
