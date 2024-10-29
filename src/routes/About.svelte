@@ -1,6 +1,7 @@
 <script>
+import { base } from '$app/paths';
 
-let profile_pic = "/assets/profile.JPG";
+let profile_pic = `${base}/assets/profile.JPG`;
 </script>
 
 <section class="about-me">
