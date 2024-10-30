@@ -309,7 +309,7 @@
     <div class="landing-background-gradient-overlay-bottom"></div>
     <div>
             <!-- <h1>JACK RHYS COMEY</h1> -->
-            <h1>Jack Rhys Comey</h1>
+            <h1>Jack Comey</h1>
             <hr>
             <h4>Guidance, Navigation, and Control Engineer</h4>
             <h4>Currently at: Lockheed Martin Space</h4>
@@ -331,6 +331,7 @@
         <hr>
         <h2 class="underline">KEY SKILLS</h2>
         <p>Rust | C | C++ | Python | MATLAB | Simulink </p>
+        <p>Precision Servo Control | Discrete Controller Design</p>
         <!-- <p>Modern Controller/Navigation Design</p> -->
         <hr>
     </div>

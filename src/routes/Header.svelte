@@ -1,5 +1,6 @@
 <script>
     export let title = "JRC Portfolio Website"
+    import { base } from '$app/paths';
 </script>
 
 <header class="bg-blue-500 text-white p-4">
@@ -16,13 +17,14 @@
     <!-- <h4>Portfolio | Jack Comey</h4> -->
             <nav>
                 <ul>
-                  <li><a href="/">Home</a></li>
-                  <li><a href="/about">About</a></li>
-                  <li><a href="/projects">Projects</a></li>
-                  <!-- <li><a href="/blog" class="dropdown-toggle">Blog</a></li> -->
+                  <li><a href="{base}/">Home</a></li>
+                  <li><a href="{base}/about">About</a></li>
+                  <li><a href="{base}/projects">Projects</a></li>
+                  <!-- <li><a href="{base}/blog" class="dropdown-toggle">Blog</a></li> -->
                   <li><a href="https://www.linkedin.com/in/jack-rhys-comey/">LinkedIn</a></li>
                   <li><a href="https://github.com/jrcomey">GitHub</a></li>
-                  <li><a href="/contact">Contact</a></li>
+                  <!-- <li><a href="{base}/contact">Contact</a></li> -->
+                  <!-- <li><a href="">Futura Font Check</a></li> -->
                 </ul>
               </nav>
 

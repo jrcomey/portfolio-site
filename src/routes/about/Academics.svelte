@@ -25,7 +25,7 @@
 <style>
 
     section {
-        background-image: url("./src/assets/photography/cooks_bay.jpg");
+        background-image: url("/assets/photography/cooks_bay.jpg");
         align-content: center;
         background-size: cover;
         position: relative;

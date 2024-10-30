@@ -4,6 +4,8 @@
     let darkgrey = "#22272b";
     let white = "#FFFFFF";
 
+    import { base } from '$app/paths';
+
 
 </script>
 
@@ -15,7 +17,7 @@
 
 
         <div class="project">
-            <a href="/projects/UAVsim"><img src="/assets/newplot.png" alt="UAVSim Plot"></a>
+            <a href="{base}/projects/UAVsim"><img src="/assets/newplot.png" alt="UAVSim Plot"></a>
             <a href="/projects/UAVsim"><h2>UAVSim</h2></a>
             <a href="/projects/UAVsim"><h3>Rotorcraft Dynamics Simulation Package</h3></a>
             <a href="/projects/UAVsim"><p>A package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
