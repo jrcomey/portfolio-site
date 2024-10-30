@@ -1,14 +1,15 @@
 <script>
+    import { base } from '$app/paths';
 
-    let profile_pic = "/assets/profile.JPG";
-    let moon_pic = "/assets/moon_pic.jpg";
+    let profile_pic = "{base}/assets/profile.JPG";
+    let moon_pic = "{base}/assets/moon_pic.jpg";
 
 </script>
 
 <section>
     <div class="shaded-background">
         <div class="image-reel">
-            <img src={moon_pic} alt="Profile Picture"/>
+            <img src={moon_pic} alt="Profile Picture" />
             <h3><i>The Moon and Mars</i></h3> 
             <p>January 30<sup>th</sup>, 2023</p>
         </div>
@@ -25,7 +26,7 @@
 <style>
 
     section {
-        background-image: url("/assets/moon_pic.jpg");
+        background-image: url("{base}/assets/moon_pic.jpg");
         align-content: center;
         background-size: cover;
         position: relative;

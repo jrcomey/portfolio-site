@@ -1,5 +1,7 @@
 <script>
 
+    import { base } from '$app/paths';
+
     let profile_pic = "src/assets/profile.JPG";
     let moon_pic = "src/assets/moon_pic.jpg";
 
@@ -8,7 +10,7 @@
 <section>
     <div class="shaded-background">
         <div class="image-reel">
-            <img src={moon_pic} alt="Profile Picture"/>
+            <img src={moon_pic} alt="Profile Picture" />
             <h3><i>The Moon and Mars</i></h3> 
             <p>January 30<sup>th</sup>, 2023</p>
         </div>
@@ -24,7 +26,7 @@
             </ul>
             <p><i>Of course, should you prefer a well-formatted resume, <a>you can find mine here.</a></i></p>
             <hr>
-            <p>If you are intrigued by what you've seen here, <a href="/contact">please don't hesitate to reach out.</a></p>
+            <p>If you are intrigued by what you've seen here, <a href="{base}/contact">please don't hesitate to reach out.</a></p>
         </div>
         
     </div>

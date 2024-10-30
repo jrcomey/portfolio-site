@@ -1,5 +1,7 @@
 <script>
 
+    import { base } from '$app/paths';
+
     let profile_pic = "src/assets/profile.JPG";
     let fern_pic = "src/assets/photography/fern_closeup.jpg";
 
@@ -16,7 +18,7 @@
             <p>The challenge for our undergraduate capstone design team was to create an urban air mobility aircraft (UAM) for transport in and around one of several major metropolitan areas in the continental United States. The challenge itself was written by the NASA Aeronautics Research Mission Directorate, based out of the NASA facility in Langley, Virginia, and our team was allowed the option of submitting our design to the competition after completion. We decided on Chicago as our target location, as we thought a midwestern winter made for a more challenging environment (and therefore a more interesting project). Our end result was <a>the ATP-XW Blizzard, a two-ton, hydrogen-powered multirotor helicopter</a> with a high passenger throughput and significant temperature tolerance.</p>
         </div>
         <div class="image-reel">
-            <img src={fern_pic} alt="Profile Picture"/>
+            <img src={fern_pic} alt="Profile Picture" />
             <h3><i>Hawaiian Fern</i></h3> 
             <p>May 2<sup>nd</sup>, 2023</p>
         </div>
