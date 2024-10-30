@@ -26,7 +26,7 @@
 
 <ProjectHighlights/>
 
-<!-- <ProjectGallery/> -->
+<ProjectGallery/>
 
 <style>
 
