@@ -313,6 +313,8 @@
             <hr>
             <p>Guidance, Navigation, and Control Engineer</p>
             <p>Currently at: Lockheed Martin Space</p>
+            <p>2021 NASA ARMD University Design Challenge Winner</p>
+            <p>3 Years of Industry Experience</p>
             <hr>
     </div>
 
@@ -320,10 +322,8 @@
     <div>
         <hr width="100%">
         <h2 class="underline">EDUCATION</h2>
-        <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>3 Years of Industry Experience</p>
         <hr>
     </div>
 
