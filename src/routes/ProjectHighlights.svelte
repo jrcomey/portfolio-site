@@ -28,7 +28,7 @@
             </p>
         </div>
         <div class="project-image-backdrop-black">
-            <img src={GRS} class="big-project-image-title-page" alt="DATACOM">
+            <img src={GRS} class="big-project-image-title-page" alt="MultiVAC">
         </div>
     </div>
 

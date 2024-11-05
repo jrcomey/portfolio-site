@@ -448,6 +448,7 @@
         /* font-family: 'JetBrains Mono', monospace; */
         /* font-family: 'Helvetica', sans-serif; */
         color: #FFFFFF;
+        position: relative;
     }
 
     .landing-page p {
