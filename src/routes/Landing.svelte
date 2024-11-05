@@ -323,7 +323,7 @@
         <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>3 years of Industry Experience</p>
+        <p>3 Years of Industry Experience</p>
         <hr>
     </div>
 
@@ -364,7 +364,10 @@
 
     div {
         min-width: 35%;
+        text-wrap: pretty;
         /* max-width: 40%; */
+        /* display: flex;
+        flex-direction: column; */
     }
 
     .landing-background-animation {
@@ -408,7 +411,7 @@
         justify-content: space-between;
         /* background: linear-gradient(to left, rgba(32,39,49,0) 80%,
               rgba(32,39,49,1)), url(http://foo.com/image.jpg); */
-        color: #ffffff;      
+        background: #000000;      
         overflow: hidden;        
         /* font-variant: small-caps; */
         z-index: 0;
@@ -433,7 +436,7 @@
         line-height: 1.5;
         /* font-family: 'Futura', 'Helvetica', sans-serif; */
         /* font-family: 'JetBrains Mono', monospace; */
-        font-weight: 700;
+        font-weight: bold;
         /* font-variant: small-caps; */
         color: #FFFFFF;
     }

@@ -17,7 +17,8 @@
             <h1>DATACOM</h1>
             <h3>Source-Agnostic Data Visualization Program</h3>
             <p>
-                I wrote a general-purpose 3D visualization engine using OpenGL and Rust to serve as a visual terminal interface for a multitude of projects I have been developing. DATACOM is a source-agnostic program (meaning it can take data from any source provided it is formatted correctly) and can recieve and display multiple incoming datastreams.
+                I wrote a general-purpose 3D visualization engine using OpenGL and Rust to serve as a visual terminal interface for a multitude of projects I have been developing. 
+                DATACOM is a source-agnostic program (meaning it can take data from any source provided correct formatting) and can recieve and display multiple incoming datastreams.
             </p>
             <p>
                 Originally intended to serve as a command-and-control interface for UAV swarm behavior, DATACOM has evolved into a more general-purpose interface.
@@ -56,7 +57,7 @@
             <h1>ATP-XW Blizzard</h1>
             <h3>Weather Tolerant Urban Air Mobility Concept</h3>
             <p>
-                As part of a team of 5, my team and I are developing a weather tolerant, hydrogen powered Urban Air Mobility (UAM) vehicle, designed for operation in Chicago's cold-weather environment. I developed a fully functional Guidance, Navigation, and Control (GNC) system to enable autonomous flight for the aircraft. I also developed significant parts of the propulsion train for the aircraft, developing propellers using Blade Element Momentum (BEM) theory. I also created a flight model for the aircraft and proved the viability of the control method using a Monte Carlo simulation. I additionally designed the propeller for the aircraft, and performed center of mass calculations.
+                As part of a team of 5, my team and I are developing a weather tolerant, hydrogen powered Urban Air Mobility (UAM) vehicle, designed for operation in Chicago's cold-weather environment. I developed a fully functional Guidance, Navigation, and Control (GNC) system to enable autonomous flight for the aircraft. I also developed significant parts of the propulsion train for the aircraft, developing propellers using Blade Element Momentum (BEM) theory. I also created a flight model for the aircraft and proved the viability of the control method using a Monte Carlo simulation.
             </p>
             <p>
                 To read more about it, <a href="projects/blizzard">click here</a>.
