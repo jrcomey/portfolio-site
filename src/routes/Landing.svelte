@@ -444,7 +444,7 @@
 
 
     .landing-page h4 {
-        line-height: 0%;
+        line-height: 10%;
         /* font-family: 'JetBrains Mono', monospace; */
         /* font-family: 'Helvetica', sans-serif; */
         color: #FFFFFF;
