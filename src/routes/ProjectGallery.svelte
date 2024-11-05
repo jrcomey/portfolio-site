@@ -97,17 +97,17 @@
     
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* Adjust the number of columns as needed */
+  grid-template-columns: repeat(4, 1fr); /* Adjust the number of columns as needed */
   grid-gap: 20px;
 }
-
+/* 
 @media (max-width: 1240px){
     .project-grid {
         grid-template-columns: repeat(4, 1fr);
     }
-}
+} */
 
-@media (max-width: 1008px){
+@media (max-width: 1024px){
     .project-grid {
         grid-template-columns: repeat(3, 1fr);
     }
