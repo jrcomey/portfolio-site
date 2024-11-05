@@ -112,6 +112,17 @@
         align-content: flex-start;
     }
 
+    @media (max-width: 480px){
+        .big-project-title-page {
+            display: flex;
+            flex-direction: column;
+        }
+        .big-project-title-page-alt{
+            display: flex;
+            flex-direction: column-reverse;
+        }
+    }
+
     .big-project-title-page h1 {
         font-variant: small-caps;
         font-size: 2.0em;
@@ -119,7 +130,7 @@
 
     .big-project-title-page h3 {
         font-style: italic;
-        font-variant: small-caps;
+        /* font-variant: small-caps; */
     }
 
     .project-image-backdrop-white {
