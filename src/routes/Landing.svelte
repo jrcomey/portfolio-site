@@ -311,8 +311,8 @@
             <!-- <h1>JACK RHYS COMEY</h1> -->
             <h1>Jack Rhys Comey</h1>
             <hr>
-            <h4>Guidance, Navigation, and Control Engineer</h4>
-            <h4>Currently at: Lockheed Martin Space</h4>
+            <p>Guidance, Navigation, and Control Engineer</p>
+            <p>Currently at: Lockheed Martin Space</p>
             <hr>
     </div>
 
