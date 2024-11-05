@@ -309,7 +309,7 @@
     <div class="landing-background-gradient-overlay-bottom"></div>
     <div>
             <!-- <h1>JACK RHYS COMEY</h1> -->
-            <h1>Jack Comey</h1>
+            <h1>Jack Rhys Comey</h1>
             <hr>
             <h4>Guidance, Navigation, and Control Engineer</h4>
             <h4>Currently at: Lockheed Martin Space</h4>
@@ -340,8 +340,8 @@
         <!-- <img width=40% src={gear_pic} alt={gear_alt}/>
         <img width=40% src={rocket_pic} alt={rocket_alt}/> -->
         <div class="empty"></div>
-        <p>Stat 1</p>
-        <p>Stat 2</p>
+        <p></p>
+        <p></p>
         <div class="empty"></div>
         
     </div>
@@ -374,7 +374,6 @@
         width: 100%;
         height: 100%;
         z-index: -2;
-        
     }
 
     hr {
@@ -416,6 +415,7 @@
         position: relative;
         top: 0;
         left: 0;
+        font-family: 'Futura', 'Helvetica', sans-serif;
     }
     
 
@@ -431,30 +431,35 @@
 
     .landing-page h1 {
         line-height: 1.5;
-        font-family: 'JetBrains Mono', sans-serif;
+        /* font-family: 'Futura', 'Helvetica', sans-serif; */
+        /* font-family: 'JetBrains Mono', monospace; */
         font-weight: 700;
         /* font-variant: small-caps; */
         color: #FFFFFF;
     }
 
+
+
     .landing-page h4 {
         line-height: 0%;
-        font-family: 'JetBrains Mono', monospace;
+        /* font-family: 'JetBrains Mono', monospace; */
+        /* font-family: 'Helvetica', sans-serif; */
         color: #FFFFFF;
     }
 
     .landing-page p {
-        font-family: 'JetBrains Mono', monospace;
+        /* font-family: 'JetBrains Mono', monospace; */
+        /* font-family: 'Helvetica', sans-serif; */
         color: #FFFFFF;
     }
 
-    @font-face {
+    /* @font-face {
         font-family: 'JetBrains Mono';
         src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Bold.woff2') format('woff2'),
             url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Bold.woff') format('woff');
         font-weight: 700;
         font-style: normal;
         font-display: swap;
-    }
+    } */
    
 </style>

@@ -1,17 +1,39 @@
 <script>
     import { base } from '$app/paths';
     const blizz_render_path = `${base}/assets/blizz.png`;
-    const GRS = `${base}/assets/BlockDiagTransparent4.png`;
+    const blizz_path_2 = `${base}/assets/IsoTransparentWebsite.png`;
+    const GRS = `${base}/assets/BlockDiagStylized.svg`;
+
+    const GRS2 = `${base}/assets/BlockDiagTransparent4.png`;
 </script>
 
-<section class="dark centered">
-    <h1>Project Highlights</h1>
-    
-    <div class="big-project-title-page">
+<section class="centered gallery">
+    <h1 class='dark'>Project Highlights</h1>
 
-        <div class="project-image-backdrop-white">
-            <img src={GRS} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
+    <div class="big-project-title-page-alt">
+
+        
+        <div class="big-project-description">
+            <h1>DATACOM</h1>
+            <h3>Source-Agnostic Data Visualization Program</h3>
+            <p>
+                I wrote a general-purpose 3D visualization engine using OpenGL and Rust to serve as a visual terminal interface for a multitude of projects I have been developing. DATACOM is a source-agnostic program (meaning it can take data from any source provided it is formatted correctly) and can recieve and display multiple incoming datastreams.
+            </p>
+            <p>
+                Originally intended to serve as a command-and-control interface for UAV swarm behavior, DATACOM has evolved into a more general-purpose interface.
+            </p>
+            <p>
+                To read more about it, <a href="projects/grs">click here</a>.
+            </p>
         </div>
+        <div class="project-image-backdrop-black">
+            <img src={GRS} class="big-project-image-title-page" alt="DATACOM">
+        </div>
+    </div>
+    
+    <div class="big-project-title-page-alt">
+
+        
         <div class="big-project-description">
             <h1>Multirotor Gust Reduction System</h1>
             <h3>Weather Tolerant Controls Scheme for High Wind Environments</h3>
@@ -22,12 +44,13 @@
                 To read more about it, <a href="projects/grs">click here</a>.
             </p>
         </div>
+        <div class="project-image-backdrop-white">
+            <img src={GRS2} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
+        </div>
     </div>
 
-    <div class="big-project-title-page">
-        <div class="project-image-backdrop-white">
-            <img src={blizz_render_path} class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
-        </div>
+    <div class="big-project-title-page-alt">
+        
         
         <div class="big-project-description">
             <h1>ATP-XW Blizzard</h1>
@@ -39,6 +62,10 @@
                 To read more about it, <a href="projects/blizzard">click here</a>.
             </p>
         </div>
+
+        <div class="project-image-backdrop-white">
+            <img src={blizz_render_path} class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
+        </div>
     </div>
 
 
@@ -49,7 +76,21 @@
     .big-project-title-page {
         display: grid;
         grid-template-columns: 1fr 2fr;
-        background-color: #22272b;
+        /* background-color: #22272b; */
+        background-color: #0f1112CC;
+        border-radius: 25px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        padding: 5% 5%;
+        align-items: center;
+    }
+
+    .big-project-title-page-alt {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        /* background-color: #22272b; */
+        background-color: #0f1112CC;
+        border-radius: 25px;
         margin-top: 1%;
         margin-bottom: 1%;
         padding: 5% 5%;
@@ -81,12 +122,36 @@
     }
 
     .project-image-backdrop-white {
-        background-color: #FFFFFFCC;
+        /* background-color: #FFFFFFCC; */
+        /* background-color: #000000FF; */
+        background-color: #f5f5f5CC;
         display: flex;
         padding: 0%;
         border-radius: 5%;
         height: 100%;
         width: 100%;
+    }
+
+    .project-image-backdrop-black {
+        /* background-color: #FFFFFFCC; */
+        /* background-color: #000000FF; */
+        background-color: #0f1112FF;
+        display: flex;
+        padding: 0%;
+        border-radius: 5%;
+        height: 100%;
+        width: 100%;
+    }
+
+    .gallery {
+        background-image: url("/assets/photography/cooks_bay_2.JPG");
+        align-content: center;
+        background-size: cover;
+        position: relative;
+    }
+
+    .dark {
+        color: #0f1112FF;
     }
 
     

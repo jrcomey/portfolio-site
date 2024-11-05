@@ -4,7 +4,8 @@
 
 :root {
     /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
-    font-family: 'JetBrains Mono';
+    /* font-family: 'Helvetica', sans-serif; */
+    /* font-family: 'Helvetica', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Futura, Ubuntu, 'Open Sans', 'Helvetica Neue', sans-serif sans-serif; */
     line-height: 1.5;
     font-weight: 400;
   
@@ -17,11 +18,16 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+
   }
 
 
 a {
   color: goldenrod;
+}
+
+section {
+  font-family: 'Futura', 'Helvetica', sans-serif;
 }
  
 a:hover {
@@ -40,7 +46,7 @@ section {
 
 body {
   margin: 0;
-  font-family: 'Futura', sans-serif;
+  font-family: 'Helvetica', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif sans-serif;
   /* font-variant: small-caps; */
   font-weight: 700;
   color: white;
@@ -132,25 +138,24 @@ nav ul li {
 
 h1 {
   line-height: 1.5;
-  font-family: 'JetBrains Mono', sans-serif;
+  /* font-family: 'JetBrains Mono', sans-serif; */
   font-weight: 700;
   /* font-variant: small-caps; */
   color: #FFFFFF;
 }
 
 h2 {
-  font-family: 'JetBrains Mono', sans-serif;
   color: #FFFFFF;
 }
 
 h4 {
   line-height: 0%;
-  font-family: 'JetBrains Mono', monospace;
+  /* font-family: 'JetBrains Mono', monospace; */
   color: #FFFFFF;
 }
 
 p {
-  font-family: 'JetBrains Mono', monospace;
+  /* font-family: 'JetBrains Mono', monospace; */
   color: #FFFFFF;
 }
 

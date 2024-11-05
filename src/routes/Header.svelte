@@ -45,6 +45,7 @@ header {
     width: 100%;
     position: fixed;
     z-index: 100;
+    font-family: 'Helvetica';
 }
 /* 
 header h1 {
@@ -108,6 +109,7 @@ nav ul li a {
 
 a:hover {
   text-decoration: underline;
+  /* font-family: sans-serif; */
 }
 </style>
 

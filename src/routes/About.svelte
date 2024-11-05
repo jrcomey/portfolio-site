@@ -12,7 +12,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
       <div class="bio">
         <h1>About Me</h1>
             <p> 
-                My name is Jack Comey, and I'm a Guidance, Navigation, and Control Engineer in the San Francisco Bay Area, working in the space domain. I graduated from UC Davis in 2021, with double Bachelors degrees in Mechanical Engineering, and Aerospace Engineering. I have a deep passion for civil and commercial flight, and believe that it has the ability to dramatically improve the quality of life here on Earth.
+                My name is Jack Comey, and I'm a Guidance, Navigation, and Control Engineer in the San Francisco Bay Area, working in the space domain. I graduated from UC Davis in 2021, with double Bachelors degrees in Mechanical Engineering, and Aerospace Engineering, and have since worked for Lockheed Martin Space in Sunnyvale.
             </p>
             <!-- <p>
                 I used the Covid-19 pandemic as an opportunity to improve my academic work and made the Dean's List three times during lockdown. I used the extra time available to take my work to the next level, and my team won the NASA ARMD Aeronautics competition as a part of the result of that.
@@ -31,14 +31,11 @@ let profile_pic = `${base}/assets/profile.JPG`;
                 I'm adept with multiple programming languages, such as Matlab, C, and Python, and I have strong communication and interpersonal skills.
             </p> -->
 
+          <p>
+              I have a deep passion for civil and commercial spaceflight, and believe it will continue to provide a common benefit for mankind. 
+          </p>
             <p>
-              I have years of experience with most common controls engineering design languages and tools, including MATLAB/Simulink and Python, and have delivered and tested flight code to customers. 
-              I work primarily with close-to-the-wire controls software on FPGAs, and am familiar with fixed-point design. 
-              When not working, I make my own tools with Rust and C/C++, which you can see examples of on this site. 
-
-            </p>
-            <p>
-              <a href="/about">To learn more about how I work and think, click here</a>
+              <a href="/about">Click here for more.</a>
             </p>
       </div>
     </div>
