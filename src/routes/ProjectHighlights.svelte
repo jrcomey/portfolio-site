@@ -24,7 +24,29 @@
                 Originally intended to serve as a command-and-control interface for UAV swarm behavior, DATACOM has evolved into a more general-purpose interface.
             </p>
             <p>
-                To read more about it, <a href="projects/grs">click here</a>.
+                To read more about it, <a href="projects/DATACOM">click here</a>.
+            </p>
+        </div>
+        <div class="project-image-backdrop-black">
+            <img src={GRS} class="big-project-image-title-page" alt="DATACOM">
+        </div>
+    </div>
+
+    <div class="big-project-title-page-alt">
+
+        
+        <div class="big-project-description">
+            <h1>MultiVAC</h1>
+            <h3>High Fidelity Generap Purpose 6DOF Simulation</h3>
+            <p>
+                Named after Isaac Asimov's recurring supercomputer, MultiVAC is a general purpose 6DOF simulation that I wrote in Rust to serve as a proving ground for newGNC  methods for UAV swarms and satellite constellations.
+                MultiVAC is configurable via Python script, allowing for both rapid test setup and low runtime.
+            </p>
+            <p>
+                MultiVAC is able to simulate aircraft in-atmosphere and satellite constellations simulatenously, allowing for more precise modeling of interactions between the two. Demonstration projects available include a reinforcement learning flight controller developed for the ATP-XW Blizzard (see below) and a satellite constellation collision avoidance scenario.
+            </p>
+            <p>
+                To read more about it, <a href="projects/multivac">click here</a>.
             </p>
         </div>
         <div class="project-image-backdrop-black">
