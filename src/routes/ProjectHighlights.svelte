@@ -18,7 +18,7 @@
             <h3>Source-Agnostic Data Visualization Program</h3>
             <p>
                 I wrote a general-purpose 3D visualization engine using OpenGL and Rust to serve as a visual terminal interface for a multitude of projects I have been developing. 
-                DATACOM is a source-agnostic program (meaning it can take data from any source provided correct formatting) and can recieve and display multiple incoming datastreams.
+                DATACOM is a source-agnostic program (meaning it can take data from any source, provided correct formatting) and can recieve and display multiple incoming datastreams.
             </p>
             <p>
                 Originally intended to serve as a command-and-control interface for UAV swarm behavior, DATACOM has evolved into a more general-purpose interface.
@@ -37,9 +37,9 @@
         
         <div class="big-project-description">
             <h1>MultiVAC</h1>
-            <h3>High Fidelity Generap Purpose 6DOF Simulation</h3>
+            <h3>High Fidelity General Purpose 6DOF Simulation</h3>
             <p>
-                Named after Isaac Asimov's recurring supercomputer, MultiVAC is a general purpose 6DOF simulation that I wrote in Rust to serve as a proving ground for newGNC  methods for UAV swarms and satellite constellations.
+                Named after Isaac Asimov's recurring supercomputer, MultiVAC is a general purpose 6DOF simulation that I wrote in Rust to serve as a proving ground for new GNC methods for UAV swarms and satellite constellations.
                 MultiVAC is configurable via Python script, allowing for both rapid test setup and low runtime.
             </p>
             <p>
