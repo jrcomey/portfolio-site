@@ -4,6 +4,7 @@
     const blizz_path_2 = `${base}/assets/IsoTransparentWebsite.png`;
     const GRS = `${base}/assets/BlockDiagStylized.svg`;
 
+    const datacom = `${base}/assets/datacom_example.png`;
     const GRS2 = `${base}/assets/BlockDiagTransparent4.png`;
 </script>
 
@@ -28,7 +29,7 @@
             </p>
         </div>
         <div class="project-image-backdrop-black">
-            <img src={GRS} class="big-project-image-title-page" alt="DATACOM">
+            <img src={datacom} class="big-project-image-title-page" alt="DATACOM">
         </div>
     </div>
 
