@@ -3,6 +3,8 @@
     export let data;
 </script>
 
+<h1>UNDER CONSTRUCTION</h1>
+
 <p>As part of my undergraduate design project (see below), I worked with my team to develop a system for the Blizzard eVTOL UAM aircraft to withstand both significant gusts and other wind fields common to the Chicago area. I developed a fully fledged Guidance, Navigation, and Control system (GNC), using multiple controllers, to operate the aircraft during flight. I developed optimal controllers using a Linear Quadratic Regulator (LQR) from a linearized model, and demonstrated the controller using my UAV simulation. I have currently performed dozens of tests to verify flight performance under windy conditions.</p>
 
 <p>The GNC system uses two controllers for flight operations, one primary feedback, and an an auxiliary feed-forward controller for use in gust avoidance.</p>

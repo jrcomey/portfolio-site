@@ -3,6 +3,8 @@
     export let data;
 </script>
 
+<h1>UNDER CONSTRUCTION</h1>
+
 <p>I developed a multicopter dynamics package to aid in the development of Unmanned Aerial Vehicles (UAV/UAS). It allows for rapid prototyping of UAVs of any size, shape, or configuration, through easily configured settings, and returns predictions of vehicle dynamics under a variety of conditions.</p>
 
 <p>I began developing this Python package after I encountered difficulties gaining access to aircraft testing facilities on campus while captain of my aircraft design team. While initially intended to serve as a replacement for flight testing, the scope of the project increased to serve as a rapid prototyping environment for Unmanned Aerial Vehicles (UAVs).</p>
