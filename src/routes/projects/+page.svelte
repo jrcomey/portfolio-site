@@ -8,7 +8,7 @@
 
     <Header/>
     <ProjectHighlights/>
-    <ProjectGallery/>
+    <!-- <ProjectGallery/> -->
 
 
 <style>
