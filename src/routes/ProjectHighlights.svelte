@@ -5,6 +5,7 @@
     const GRS = `${base}/assets/BlockDiagStylized.svg`;
 
     const datacom = `${base}/assets/datacom_example.png`;
+    const multivac = `${base}/assets/masada-fortress-israel.png`;
     const GRS2 = `${base}/assets/BlockDiagTransparent4.png`;
 </script>
 
@@ -24,9 +25,9 @@
             <p>
                 Originally intended to serve as a command-and-control interface for UAV swarm behavior, DATACOM has evolved into a more general-purpose interface.
             </p>
-            <p>
+            <!-- <p>
                 To read more about it, <a href="projects/DATACOM">click here</a>.
-            </p>
+            </p> -->
         </div>
         <div class="project-image-backdrop-black">
             <img src={datacom} class="big-project-image-title-page" alt="DATACOM">
@@ -47,12 +48,12 @@
                 MultiVAC is configurable via Python script, allowing for both rapid test setup and low runtime.
                 Demonstration projects available include a reinforcement learning flight controller developed for the ATP-XW Blizzard (see below) and a satellite constellation collision avoidance scenario.
             </p>
-            <p>
+            <!-- <p>
                 To read more about it, <a href="projects/multivac">click here</a>.
-            </p>
+            </p> -->
         </div>
         <div class="project-image-backdrop-black">
-            <img src={GRS} class="big-project-image-title-page" alt="MultiVac">
+            <img src={multivac} class="big-project-image-title-page" alt="MultiVac">
         </div>
     </div>
     
@@ -65,9 +66,9 @@
             <p>
                 As part of my undergraduate design project, I worked with my team to develop a system for the Blizzard eVTOL UAM aircraft to withstand both significant gusts and other wind fields common to the Chicago area. I developed a fully fledged Guidance, Navigation, and Control system (GNC), using multiple controllers, to operate the aircraft during flight. I developed optimal controllers using a Linear Quadratic Regulator (LQR) from a linearized model, and demonstrated the controller using my UAV simulation. I performed dozens of simulation tests to verify flight performance under windy conditions.
             </p>
-            <p>
+            <!-- <p>
                 To read more about it, <a href="projects/grs">click here</a>.
-            </p>
+            </p> -->
         </div>
         <div class="project-image-backdrop-white">
             <img src={GRS2} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
@@ -83,9 +84,9 @@
             <p>
                 As part of a team of 5, my team and I developed a weather tolerant, hydrogen powered Urban Air Mobility (UAM) vehicle, designed for operation in Chicago's cold-weather environment. I developed a fully functional Guidance, Navigation, and Control (GNC) system to enable autonomous flight for the aircraft. I also developed significant parts of the propulsion train for the aircraft, developing propellers using Blade Element Momentum (BEM) theory. I also created a flight model for the aircraft and proved the viability of the control method using a Monte Carlo simulation.
             </p>
-            <p>
+            <!-- <p>
                 To read more about it, <a href="projects/blizzard">click here</a>.
-            </p>
+            </p> -->
         </div>
 
         <div class="project-image-backdrop-white">

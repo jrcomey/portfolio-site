@@ -247,7 +247,7 @@
         }
     );
 
-    let propellerSpeed = 0.1;  // Adjust for faster/slower rotation
+    let propellerSpeed = 0.01;  // Adjust for faster/slower rotation
 
     function animate() {
         requestAnimationFrame( animate);
