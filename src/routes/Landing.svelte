@@ -60,7 +60,7 @@
             polygonOffsetFactor: 1,
             polygonOffsetUnits: 1
         }),
-        wireframe: new THREE.MeshBasicMaterial({
+        wireframe: new THREE.MeshBasicMaterial({rotation
             color: green,
             wireframe: true,
             wireframeLinewidth: 1
@@ -247,7 +247,7 @@
         }
     );
 
-    let propellerSpeed = 0.1;  // Adjust for faster/slower rotation
+    let propellerSpeed = 0.01;  // Adjust for faster/slower rotation
 
     function animate() {
         requestAnimationFrame( animate);
@@ -323,7 +323,7 @@
         <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>3 years of Industry Experience</p>
+        <p>4 years of Industry Experience</p>
         <hr>
     </div>
 
