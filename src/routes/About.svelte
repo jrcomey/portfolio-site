@@ -68,6 +68,13 @@ let profile_pic = `${base}/assets/profile.JPG`;
     align-items: left;
   }
 
+  @media (max-width: 480px){
+    .about-grid {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   .about-grid img {
     object-fit: scale-down;
     width: 80%;

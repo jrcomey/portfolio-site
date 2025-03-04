@@ -1,8 +1,8 @@
 <script>
-    import { base } from '$app/paths';
 
-    let profile_pic = "{base}/assets/profile.JPG";
-    let moon_pic = "{base}/assets/moon_pic.jpg";
+    import { base } from '$app/paths';
+    let profile_pic = `${base}/assets/profile.JPG`;
+    let moon_pic = `${base}/assets/moon_pic.jpg`;
 
 </script>
 

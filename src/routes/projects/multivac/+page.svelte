@@ -1,25 +1,23 @@
 <script>
     /** @type {import('./$types').PageData} */
     export let data;
+    import Header from '../../Header.svelte';
 </script>
 
-<section class="high-level-description centered">
+<Header/>
 
-    <h1 class="centered">DATACOM: Visual Command and Control Terminal for Air and Space</h1>
-
+<section class="high-level-description-centered">
+    <h1>Multivac</h1>
     <div class="shaded-background">
         <div class="description">
-            <p>DATACOM is a multipurpose visual terminal designed to provide an interface for managing large swarms of air and spacecraft. Originally concieved as an RTS-style control interface for drone swarms, the project has expanded in scope to become a more general purpose interface.</p>
-
-            <p>DATACOM works on a networked packet system, and assumes that all craft that it interacts with are on the same network. Each aircraft (real or simulated) contains a basic model, which is transmitted to DATACOM on initial request. Subsequent requests from the terminal interface will pull current navigational data, and transmit new position commands as needed. How the aircraft gets there is determined by the vehicle itself.</p>
-            
-            <p>The packet interface allows for much more than it's original purpose, and can serve as a visual interface for any program provided that the correct interface is set up on the server side (here, either a vehicle or a sim like MultiVAC).</p>
-        
+            <h1>Project Outline</h1>
+            <p>MultiVAC is a 6 degree-of-freedom simulation, named after Isaac Asimov's recurring computer. It was originally designed as a simulation tool for UAV swarms, but was expanded as a development environment for the interaction between air- and spacecraft, and for extraterrestrial UAV design (the <i>Ingenuity</i> helicopter, for example).</p>
+            <p>MultiVAC is DATACOM compatible, and currently supports both visual and headless modes of operation. The simulation uses an object dependent integrator, and can swap between them as needed.</p>
+            <p></p>
+            <p></p>
         </div>
     </div>
 </section>
-
-
 
 
 

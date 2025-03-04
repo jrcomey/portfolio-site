@@ -30,13 +30,13 @@ TO DO:
 
 <PersonalInfo/>
 
-<Skills/>
+<!-- <Skills/> -->
 
-<Academics/>
+<!-- <Academics/> -->
 
-<WorkExperience/>
+<!-- <WorkExperience/> -->
 
-<WhyAWebsite/>
+<!-- <WhyAWebsite/> -->
 
 
 

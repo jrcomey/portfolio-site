@@ -1,9 +1,7 @@
 <script>
-        import { base } from '$app/paths';
-
-
-    let profile_pic = "src/assets/profile.JPG";
-    let moon_pic = "src/assets/moon_pic.jpg";
+    import { base } from '$app/paths';
+    let profile_pic = `${base}/assets/profile.JPG`;
+    let moon_pic = `${base}/assets/moon_pic.JPG`;
 
 </script>
 
@@ -27,7 +25,7 @@
 <style>
 
 section {
-    background-image: url("/assets/moon_pic.jpg");
+    background-image: url("/assets/photography/hawaii_canyon.JPG");
     align-content: center;
     background-size: cover;
     position: relative;

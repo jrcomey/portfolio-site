@@ -60,7 +60,7 @@
             polygonOffsetFactor: 1,
             polygonOffsetUnits: 1
         }),
-        wireframe: new THREE.MeshBasicMaterial({rotation
+        wireframe: new THREE.MeshBasicMaterial({
             color: green,
             wireframe: true,
             wireframeLinewidth: 1
@@ -311,8 +311,10 @@
             <!-- <h1>JACK RHYS COMEY</h1> -->
             <h1>Jack Rhys Comey</h1>
             <hr>
-            <h4>Guidance, Navigation, and Control Engineer</h4>
-            <h4>Currently at: Lockheed Martin Space</h4>
+            <p>Guidance, Navigation, and Control Engineer</p>
+            <p>Currently at: Lockheed Martin Space</p>
+            <p>2021 NASA ARMD University Design Challenge Winner</p>
+            <p>3 Years of Industry Experience</p>
             <hr>
     </div>
 
@@ -320,7 +322,6 @@
     <div>
         <hr width="100%">
         <h2 class="underline">EDUCATION</h2>
-        <p>2021 NASA ARMD University Design Challenge Winner</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
         <p>4 years of Industry Experience</p>
@@ -364,7 +365,10 @@
 
     div {
         min-width: 35%;
+        text-wrap: pretty;
         /* max-width: 40%; */
+        /* display: flex;
+        flex-direction: column; */
     }
 
     .landing-background-animation {
@@ -408,7 +412,7 @@
         justify-content: space-between;
         /* background: linear-gradient(to left, rgba(32,39,49,0) 80%,
               rgba(32,39,49,1)), url(http://foo.com/image.jpg); */
-        color: #ffffff;      
+        background: #000000;      
         overflow: hidden;        
         /* font-variant: small-caps; */
         z-index: 0;
@@ -433,7 +437,7 @@
         line-height: 1.5;
         /* font-family: 'Futura', 'Helvetica', sans-serif; */
         /* font-family: 'JetBrains Mono', monospace; */
-        font-weight: 700;
+        font-weight: bold;
         /* font-variant: small-caps; */
         color: #FFFFFF;
     }
@@ -441,10 +445,11 @@
 
 
     .landing-page h4 {
-        line-height: 0%;
+        line-height: 100%;
         /* font-family: 'JetBrains Mono', monospace; */
         /* font-family: 'Helvetica', sans-serif; */
         color: #FFFFFF;
+        position: relative;
     }
 
     .landing-page p {
