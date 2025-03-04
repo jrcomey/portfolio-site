@@ -5,7 +5,7 @@
     const GRS = `${base}/assets/BlockDiagStylized.svg`;
 
     const datacom = `${base}/assets/datacom_example.png`;
-    const multivac = `${base}/assets/masada-fortress-israel.png`;
+    const multivac = `${base}/assets/masada_test.png`;
     const GRS2 = `${base}/assets/BlockDiagTransparent4.png`;
 </script>
 
