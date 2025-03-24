@@ -314,7 +314,6 @@
             <p>Guidance, Navigation, and Control Engineer</p>
             <p>Currently at: Lockheed Martin Space</p>
             <p>2021 NASA ARMD University Design Challenge Winner</p>
-            <p>3 Years of Industry Experience</p>
             <hr>
     </div>
 
