@@ -310,32 +310,32 @@
     <div>
             <!-- <h1>JACK RHYS COMEY</h1> -->
             <h1>Jack Rhys Comey</h1>
-            <hr>
             <p>Guidance, Navigation, and Control Engineer</p>
             <p>Currently at: Lockheed Martin Space</p>
             <p>2021 NASA ARMD University Design Challenge Winner</p>
-            <hr>
     </div>
-
-    
+    <br>
     <div>
-        <hr width="100%">
-        <h2 class="underline">EDUCATION</h2>
+        <!-- <hr> -->
+        <h2>EDUCATION</h2>
+        <hr>
+        <p>M.S. UCLA: Aerospace Engineering (exp. 2027)</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
         <p>4 years of Industry Experience</p>
-        <hr>
+        <!-- <hr> -->
     </div>
-
+    <br>
     <div>
+        <!-- <hr> -->
+        <h2>KEY SKILLS</h2>
         <hr>
-        <h2 class="underline">KEY SKILLS</h2>
         <p>Rust | C | C++ | Python | MATLAB | Simulink </p>
         <p>Precision Servo Control | Discrete Controller Design</p>
         <!-- <p>Modern Controller/Navigation Design</p> -->
-        <hr>
+        <!-- <hr> -->
     </div>
-        
+    <br>
     <div class="landing-page-icon-grid">
         <!-- <img width=40% src={gear_pic} alt={gear_alt}/>
         <img width=40% src={rocket_pic} alt={rocket_alt}/> -->
@@ -434,20 +434,28 @@
 
     .landing-page h1 {
         line-height: 1.5;
-        /* font-family: 'Futura', 'Helvetica', sans-serif; */
+        font-family: 'Helvetica', 'Futura', sans-serif;
+        /* font-family: 'JetBrains Mono', monospace; */
+        /* font-weight: bold; */
+        font-variant: small-caps;
+        color: #FFFFFF;
+    }
+
+    .landing-page h2 {
+        /* line-height: 1.5; */
+        font-family: 'Helvetica', 'Futura', sans-serif;
         /* font-family: 'JetBrains Mono', monospace; */
         font-weight: bold;
         /* font-variant: small-caps; */
         color: #FFFFFF;
     }
 
-
-
     .landing-page h4 {
         line-height: 100%;
         /* font-family: 'JetBrains Mono', monospace; */
         /* font-family: 'Helvetica', sans-serif; */
         color: #FFFFFF;
+        /* font-weight: norm; */
         position: relative;
     }
 

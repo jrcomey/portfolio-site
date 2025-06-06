@@ -10,10 +10,18 @@ let profile_pic = `${base}/assets/profile.JPG`;
       <img src={profile_pic} alt="Profile Picture">
       
       <div class="bio">
-        <h1>About Me</h1>
+        <div>
+            <h1>About Me</h1>
+        <hr width="100%">
+        </div>
+         <br>
+        <div>
             <p> 
-                My name is Jack Comey, and I'm a Guidance, Navigation, and Control Engineer in the San Francisco Bay Area, working in the space domain. I graduated from UC Davis in 2021, with double Bachelors degrees in Mechanical Engineering, and Aerospace Engineering, and have since worked for Lockheed Martin Space in Sunnyvale.
+                My name is Jack Comey, and I'm a Guidance, Navigation, and Control Engineer working in the space domain. I graduated from UC Davis in 2021, with double Bachelor's degrees in Mechanical Engineering, and Aerospace Engineering, and have since worked for Lockheed Martin Space in Sunnyvale.
             </p>
+        </div>
+        <br>
+            
             <!-- <p>
                 I used the Covid-19 pandemic as an opportunity to improve my academic work and made the Dean's List three times during lockdown. I used the extra time available to take my work to the next level, and my team won the NASA ARMD Aeronautics competition as a part of the result of that.
                 Since graduating, I've been at Lockheed Martin Space in Sunnyvale, working on precision motor controls for launch vehicle attitude control systems.
@@ -52,6 +60,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
     /* margin: 0% 0%; */
   }
 
+
   .shaded-background {
     background-color: #0f1112CC;
     /* display: flex; */
@@ -68,7 +77,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
     align-items: left;
   }
 
-  @media (max-width: 480px){
+  @media (max-width: 80em){
     .about-grid {
       display: flex;
       flex-direction: column;
@@ -90,8 +99,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
   }
 
   .bio h1 {
-    font-variant: small-caps;
-    text-decoration: underline;
+    line-height: 1.0;
   }
   
 </style>
