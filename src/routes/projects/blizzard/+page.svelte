@@ -292,12 +292,9 @@
 <Header/>
 
 <section class="title-page">
-
     <div class="gradient-background"></div>
     <div bind:this={container} class="scene-container"></div>
     <h1>THE ATP-XW BLIZZARD</h1>
-
-
 </section>
 
 <section class="high-level-description centered">
@@ -383,9 +380,6 @@
         height: 100%;
         background: linear-gradient(to top, rgba(15, 17, 18, 0.9), rgba(15, 17, 18, 0.9), 80%, rgba(15, 17, 18, 0));
         z-index: -1;
-    }
-    .high-level-description {
-
     }
     .scene-container {
         position: absolute;

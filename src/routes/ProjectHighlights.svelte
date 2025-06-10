@@ -17,6 +17,35 @@
         
         <div class="big-project-description">
             <div>
+                <h1>MultiVAC</h1>
+                <h3>High Fidelity General Purpose 6DOF Simulation</h3>
+                <hr width="100%">
+            </div>
+            <br>
+            <div>
+                <p>
+                    Named after Isaac Asimov's recurring supercomputer, MultiVAC is a general purpose 6DOF simulation that I wrote to serve as a proving ground for new GNC methods.
+                    MultiVAC is intended as a development tool to aid in any real world applications - from industrial robotics to air and space GNC. 
+                </p>
+                <p>
+                    MultiVAC is fast and flexible - its scripting interface allows for quick iterations to your design while retaining calculation speed.
+                </p>
+            </div>
+            
+            <p>
+                To read more about it, <a href="projects/multivac">click here</a>.
+            </p>
+        </div>
+        <div class="project-image-backdrop-black">
+            <img src={multivac} class="big-project-image-title-page" alt="MultiVac">
+        </div>
+    </div>
+
+    <div class="big-project-title-page-alt">
+
+        
+        <div class="big-project-description">
+            <div>
                 <h1>DATACOM</h1>
                 <h3>Source-Agnostic Data Visualization Program</h3>
                 <hr width="100%">
@@ -38,36 +67,6 @@
         </div>
         <div class="project-image-backdrop-black">
             <img src={datacom} class="big-project-image-title-page" alt="DATACOM">
-        </div>
-    </div>
-
-    <div class="big-project-title-page-alt">
-
-        
-        <div class="big-project-description">
-            <div>
-                <h1>MultiVAC</h1>
-                <h3>High Fidelity General Purpose 6DOF Simulation</h3>
-                <hr width="100%">
-            </div>
-            <br>
-            <div>
-                <p>
-                    Named after Isaac Asimov's recurring supercomputer, MultiVAC is a general purpose 6DOF simulation that I wrote in Rust to serve as a proving ground for new GNC methods.
-                    MultiVAC is able to simulate aircraft in-atmosphere and satellite constellations simulatenously, allowing for more precise modeling of interactions between the two.
-                </p>
-                <p>
-                    MultiVAC is configurable via Python script, allowing for both rapid test setup and low runtime.
-                    Demonstration projects available include a reinforcement learning flight controller developed for the ATP-XW Blizzard (see below) and a satellite constellation collision avoidance scenario.
-                </p>
-            </div>
-            
-            <!-- <p>
-                To read more about it, <a href="projects/multivac">click here</a>.
-            </p> -->
-        </div>
-        <div class="project-image-backdrop-black">
-            <img src={multivac} class="big-project-image-title-page" alt="MultiVac">
         </div>
     </div>
     
@@ -167,7 +166,7 @@
         align-content: flex-start;
     }
 
-    @media (max-width: 80em){
+    @media (max-width: 60em){
         .big-project-title-page {
             display: flex;
             flex-direction: column;

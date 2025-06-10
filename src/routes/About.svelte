@@ -20,7 +20,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
                 My name is Jack Comey, and I'm a Guidance, Navigation, and Control Engineer working in the space domain. I graduated from UC Davis in 2021, with double Bachelor's degrees in Mechanical Engineering, and Aerospace Engineering, and have since worked for Lockheed Martin Space in Sunnyvale.
             </p>
         </div>
-        <br>
+        <!-- <br> -->
             
             <!-- <p>
                 I used the Covid-19 pandemic as an opportunity to improve my academic work and made the Dean's List three times during lockdown. I used the extra time available to take my work to the next level, and my team won the NASA ARMD Aeronautics competition as a part of the result of that.

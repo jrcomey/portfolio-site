@@ -148,6 +148,11 @@ h2 {
   color: #FFFFFF;
 }
 
+h2 {
+  font-family: 'Helvetica', sans-serif;
+  color: #FFFFFF;
+}
+
 h4 {
   font-family: 'Helvetica', sans-serif;
   line-height: 0%;
