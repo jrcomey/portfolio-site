@@ -437,7 +437,7 @@
         font-family: 'Helvetica', 'Futura', sans-serif;
         /* font-family: 'JetBrains Mono', monospace; */
         /* font-weight: bold; */
-        font-variant: small-caps;
+        /* font-variant: small-caps; */
         color: #FFFFFF;
     }
 
