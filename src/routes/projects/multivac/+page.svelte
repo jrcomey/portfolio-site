@@ -318,15 +318,15 @@
         <div class="image-reel">
             <img src={blizz_render_path} alt="ATP-XW Blizzard Render" />
             <!-- <h3>The Basic Process</h3>  -->
-            <p><i></i></p>
+            <!-- <p><i></i></p> -->
         </div>
     </div>
 
     <div class="shaded-background-alt">
         <div class="image-reel">
             <img src={script_diagram} alt="ATP-XW Blizzard Render" />
-            <h3>An example scenario setup structure using <i>Blizzard</i></h3> 
-            <p><i></i></p>
+            <!-- <h3>An example scenario setup structure using <i>Blizzard</i></h3>  -->
+            <!-- <p><i></i></p> -->
         </div>
         <div class="description">
             <h1>Instant Prototypes</h1>
@@ -379,7 +379,7 @@
         <div class="image-reel">
             <img src={pos_plot} alt="ATP-XW Blizzard Render" />
             <!-- <h3><i>The Basic Process</i></h3>  -->
-            <p><i></i></p>
+            <!-- <p><i></i></p> -->
         </div>
         
         
@@ -491,5 +491,16 @@
             border-radius: 5%;
             /* padding: 5%; */
         }
+
+    @media (max-width: 60em){
+        .shaded-background {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .shaded-background-alt{
+            display: flex;
+            flex-direction: column;
+        }
+    }
 
 </style>
