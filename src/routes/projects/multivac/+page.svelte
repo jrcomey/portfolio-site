@@ -6,6 +6,7 @@
     const blizz_render_path = `${base}/assets/basic-sixdof-process.png`;
     const pos_plot = `${base}/assets/Blizzard_0_pos_plot.png`;
     const script_diagram = `${base}/assets/script-creation-diagram.png`;
+    const threeDplot = `${base}/assets/blizz_circle_plot.png`;
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
@@ -307,12 +308,12 @@
         <div class="description">
             <h1>Tired of Simulink?</h1>
              <p>
-                Named after Isaac Asimov's recurring supercomputer, MultiVAC is a general purpose 6DOF simulation that I wrote to serve as a proving ground for new GNC methods.
+                Named after Isaac Asimov's recurring supercomputer, MultiVAC is a <b>general purpose 6DOF simulation</b> that I wrote to serve as a proving ground for new GNC methods.
                 MultiVAC is intended as a development tool to aid in any real world applications - from industrial robotics to air and space GNC. 
             </p>
             <!-- <br> -->
             <p>
-                MultiVAC is fast and flexible - its scripting interface allows for quick iterations to your design while retaining calculation speed.
+                MultiVAC is <b>fast and flexible</b> - its scripting interface allows for quick iterations to your design while retaining calculation speed.
             </p>
         </div>
         <div class="image-reel">
@@ -324,7 +325,7 @@
 
     <div class="shaded-background-alt">
         <div class="image-reel">
-            <img src={script_diagram} alt="ATP-XW Blizzard Render" />
+            <img src={threeDplot} alt="ATP-XW Blizzard Render" />
             <!-- <h3>An example scenario setup structure using <i>Blizzard</i></h3>  -->
             <!-- <p><i></i></p> -->
         </div>
@@ -372,7 +373,7 @@
         <div class="description">
             <h1>Zero-Click Insights</h1>
             <p>
-                MuliVAC automatically generates a full teardown at the end of each run. Plots are generated of each vehicle's position, velocity, and rotation, along with a plot of the full scenario. A full LaTeX report is also generated for easy reading.
+                MuliVAC <b>automatically</b> generates a full teardown at the end of each run. Plots are generated of each vehicle's position, velocity, and rotation, along with a plot of the full scenario. A full LaTeX report is also generated for easy reading.
             </p>
             <p>The full data for each run is saved to a single HDF5 file, allowing you to generate your own plots as well.</p>
         </div>
