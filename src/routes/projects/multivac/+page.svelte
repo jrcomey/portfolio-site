@@ -6,7 +6,7 @@
     const blizz_render_path = `${base}/assets/basic-sixdof-process.png`;
     const pos_plot = `${base}/assets/Blizzard_0_pos_plot.png`;
     const script_diagram = `${base}/assets/script-creation-diagram.png`;
-    const threeDplot = `${base}/assets/blizz_circle_plot.png`;
+    const threeDplot = `${base}/assets/tracking_plot_anim.gif`;
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
