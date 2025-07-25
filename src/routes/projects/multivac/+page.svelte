@@ -1,3 +1,6 @@
+<title>MultiVAC</title>
+
+
 <script>
     /** @type {import('./$types').PageData} */
     export let data;

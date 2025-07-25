@@ -1,3 +1,6 @@
+<title>Jack Comey - Portfolio</title>
+
+
 <script>
     import Landing from "./Landing.svelte";
     import About from "./About.svelte";
@@ -11,6 +14,7 @@
 
 
 </script>
+
 
 <Header/>
 

@@ -4,8 +4,8 @@
     const blizz_path_2 = `${base}/assets/IsoTransparentWebsite.png`;
     const GRS = `${base}/assets/BlockDiagStylized.svg`;
 
-    const datacom = `${base}/assets/datacom_example.png`;
-    const multivac = `${base}/assets/masada_test.png`;
+    const multivac = `${base}/assets/run_full_plot.png`;
+    const datacom = `${base}/assets/masada_test.png`;
     const GRS2 = `${base}/assets/BlockDiagTransparent4.png`;
 </script>
 

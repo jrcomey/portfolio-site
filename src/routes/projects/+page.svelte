@@ -1,3 +1,5 @@
+<title>Projects</title>
+
 <script>
     import Header from '../Header.svelte';
     import ProjectHighlights from '../ProjectHighlights.svelte';
