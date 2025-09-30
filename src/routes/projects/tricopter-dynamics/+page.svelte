@@ -9,8 +9,6 @@
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
 
 
-
-
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
