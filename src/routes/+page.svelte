@@ -9,10 +9,6 @@
     import Header from "./Header.svelte";
     import ProjectHighlights from "./ProjectHighlights.svelte";
     import ProjectGallery from "./ProjectGallery.svelte";
-    // import '../app.css';
-
-
-
 </script>
 
 
@@ -20,15 +16,11 @@
 
 <Landing/>
 
-<!-- <LandingTakeTwo/> -->
-
 <About/>
-
-<!-- <Education/> -->
 
 <ProjectHighlights/>
 
-<!-- <ProjectGallery/> -->
+<ProjectGallery/>
 
 <style>
 

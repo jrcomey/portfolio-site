@@ -2,6 +2,9 @@
 import { base } from '$app/paths';
 
 let profile_pic = `${base}/assets/profile.JPG`;
+
+
+
 </script>
 
 <section class="about-me">
@@ -66,7 +69,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
     /* display: flex; */
     /* flex-direction: row; */
     padding: 5%;
-    border-radius: 2%;
+    border-radius: 20px;
   }
 
   .about-grid {

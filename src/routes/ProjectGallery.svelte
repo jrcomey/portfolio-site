@@ -15,12 +15,46 @@
     
     <div class="project-grid">
 
+        <div class="project">
+            <a href="{base}/projects/tricopter-dynamics"><img src="{base}/assets/trifecta/render_screenshot.png" alt="MultiVAC Demo"></a>
+            <a href="{base}/projects/tricopter-dynamics"><h2>Tricopter Dynamics Model</h2></a>
+            <a href="{base}/projects/tricopter-dynamics"><h3>Nonlinear Dynamics Model for Experimentation</h3></a>
+            <a href="{base}/projects/tricopter-dynamics"><p>Derivation of a nonlinear dynamics model for a folding tricopter. </p></a>
+        </div>
 
         <div class="project">
-            <a href="{base}/projects/UAVsim"><img src="{base}/assets/newplot.png" alt="UAVSim Plot"></a>
-            <a href="{base}/projects/UAVsim"><h2>UAVSim</h2></a>
-            <a href="{base}/projects/UAVsim"><h3>Rotorcraft Dynamics Simulation Package</h3></a>
-            <a href="{base}/projects/UAVsim"><p>A package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
+            <a href="{base}/projects/multivac"><img src="{base}/assets/run_full_plot.png" alt="MultiVAC Demo"></a>
+            <a href="{base}/projects/multivac"><h2>MultiVAC</h2></a>
+            <a href="{base}/projects/multivac"><h3>General Purpose 6DOF Simulation</h3></a>
+            <a href="{base}/projects/multivac"><p>Multipurpose simulation environment able to model linear and nonlinear vehicles. Fully scriptable, intended for end-to-end vehicle design.</p></a>
+        </div>
+
+        <div class="project">
+            <a href="{base}/projects/DATACOM"><img src="{base}/assets/masada_test.png" alt="MultiVAC Demo"></a>
+            <a href="{base}/projects/DATACOM"><h2>DATACOM</h2></a>
+            <a href="{base}/projects/DATACOM"><h3>Source Agnostic Data Visualization Program</h3></a>
+            <a href="{base}/projects/DATACOM"><p>A collaboration with Charles Comey to develop a general purpose 3D visualization terminal for robotics command and control. Also intended as a user interface for MultiVAC.</p></a>
+        </div>
+
+        <!-- <div class="project">
+            <a href="{base}/projects/bldc"><img src="{base}/assets/masada_test.png" alt="Brushless Motor Model"></a>
+            <a href="{base}/projects/bldc"><h2>Brushless DC Motor Model</h2></a>
+            <a href="{base}/projects/bldc"><h3>Component Creation for MultiVAC</h3></a>
+            <a href="{base}/projects/bldc"><p>A linear state-space model of a brushless DC motor</p></a>
+        </div> -->
+
+        <div class="project">
+            <a href="{base}/projects/UAVSim"><img src="{base}/assets/newplot.png" alt="UAVSim Plot"></a>
+            <a href="{base}/projects/UAVSim"><h2>UAVSim</h2></a>
+            <a href="{base}/projects/UAVSim"><h3>Rotorcraft Dynamics Simulation Package</h3></a>
+            <a href="{base}/projects/UAVSim"><p>A package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
+        </div>
+
+        <div class="project">
+            <a href="{base}/projects/blizzard"><img src="{base}/assets/blizz.png" alt="MultiVAC Demo"></a>
+            <a href="{base}/projects/blizzard"><h2>Blizzard</h2></a>
+            <a href="{base}/projects/blizzard"><h3>Weather Tolerant Urban Air Mobility Vehicle</h3></a>
+            <a href="{base}/projects/blizzard"><p>Eight rotor eVTOL aircraft designed to transport passengers around Chicago at cost-competitive rates. Design won the 2020-2021 NASA ARMD University Design Challenge. </p></a>
         </div>
 
         <div class="project">
@@ -39,11 +73,18 @@
         </div>
 
 
-        <div class="project">
+        <!-- <div class="project">
             <a href="{base}/projects/launchsim"><img src="{base}/assets/Undeformed.png" alt="Deformed Satellite"></a>
             <a href="{base}/projects/launchsim"><h2>Launch Simulation</h2></a>
             <a href="{base}/projects/launchsim"><h3>Satellite Inertial Loading and Thermal Analysis</h3></a>
             <a href="{base}/projects/launchsim"><p>Analysis of satellite superstructure experiencing inertial loading during launch, and thermal loading during operation</p></a>
+        </div> -->
+
+        <div class="project">
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><img src="{base}/assets/Undeformed.png" alt="Deformed Satellite"></a>
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h2>Launch Simulation</h2></a>
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h3>Satellite Inertial Loading and Thermal Analysis</h3></a>
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><p>Analysis of satellite superstructure experiencing inertial loading during launch, and thermal loading during operation</p></a>
         </div>
 
 
@@ -56,26 +97,32 @@
 
 
         <div class="project">
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><img src="{base}/assets/Prob1b.png" alt=""></a>
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h2>Wave Propagation Analysis</h2></a>
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h3>2D Discrete Differential Equation Solutions</h3></a>
+            <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><p>A three-dimensional study of wave propagation and subsonic/supersonic airflow</p></a>
+        </div>
+
+        <!-- <div class="project">
             <a href="{base}/projects/waveprop"><img src="{base}/assets/Prob1b.png" alt=""></a>
             <a href="{base}/projects/waveprop"><h2>Wave Propagation Analysis</h2></a>
             <a href="{base}/projects/waveprop"><h3>2D Discrete Differential Equation Solutions</h3></a>
             <a href="{base}/projects/waveprop"><p>A three-dimensional study of wave propagation and subsonic/supersonic airflow</p></a>
-        </div>
+        </div> -->
 
 
         <div class="project">
             <a href="{base}/projects/basins"><img src="{base}/assets/basinsofattraction.png" alt="Project 4"></a>
             <a href="{base}/projects/basins"><h2>Basins of Attraction</h2></a>
-            <div></div>
             <a href="{base}/projects/basins"><h3>Iterative Convergence Study</h3></a>
             <a href="{base}/projects/basins"><p>Fractal convergence study for system using imaginary numbers</p></a>
         </div>
 
-        <div class="project">
+        <!-- <div class="project">
             <a href="{base}/projects/supersonic"><img src="{base}/assets/Prob2bResults.png" alt="Project 3"></a>
             <a href="{base}/projects/supersonic"><h3>Supersonic Flow</h3></a>
             <a href="{base}/projects/supersonic"><p>Two-dimensional analysis of supersonic flow over a symmetric biconvex airfoil</p></a>
-        </div>
+        </div> -->
 
     </div>
 

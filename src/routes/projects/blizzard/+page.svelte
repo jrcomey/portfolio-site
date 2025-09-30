@@ -3,12 +3,16 @@
     export let data;
     import Header from '../../Header.svelte';
 
-    const blizz_render_path = `${base}/assets/blizz.png`;
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
+
+    const blizz_render_path = `${base}/assets/blizz.png`;
+    const carpet_plot = `${base}/assets/blizzard/carpet_plot.png`;
+    const impulse_response = `${base}/assets/blizzard/impulse_response.png`;
+    const monte_carlo = `${base}/assets/blizzard/monte-carlo.png`;
 
     let gifIndex = 1;
     let totalGifs = 3; // Total number of GIFs
@@ -294,19 +298,22 @@
 <section class="title-page">
     <div class="gradient-background"></div>
     <div bind:this={container} class="scene-container"></div>
-    <h1>THE ATP-XW BLIZZARD</h1>
+    <h1>THE ATP-XW <i>BLIZZARD</i></h1>
 </section>
 
 <section class="high-level-description centered">
 
-    <h1 class='centered'>ALL WEATHER TAXI PILOTS EXPERIMENTAL WEATHER AIRCRAFT <i>BLIZZARD</i></h1>
+    <!-- <h1 class='centered'>ALL WEATHER TAXI PILOTS EXPERIMENTAL WEATHER AIRCRAFT <i>BLIZZARD</i></h1> -->
 
     <div class="shaded-background">
         <div class="description">
-            <h1>Abstract</h1>
+            <h1>Overview</h1>
+
+            <p>As part of a team of 5, my team and I developed a weather tolerant UAM concept vehicle, designed for operation in Chicago's cold-weather environment. This design won the <a href="https://www.nasa.gov/general/the-nasa-aeronautics-university-design-challenge-2020-2021-academic-year/">NASA ARMD 2021 University Design Challenge</a>.</p>
+
             <p>I designed a fully functional Guidance, Navigation, and Control (GNC) system for the Blizzard, and is capable of both piloted and autonomous control. The control system uses a state-feedback controller with added integrator control to maintain both the position and attitude of the aircraft by varying the rotation speed of the 8 motors which power the aircraft, creating thrust differentials, and therefore a moment about the center. The autonomous capabilities of the aircraft would reduce the operating costs by 35%, lowering ticket price and ultimately allowing the aircraft to carry more passengers. </p>
 
-            <p>The system is currently being redeveloped to be used in gust detection and avoidance. The process is currently in an early stage of development, but will use ultrasonic sensors to detect local weather cells in the areas around the aircraft, predict incoming wind patterns, and preemptively begin maneuvers to reduce the impact of wind gusts on the aircraft.</p>
+            <!-- <p>The system is currently being redeveloped to be used in gust detection and avoidance. The process is currently in an early stage of development, but will use ultrasonic sensors to detect local weather cells in the areas around the aircraft, predict incoming wind patterns, and preemptively begin maneuvers to reduce the impact of wind gusts on the aircraft.</p>
 
             <p>Using my simulation program, I was able to test the aircraft against a variety of maneuverability tests, as laid out in ADS-33E-PRF, a military standard which contains, among other elements, a list of response tests for rotary-wing aircraft in windy conditions. While not required to certify the Blizzard for its intended use, these standards provide a clear pass/fail test used for other fast-response aircraft in similar conditions. My plan is to repeat these tests once the aerodynamic model is fully completed, for wind conditions, temperatures, and precipitation consistent with Chicago winter weather.</p>
 
@@ -322,7 +329,7 @@
 
             <p>I selected a motor for the aircraft based on power and weight requirements to meet requirements set out by the competition statement and further requirements by our team. I then developed a propeller under the motors' given operating characteristics using Blade Element Momentum (BEM) theory using a self-developed Python program. I analyzed the propeller and the aircraft as a whole and determined Hover Efficiency/Figure of Merit for the aircraft.</p>
 
-            <p> Among many other things, I designed the propellers and selected motors for the aircraft, but my biggest contribution to the project was a full autopilot system for the aircraft. This system included guidance, navigation, and control components, and aircraft dynamic behavior was verified through the multirotor simulator I had designed the previous summer. To verify our flight controller, I ran Monte Carlo simulations to verify aircraft stability under randomized conditions.</p>
+            <p> Among many other things, I designed the propellers and selected motors for the aircraft, but my biggest contribution to the project was a full autopilot system for the aircraft. This system included guidance, navigation, and control components, and aircraft dynamic behavior was verified through the multirotor simulator I had designed the previous summer. To verify our flight controller, I ran Monte Carlo simulations to verify aircraft stability under randomized conditions.</p> -->
         </div>
         <div class="image-reel">
             <img src={blizz_render_path} alt="ATP-XW Blizzard Render" />
@@ -331,32 +338,43 @@
         </div>
     </div>
 
+
+    <div class="shaded-background-alt">
+        <div class="image-reel">
+            <img src={impulse_response} alt="ATP-XW Blizzard Render" />
+        </div>
+        <div class="description">
+            <h1>Dynamics Modeling</h1>
+            <p>Using my simulation program <a href="projects/UAVSim">UAVSim</a>, I was able to test the aircraft against a variety of maneuverability tests, as laid out in ADS-33E-PRF, a military standard which contains, among other elements, a list of response tests for rotary-wing aircraft in windy conditions. While not required to certify the Blizzard for its intended use, these standards provide a clear pass/fail test used for other fast-response aircraft in similar conditions. My plan is to repeat these tests once the aerodynamic model is fully completed, for wind conditions, temperatures, and precipitation consistent with Chicago winter weather.</p>
+        </div>
+    </div>
+
+    <div class="shaded-background">
+        
+        <div class="description">
+            <h1>Duct Sizing</h1>
+            <p>To determine the size of the support struts which held the coaxial motor set in place in the duct, I constructed a carpet plot, a method commonly used in the aerospace field to size sets of independent and dependent variables. The plot varies both the number of struts, and their size, and determined operating point based on beam deflection under maximum loading conditions, and thrust force lost to drag on the motors. Using this plot I was able to appropriately size the motor support struts around an operating point.</p>
+        </div>
+
+        <div class="image-reel">
+            <img src={carpet_plot} alt="ATP-XW Blizzard Render" />
+        </div>
+    </div>
+
+    <div class="shaded-background-alt">
+        <div class="image-reel">
+            <img src={monte_carlo} alt="ATP-XW Blizzard Render" />
+        </div>
+        <div class="description">
+            <h1>Monte Carlo Simulation</h1>
+            <p>Using my UAVSim flight simulator (which you can read more about here) I developed a flight model for the Blizzard and ran a Monte Carlo simulation by randomizing aircraft position and attitude and allowing the aircraft to return to a neutral position, observing system response.</p> 
+            <p>Results indicated that the aircraft was stable for perturbations under a given magnitude, and in most cases recovered with only a 6 meter loss of altitude. Results initially identified a control error that caused the aircraft destabilized if inverted, and has been fixed. The aircraft is now able to safely recover from any attitude destabilization.</p>
+        </div>
+    </div>
+
 </section>
-
-<section>
-
-    
-
-
-</section>
-
-
-
-
 
 <style>
-
-    section {
-        background-size: cover;
-        position: relative;
-        z-index: -10;
-        min-height: 90vh;
-        /* align-content: center; */
-        display: flex;
-        background-image: url("/assets/photography/cooks_bay.JPG");
-        flex-direction: column;
-    }
-
     .centered {
         align-content: center;
     }
@@ -390,18 +408,16 @@
         z-index: -1;
     }
 
-
-    .shaded-background {
-        background-color: #0f1112CC;
-        /* display: flex; */
-        /* flex-direction: row; */
-        padding: 5%;
-        border-radius: 2%;
-        display: grid;
-        /* grid-row: 1; */
-        grid-template-columns: 4fr 3fr;
-        /* padding: 5%; */
-        align-content: left;
+    section {
+        background-size: cover;
+        position: relative;
+        z-index: -10;
+        min-height: 90vh;
+        /* align-content: center; */
+        display: flex;
+        /* background-image: url("/assets/photography/cooks_bay.JPG"); */
+        /* background-color: #000000FF; */
+        flex-direction: column;
     }
 
     .image-reel {
@@ -412,6 +428,8 @@
 
     .description {
         margin: 5%;
+        display: flex;
+        flex-direction: column;
     }
 
     .image-reel img {
@@ -421,5 +439,43 @@
             border-radius: 5%;
             /* padding: 5%; */
         }
+
+    .shaded-background {
+        background-color: #0f1112CC;
+        border-radius: 2%;
+        display: grid;
+        grid-template-columns: 4fr 3fr;
+        margin: 5% 0%;
+        align-content: left;
+    }
+
+    b {
+        color: #00FFFF;
+    }
+
+    .shaded-background-alt {
+        background-color: #0f1112CC;
+        border-radius: 2%;
+        display: grid;
+        grid-template-columns: 3fr 4fr;
+        margin: 5% 0%;
+        align-content: left;
+    }
+
+    .description {
+        margin: 5%;
+        display: flex;
+        flex-direction: column;
+    }
+    @media (max-width: 60em){
+        .shaded-background {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .shaded-background-alt{
+            display: flex;
+            flex-direction: column;
+        }
+    }
 
 </style>

@@ -109,9 +109,9 @@
             <p>
                 As part of a team of 5, my team and I developed a weather tolerant, hydrogen powered Urban Air Mobility (UAM) vehicle, designed for operation in Chicago's cold-weather environment. I developed a fully functional Guidance, Navigation, and Control (GNC) system to enable autonomous flight for the aircraft. I also developed significant parts of the propulsion train for the aircraft, developing propellers using Blade Element Momentum (BEM) theory. I also created a flight model for the aircraft and proved the viability of the control method using a Monte Carlo simulation.
             </p>
-            <!-- <p>
+            <p>
                 To read more about it, <a href="projects/blizzard">click here</a>.
-            </p> -->
+            </p>
         </div>
 
         <div class="project-image-backdrop-white">

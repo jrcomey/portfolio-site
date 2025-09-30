@@ -1,6 +1,7 @@
 <script>
     /** @type {import('./$types').PageData} */
     export let data;
+    import { base } from '$app/paths';
 </script>
 
 <h1>UNDER CONSTRUCTION</h1>
