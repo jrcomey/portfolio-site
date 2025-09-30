@@ -19,7 +19,7 @@
 <!-- <div bind:this={root}>
 	<slot />
 </div> -->
-
+<!-- 
 <script>
   import { onMount, onDestroy } from 'svelte';
 
@@ -72,4 +72,4 @@
 
 <div bind:this={root}>
   <slot />
-</div>
+</div> -->

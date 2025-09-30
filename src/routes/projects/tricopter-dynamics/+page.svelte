@@ -2,22 +2,31 @@
 
 <script>
 
-    export let data;
     import Header from '../../Header.svelte';
     import MathBlock from '$lib/MathBlock.svelte';
-    import { base } from '$app/paths';
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
 
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { base } from '$app/paths';
 
     let container;
     let scene, camera, renderer, animationFrameId;
 
-    function fit() {
+
+    onMount(() => {
+        // Initialize scene
+        let destroyed = false;
+        let w = container.clientWidth;
+        let h = container.clientHeight;
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(30, w/h, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer({ antialias: true});
+
+        function fit() {
+            if (!renderer || !camera || !container) return;
             let w = container.clientWidth;
             let h = container.clientHeight;
             renderer.setSize(w, h, false);
@@ -25,31 +34,10 @@
             camera.aspect= w / h;
             camera.updateProjectionMatrix();
         }
-
-    onMount(() => {
-        // Initialize scene
-        let w = container.clientWidth;
-        let h = container.clientHeight;
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(30, w/h, 0.1, 1000);
-        renderer = new THREE.WebGLRenderer({ antialias: true, ogarithmicDepthBuffer:true });
-        
-        
-
-        // const gridHelper = new THREE.GridHelper(100, 10);
-        // gridHelper.rotation.x=Math.PI/2; 
-        // gridHelper.position.x -=2.0;
-        // scene.add( gridHelper );
-
-        fit();
-        // ro = new ResizeObserver(fit);
-        // ro.observe(container);
-        // Set size and append to container
-        // renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
-        const controls = new OrbitControls( camera, renderer.domElement );
+        // const controls = new OrbitControls( camera, renderer.domElement );
 
-        // renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(w, h);
         camera.up.set(0,0,1);
         let in2mm = 25.4;
@@ -59,19 +47,20 @@
         camera.position.setY(4);
         const camera_target_pos = new THREE.Vector3(0, 0, 0.0);
         camera.lookAt(camera_target_pos);
-        // let in2mm = 1;
 
-        // renderer.render(scene, camera);
-        // const axesHelper = new THREE.AxesHelper( 15.0 );
-        // scene.add( axesHelper );
-
-        // const loader = OBJLoader();
-        // loader.load("assets/blizzard.obj");
-
+        // Color breakdown
         const blue = 0x3333FF;
         const red = 0xFF3333;
         const green = 0x4AF626;
         const black = 0x000000;
+
+        // Store propeller references for animation
+        const propellers = [];
+        const tail_anim = [];
+
+        window.addEventListener('resize', fit);
+        let propellerGeometry = null;
+        const loader = new OBJLoader();
 
         function MeshFresnelMaterial(fresnelColor, baseColor, opts = {}) {
             const {
@@ -143,7 +132,6 @@
             });
         }
 
-
         // Opaque rim highlight (black base)
         function FresnelRimMaterial(color, {bias=0.4, scale=1.0, power=0.2, width=0.8, curve=1.5, intensity=3.0} = {}) {
         return new THREE.ShaderMaterial({
@@ -196,19 +184,6 @@
             polygonOffsetUnits: 1,
         });
         }
-
-        
-        // Store propeller references for animation
-        const propellers = [];
-        const tail_anim = [];
-
-        function handleResize() {
-            fit()
-        }
-
-        window.addEventListener('resize', fit);
-
-
 
         // Function to create materials for a specific color
         function createObjectMaterials(color) {
@@ -270,36 +245,43 @@
             return group;
         }
 
-        let propellerGeometry = null;
-        const loader = new OBJLoader();
+        function animate() {
+            requestAnimationFrame(animate);
 
-        function createPropellerGroup(config, scale) {
-            const propellerGroup = new THREE.Group();
-            const box = new THREE.Box3().setFromObject(propellerGroup);
-            // Create materials for this specific propeller
-            const materials = createPropellerMaterials(config.color);
-            
-            // Clone the loaded propeller geometry and create solid wireframe
-            propellerGeometry.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    const solidWireframeProp = createSolidWireframeMesh(
-                        child.geometry, 
-                        materials
-                    );
-                    propellerGroup.add(solidWireframeProp);
+            // Rotate propellers according to their direction
+            let prop_ticker = 0;
+            propellers.forEach(propGroup => {
+                const check = prop_ticker % 2 == 1;
+                const direction = check ? 1 : -1;
+                prop_ticker+=1;
+                if (prop_ticker > 3) {
+                    prop_ticker = 0;
                 }
+                propGroup.rotation.z += propellerSpeed * direction;
             });
-            
-            propellerGroup.position.set(
-                config.position.x , 
-                config.position.y, 
-                config.position.z
+
+            // Swing tail back and forth
+            if (ticker % 360 < 180) {
+                tail_anim.forEach(item => {
+                        item.rotation.x = Math.sin((ticker/180)*2*3.1415);
+                    }
+                )
+            }
+
+            camera.position.set(
+                35*Math.sin(ticker/360 - 3.5*Math.PI/4),
+                35*Math.cos(ticker/360 - 3.5*Math.PI/4),
+                25,
             );
-            
-            // Store the rotation direction with the group
-            propellerGroup.userData.clockwise = config.clockwise;
-            
-            return propellerGroup;
+            camera.lookAt(camera_target_pos);
+
+            // tail_group.rotation.z = 0;
+            // controls.update();
+            renderer.render( scene, camera);
+            ticker += 1;
+            if (ticker >= ticker_max) {
+                ticker = 0
+            }
         }
 
         loader.load(
@@ -318,9 +300,10 @@
                     top_shell_group.add(solidWireframeMesh);
                     }
                 });
+
+                
                 top_shell_group.scale.setScalar(4.5);
                 trifecta_group.add(top_shell_group);
-
                 // LOAD BOTTOM SHELL
                 loader.load(
                     `${base}/assets/trifecta/BotShell.obj`,
@@ -525,11 +508,6 @@
                 tail_group.position.set(7.25, 0.0, -0.45);
                 tail_anim.push(tail_group);
                 trifecta_group.add(tail_group);
-                
-
-
-
-
                 const box = new THREE.Box3().setFromObject(trifecta_group);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
@@ -548,61 +526,12 @@
         let ticker = 0;
         const ticker_max = 3_600;
 
-        function animate() {
-            requestAnimationFrame( animate);
-            // Rotate aircraft (if desired)
-            // scene.children.forEach(child => {
-            //     if (child instanceof THREE.Group) {
-            //         child.rotation.y += 0.005;
-            //     }
-            // });
-            
-            // // Rotate propellers
-            // Rotate propellers according to their direction
-            let prop_ticker = 0;
-            propellers.forEach(propGroup => {
-                const check = prop_ticker % 2 == 1;
-                const direction = check ? 1 : -1;
-                prop_ticker+=1;
-                if (prop_ticker > 3) {
-                    prop_ticker = 0;
-                }
-                propGroup.rotation.z += propellerSpeed * direction;
-            });
-
-            if (ticker % 360 < 180) {
-                tail_anim.forEach(item => {
-                        item.rotation.x = Math.sin((ticker/180)*2*3.1415);
-                    }
-                )
-            }
-
-            camera.position.set(
-                35*Math.sin(ticker/360 - 3.5*Math.PI/4),
-                35*Math.cos(ticker/360 - 3.5*Math.PI/4),
-                25,
-            )
-
-            // tail_anim.forEach(item => {
-            //     item.rotation.x += 0.01;
-            // });
-
-            // tail_group.rotation.z = 0;
-            controls.update();
-            renderer.render( scene, camera);
-            ticker += 1;
-            if (ticker >= ticker_max) {
-                ticker = 0
-            }
-        }
-
         animate()
 
   });
 
-  onDestroy(() => {
+    onDestroy(() => {
     // Clean up Three.js resources
-    ro?.disconnect();
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
     }
@@ -629,8 +558,6 @@
 
 <Header/>
 
-<!-- <div bind:this={container} class="scene-container"></div> -->
-
 <section>
 
     <div class="shaded-background">
@@ -644,7 +571,6 @@
             <br>
             <p>Unlike a quadcopter, it is <b>not</b> a symmetric aircraft. For the unfamiliar, the tricopter is laid out like a Y. It has two fixed motors in the front, and a third motor on a swivel in the back. The aircraft’s yaw (think spinning it like a disk) is primarily controlled by swiveling the tail motor in the back. This gives it a clear front, and it is better operating in some directions than others. A quadcopter generally has no preference. A tricopter behaves more like a fixed-wing aircraft in flight than a traditional quadcopter, and tends to have more ‘swoopy’ flight characteristics. From an academic standpoint, it’s much more non-linear than its quadcopter counterpart. That tail rotor rotates between +/- 45 degrees, which is not easily linearizable. The tail rotor has its own angular momentum, which is in a constantly changing plane, and the movement of the mass of the tail relative to the parent body is itself a non-linear angular momentum vector.</p>
             <br>
-
         </div>
 
         <div class='image-reel'>

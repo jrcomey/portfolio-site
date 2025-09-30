@@ -4,18 +4,8 @@
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
 
-    // import gear_pic from '$lib/assets/gear2.svg';
-    // import blizzard_file from '$lib/assets/blizzard.obj';
-
-
-    // let gear_pic = "/assets/gear2.svg";
-    // let gear_alt = "Gear pic";
-    // let rocket_pic = "/assets/rocket.svg";
-    // let rocket_alt = "Rocket Pic";
-
     let container;
     let scene, camera, renderer, animationFrameId;
-
     
 
     onMount(() => {
@@ -42,58 +32,58 @@
     // const loader = OBJLoader();
     // loader.load("assets/blizzard.obj");
 
-    // Opaque rim highlight (black base)
-    function FresnelRimMaterial(color, {bias=0.4, scale=1.0, power=0.2, width=0.8, curve=1.5, intensity=3.0} = {}) {
-    return new THREE.ShaderMaterial({
-        uniforms: {
-        uRim:   { value: new THREE.Color(color) },
-        uBias:  { value: bias },   // shifts start of rim
-        uScale: { value: scale },  // strength before shaping
-        uPower: { value: power },  // falloff exponent
-        uWidth: { value: width },  // smooth edge width
-        uCurve: { value: curve },  // gamma on mask
-        uInt:   { value: intensity }
-        },
-        vertexShader: /*glsl*/`
-        varying vec3 vWPos, vWNorm;
-        void main(){
-            vec4 wp = modelMatrix * vec4(position,1.0);
-            vWPos = wp.xyz;
-            vWNorm = normalize(mat3(transpose(inverse(modelMatrix))) * normal);
-            gl_Position = projectionMatrix * viewMatrix * wp;
-        }
-        `,
-        fragmentShader: /*glsl*/`
-        uniform vec3 uRim;
-        uniform float uBias, uScale, uPower, uWidth, uCurve, uInt;
-        varying vec3 vWPos, vWNorm;
-        void main(){
-            vec3  N = normalize(vWNorm);
-            vec3  V = normalize(cameraPosition - vWPos);
-            float dotNV = clamp(dot(N, V), 0.0, 1.0);
+    // // Opaque rim highlight (black base)
+    // function FresnelRimMaterial(color, {bias=0.4, scale=1.0, power=0.2, width=0.8, curve=1.5, intensity=3.0} = {}) {
+    // return new THREE.ShaderMaterial({
+    //     uniforms: {
+    //     uRim:   { value: new THREE.Color(color) },
+    //     uBias:  { value: bias },   // shifts start of rim
+    //     uScale: { value: scale },  // strength before shaping
+    //     uPower: { value: power },  // falloff exponent
+    //     uWidth: { value: width },  // smooth edge width
+    //     uCurve: { value: curve },  // gamma on mask
+    //     uInt:   { value: intensity }
+    //     },
+    //     vertexShader: /*glsl*/`
+    //     varying vec3 vWPos, vWNorm;
+    //     void main(){
+    //         vec4 wp = modelMatrix * vec4(position,1.0);
+    //         vWPos = wp.xyz;
+    //         vWNorm = normalize(mat3(transpose(inverse(modelMatrix))) * normal);
+    //         gl_Position = projectionMatrix * viewMatrix * wp;
+    //     }
+    //     `,
+    //     fragmentShader: /*glsl*/`
+    //     uniform vec3 uRim;
+    //     uniform float uBias, uScale, uPower, uWidth, uCurve, uInt;
+    //     varying vec3 vWPos, vWNorm;
+    //     void main(){
+    //         vec3  N = normalize(vWNorm);
+    //         vec3  V = normalize(cameraPosition - vWPos);
+    //         float dotNV = clamp(dot(N, V), 0.0, 1.0);
 
-            // Fresnel core
-            float fres = uBias + uScale * pow(1.0 - dotNV, uPower);
+    //         // Fresnel core
+    //         float fres = uBias + uScale * pow(1.0 - dotNV, uPower);
 
-            // Soft rim band around the edge
-            float x = 1.0 - dotNV; // 0=center, 1=edge
-            float rim = smoothstep(1.0 - uWidth, 1.0, x); // softness
-            rim = pow(rim * fres, uCurve);                // shape
+    //         // Soft rim band around the edge
+    //         float x = 1.0 - dotNV; // 0=center, 1=edge
+    //         float rim = smoothstep(1.0 - uWidth, 1.0, x); // softness
+    //         rim = pow(rim * fres, uCurve);                // shape
 
-            vec3 col = uRim * rim * uInt; // base is black
-            gl_FragColor = vec4(col, 1.0);
-        }
-        `,
-        // side: THREE.DoubleSide,
-        transparent: true,
-        depthWrite: true,
-        // blending: THREE.NoBlending,
-        // toneMapped: false
-        polygonOffset: true,
-        polygonOffsetFactor: 1,
-        polygonOffsetUnits: 1,
-    });
-    }
+    //         vec3 col = uRim * rim * uInt; // base is black
+    //         gl_FragColor = vec4(col, 1.0);
+    //     }
+    //     `,
+    //     // side: THREE.DoubleSide,
+    //     transparent: true,
+    //     depthWrite: true,
+    //     // blending: THREE.NoBlending,
+    //     // toneMapped: false
+    //     polygonOffset: true,
+    //     polygonOffsetFactor: 1,
+    //     polygonOffsetUnits: 1,
+    // });
+    // }
 
     const blue = 0x3333FF;
     const red = 0xFF3333;
@@ -112,7 +102,7 @@
             wireframe: true,
             wireframeLinewidth: 1
         }),
-        fresnel: FresnelRimMaterial(green),
+        // fresnel: FresnelRimMaterial(green),
     };
 
     // Store propeller references for animation
@@ -186,7 +176,7 @@
                 wireframe: true,
                 wireframeLinewidth: 1
             }),
-            fresnel: FresnelRimMaterial(color)
+            // fresnel: FresnelRimMaterial(color)
         };
     }
 
