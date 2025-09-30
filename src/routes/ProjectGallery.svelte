@@ -111,12 +111,12 @@
         </div> -->
 
 
-        <div class="project">
+        <!-- <div class="project">
             <a href="{base}/projects/basins"><img src="{base}/assets/basinsofattraction.png" alt="Project 4"></a>
             <a href="{base}/projects/basins"><h2>Basins of Attraction</h2></a>
             <a href="{base}/projects/basins"><h3>Iterative Convergence Study</h3></a>
             <a href="{base}/projects/basins"><p>Fractal convergence study for system using imaginary numbers</p></a>
-        </div>
+        </div> -->
 
         <!-- <div class="project">
             <a href="{base}/projects/supersonic"><img src="{base}/assets/Prob2bResults.png" alt="Project 3"></a>
