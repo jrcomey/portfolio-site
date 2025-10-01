@@ -612,22 +612,22 @@
             <h2>Linearization</h2>
             <p>A quick summation of forces and moments in the body frame demonstrates the nonlinearity of the tricopter:</p>
             <MathBlock>
-                {@html `$F_x = 0$`}
+                {@html `$$F_x = 0$$`}
             </MathBlock>
             <MathBlock>
-                {@html `$F_y = T_3\\sin{\\theta}$`}
+                {@html `$$F_y = T_3\\sin{\\theta}$$`}
             </MathBlock>
             <MathBlock>
-                {@html `$F_z = T_1 + T_2 + T_3\\cos{\\theta}$`}
+                {@html `$$F_z = T_1 + T_2 + T_3\\cos{\\theta}$$`}
             </MathBlock>
             <MathBlock>
-                {@html `$\\tau_{\\phi} = -r_1T_1 + r_2T_2 + d_3\\sin{\\theta}T_3\\cos{\\theta}$`}
+                {@html `$$\\tau_{\\phi} = -r_1T_1 + r_2T_2 + d_3\\sin{\\theta}T_3\\cos{\\theta}$$`}
             </MathBlock>
             <MathBlock>
-                {@html `$\\tau_{\\theta} = r_1T_1 + r_2T_2 - T_3\\cos{\\theta} + a_3T_3\\sin{\\theta}$`}
+                {@html `$$\\tau_{\\theta} = r_1T_1 + r_2T_2 - T_3\\cos{\\theta} + a_3T_3\\sin{\\theta}$$`}
             </MathBlock>
             <MathBlock>
-                {@html `$\\tau_{\\psi} = a_1T_1 + a_2T_2 + a_3T_3\\cos{\\theta}+ r_3T_3sin{\\theta}$`}
+                {@html `$$\\tau_{\\psi} = a_1T_1 + a_2T_2 + a_3T_3\\cos{\\theta}+ r_3T_3sin{\\theta}$$`}
             </MathBlock>
 
             <p>Where those <i>a</i> coefficients are an approximation of motor torque to propeller thrust. We'll get into that later. Be assured that motor torque, motor electrical dynamics, and motor/propeller angular momentum are all modeled in MultiVAC.</p>
