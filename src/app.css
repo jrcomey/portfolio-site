@@ -80,6 +80,10 @@ h1 {
   line-height: 1.1;
 }
 
+h3 {
+  font-style: italic;
+}
+
 nav ul li {
   display: inline;
   margin-right: 10px;
@@ -171,6 +175,44 @@ p {
 
 .boxtext {
   text-decoration: underline overline;
+}
+
+.shaded-background {
+    background-color: #0f1112CC;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 4fr 3fr;
+    margin: 5% 0%;
+    align-content: left;
+}
+
+.shaded-background-no-pic {
+    background-color: #0f1112CC;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    margin: 5% 0%;
+    align-content: left;
+}
+
+b {
+    color: #00FFFF;
+}
+.shaded-background-alt {
+    background-color: #0f1112CC;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 3fr 4fr;
+    margin: 5% 0%;
+    align-content: left;
+}
+
+.shaded-background h1 {
+    line-height: 0.0;
+}
+
+.shaded-background-alt h1 {
+    line-height: 0.0;
 }
 
 /* .shaded-background {

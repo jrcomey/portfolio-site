@@ -36,12 +36,12 @@
             <a href="{base}/projects/DATACOM"><p>A collaboration with Charles Comey to develop a general purpose 3D visualization terminal for robotics command and control. Also intended as a user interface for MultiVAC.</p></a>
         </div>
 
-        <!-- <div class="project">
-            <a href="{base}/projects/bldc"><img src="{base}/assets/masada_test.png" alt="Brushless Motor Model"></a>
+        <div class="project">
+            <a href="{base}/projects/bldc"><img src="{base}/assets/bldc/motor_pic.png" alt="Brushless Motor Model"></a>
             <a href="{base}/projects/bldc"><h2>Brushless DC Motor Model</h2></a>
             <a href="{base}/projects/bldc"><h3>Component Creation for MultiVAC</h3></a>
             <a href="{base}/projects/bldc"><p>A linear state-space model of a brushless DC motor</p></a>
-        </div> -->
+        </div>
 
         <div class="project">
             <a href="{base}/projects/UAVSim"><img src="{base}/assets/newplot.png" alt="UAVSim Plot"></a>
@@ -65,12 +65,12 @@
         </div>
 
 
-        <div class="project">
+        <!-- <div class="project">
             <a href="{base}/projects/aerobrick"><img src="{base}/assets/mozziepic.png" alt="Aerobrick"></a>
             <a href="{base}/projects/aerobrick"><h2>Aerobrick</h2></a>
             <a href="{base}/projects/aerobrick"><h3>Fixed-wing Aircraft Design</h3></a>
             <a href="{base}/projects/aerobrick"><p>I was Team Captain of a heavy-lift aircraft design team that competed in SAE Aero Design West's Regular division. </p></a>
-        </div>
+        </div> -->
 
 
         <!-- <div class="project">
@@ -80,12 +80,12 @@
             <a href="{base}/projects/launchsim"><p>Analysis of satellite superstructure experiencing inertial loading during launch, and thermal loading during operation</p></a>
         </div> -->
 
-        <div class="project">
+        <!-- <div class="project">
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><img src="{base}/assets/Undeformed.png" alt="Deformed Satellite"></a>
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h2>Launch Simulation</h2></a>
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h3>Satellite Inertial Loading and Thermal Analysis</h3></a>
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><p>Analysis of satellite superstructure experiencing inertial loading during launch, and thermal loading during operation</p></a>
-        </div>
+        </div> -->
 
 
         <div class="project">
@@ -96,12 +96,12 @@
         </div>
 
 
-        <div class="project">
+        <!-- <div class="project">
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><img src="{base}/assets/Prob1b.png" alt=""></a>
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h2>Wave Propagation Analysis</h2></a>
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><h3>2D Discrete Differential Equation Solutions</h3></a>
             <a href="https://sites.google.com/view/jackcomey/home/project-gallery/satellte-inertial-loading-and-thermal-analysis?authuser=0"><p>A three-dimensional study of wave propagation and subsonic/supersonic airflow</p></a>
-        </div>
+        </div> -->
 
         <!-- <div class="project">
             <a href="{base}/projects/waveprop"><img src="{base}/assets/Prob1b.png" alt=""></a>

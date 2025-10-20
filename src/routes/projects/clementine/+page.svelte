@@ -21,11 +21,11 @@
 
 
 <section class="high-level-description centered">
-<div class="shaded-background">
+<div class="shaded-background-vertical">
     <div class="image-reel">
         <a href="{base}/assets/poster_req_review.png"><img src={poster_path} href="{base}/assets/poster_req_review.png" alt="Clementine Poster" /></a>
-        <a href="{base}/assets/poster_req_review.png"><h3><i>Clementine Model</i></h3></a>
-        <p><i>Image Credit: Air and Space Museum</i></p>
+        <!-- <a href="{base}/assets/poster_req_review.png"><h3><i>Clementine Model</i></h3></a> -->
+        <!-- <p><i>Image Credit: Air and Space Museum</i></p> -->
     </div>
 
     <div class="description">
@@ -46,10 +46,11 @@
 
 </div>
 
+<br>
 
 <div class="shaded-background">
     <div class="description">
-        <h1>Report Available</h1>
+        <div><h1>Report Available</h1></div>
 
         <p>The full CDR report is available on the right of the page, should you be interested.</p>
 
@@ -112,14 +113,28 @@
     }
 
 
+    .shaded-background-vertical {
+        background-color: #0f1112CC;
+        /* display: flex; */
+        /* flex-direction: row; */
+        padding: 5%;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        /* grid-row: 1; */
+        /* grid-template-columns: 4fr 3fr; */
+        /* padding: 5%; */
+        align-content: left;
+    }
+
     .shaded-background {
         background-color: #0f1112CC;
         /* display: flex; */
         /* flex-direction: row; */
         padding: 5%;
-        border-radius: 2%;
+        border-radius: 20px;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         /* grid-row: 1; */
         /* grid-template-columns: 4fr 3fr; */
         /* padding: 5%; */

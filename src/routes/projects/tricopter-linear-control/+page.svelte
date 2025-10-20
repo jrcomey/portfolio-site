@@ -24,7 +24,7 @@
         let w = container.clientWidth;
         let h = container.clientHeight;
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(20, w/h, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(30, w/h, 0.1, 1000);
         renderer = new THREE.WebGLRenderer({ antialias: true});
 
         function fit() {
@@ -58,7 +58,7 @@
 
         // Store propeller references for animation
         const propellers = [];
-        // const tail_anim = [];
+        const tail_anim = [];
 
         window.addEventListener('resize', fit);
         let propellerGeometry = null;
@@ -260,19 +260,21 @@
                 if (prop_ticker > 3) {
                     prop_ticker = 0;
                 }
-                propGroup.rotation.z += propellerSpeed * Math.sin(ticker / 72) * direction;
+                propGroup.rotation.z += propellerSpeed * direction;
             });
 
-            // // Swing tail back and forth
-            // if (ticker % 360 < 180) {
-            //     tail_anim.forEach(item => {
-            //             item.rotation.x = Math.sin((ticker/180)*2*3.1415);
-            //         }
-            //     )
-            // }
+            // Swing tail back and forth
+            if (ticker % 360 < 180) {
+                tail_anim.forEach(item => {
+                        item.rotation.x = Math.sin((ticker/180)*2*3.1415);
+                    }
+                )
+            }
 
             camera.position.set(
-                35, 0, 25
+                35*Math.sin(ticker/360 - 3.5*Math.PI/4),
+                35*Math.cos(ticker/360 - 3.5*Math.PI/4),
+                25,
             );
             camera.lookAt(camera_target_pos);
 
@@ -325,6 +327,27 @@
                         rotor_group.scale.setScalar(1.0);
                         rotor_group.position.set(0, 0, 1.0);
 
+                        // Load prop object
+                        // Front L Prop
+                        loader.load(
+                            `${base}/assets/prop.obj`,
+                            function(prop_geom) {
+                                const prop_group = new THREE.Group();
+                                prop_geom.traverse((child) => {
+                                    if (child instanceof THREE.Mesh) {
+                                        // normaliseGeometry(child.geometry);
+                                        const solidWireframeMesh = createSolidWireframeMesh(
+                                                    child.geometry, 
+                                                    createObjectMaterials(green)
+                                                );
+                                    prop_group.add(solidWireframeMesh);
+                                    prop_group.scale.setScalar(3.0);
+                                    rotor_group.add(prop_group);
+                                    }
+                                });
+                            }
+                        );
+
                         propellers.push(rotor_group);
                         motor_group.add(rotor_group);
                         }
@@ -334,207 +357,200 @@
             return motor_group;
         }
 
-        const motor = load_motor_and_prop();
-        motor.rotateY(0.5*3.14159);
-        motor.rotateX(0.25*3.14159)
-        motor.scale.setScalar(5.0);
-        motor.position.set(-1.0, 2, 0.0)
-        scene.add(motor);
+        loader.load(
+            `${base}/assets/trifecta/TopShell.obj`,
+            function(top_shell_geom) {
+                // propellerGeometry = tail_geom;
+                const trifecta_group = new THREE.Group();
+                const top_shell_group = new THREE.Group();
 
-        // loader.load(
-        //     `${base}/assets/trifecta/TopShell.obj`,
-        //     function(top_shell_geom) {
-        //         // propellerGeometry = tail_geom;
-        //         const trifecta_group = new THREE.Group();
-        //         const top_shell_group = new THREE.Group();
-
-        //         // Top Shell
-        //         top_shell_geom.traverse((child) => {
-        //             if (child instanceof THREE.Mesh) {
-        //                 normaliseGeometry(child.geometry);
-        //                 const solidWireframeMesh = createSolidWireframeMesh(
-        //                             child.geometry, 
-        //                             createObjectMaterials(green)
-        //                         );
-        //             top_shell_group.add(solidWireframeMesh);
-        //             }
-        //         });
+                // Top Shell
+                top_shell_geom.traverse((child) => {
+                    if (child instanceof THREE.Mesh) {
+                        normaliseGeometry(child.geometry);
+                        const solidWireframeMesh = createSolidWireframeMesh(
+                                    child.geometry, 
+                                    createObjectMaterials(green)
+                                );
+                    top_shell_group.add(solidWireframeMesh);
+                    }
+                });
                 
-        //         top_shell_group.scale.setScalar(4.5);
-        //         trifecta_group.add(top_shell_group);
-        //         // Bottom Shell
-        //         loader.load(
-        //             `${base}/assets/trifecta/BotShell.obj`,
-        //             function(bot_shell_geom) {
-        //                 const bot_shell_group = new THREE.Group
-        //                 bot_shell_geom.traverse((child) => {
-        //                     if (child instanceof THREE.Mesh) {
-        //                         normaliseGeometry(child.geometry);
-        //                         const solidWireframeMesh = createSolidWireframeMesh(
-        //                                     child.geometry, 
-        //                                     createObjectMaterials(green)
-        //                                 );
-        //                     bot_shell_group.add(solidWireframeMesh);
-        //                     bot_shell_group.scale.setScalar(4.18);
+                top_shell_group.scale.setScalar(4.5);
+                trifecta_group.add(top_shell_group);
+                // Bottom Shell
+                loader.load(
+                    `${base}/assets/trifecta/BotShell.obj`,
+                    function(bot_shell_geom) {
+                        const bot_shell_group = new THREE.Group
+                        bot_shell_geom.traverse((child) => {
+                            if (child instanceof THREE.Mesh) {
+                                normaliseGeometry(child.geometry);
+                                const solidWireframeMesh = createSolidWireframeMesh(
+                                            child.geometry, 
+                                            createObjectMaterials(green)
+                                        );
+                            bot_shell_group.add(solidWireframeMesh);
+                            bot_shell_group.scale.setScalar(4.18);
 
-        //                     bot_shell_group.position.set(-0.3, 0.0, -0.25-0.375);
-
-
-        //                     trifecta_group.add(bot_shell_group);
-        //                     }
-        //                 });
-        //             }
-        //         );
-
-        //         // Front L Arm
-        //         loader.load(
-        //             `${base}/assets/trifecta/FrontArmL.obj`,
-        //             function(front_arm_l_geom) {
-        //                 const front_arm_l_group = new THREE.Group();
-        //                 front_arm_l_geom.traverse((child) => {
-        //                     if (child instanceof THREE.Mesh) {
-        //                         normaliseGeometry(child.geometry);
-        //                         const solidWireframeMesh = createSolidWireframeMesh(
-        //                                     child.geometry, 
-        //                                     createObjectMaterials(green)
-        //                                 );
-        //                     front_arm_l_group.add(solidWireframeMesh);
-        //                     front_arm_l_group.scale.setScalar(3.8);
-        //                     front_arm_l_group.position.set(-3.96, -5.47, -0.05);
-
-        //                     trifecta_group.add(front_arm_l_group);
-        //                     }
-        //                 });
-        //             }
-        //         );
-
-        //         // Front R Arm
-        //         loader.load(
-        //             `${base}/assets/trifecta/FrontArmR.obj`,
-        //             function(front_arm_l_geom) {
-        //                 const front_arm_l_group = new THREE.Group();
-        //                 front_arm_l_geom.traverse((child) => {
-        //                     if (child instanceof THREE.Mesh) {
-        //                         normaliseGeometry(child.geometry);
-        //                         const solidWireframeMesh = createSolidWireframeMesh(
-        //                                     child.geometry, 
-        //                                     createObjectMaterials(green)
-        //                                 );
-        //                     front_arm_l_group.add(solidWireframeMesh);
-        //                     front_arm_l_group.scale.setScalar(3.8);
-        //                     front_arm_l_group.position.set(-3.96, 5.47, -0.05);
-
-        //                     trifecta_group.add(front_arm_l_group);
-        //                     }
-        //                 });
-        //             }
-        //         );
-
-        //         // Back Slide Arm
-        //         loader.load(
-        //             `${base}/assets/trifecta/BackSlide.obj`,
-        //             function(back_slide_geom) {
-        //                 const back_slide_group = new THREE.Group();
-        //                 back_slide_geom.traverse((child) => {
-        //                     if (child instanceof THREE.Mesh) {
-        //                         normaliseGeometry(child.geometry);
-        //                         const solidWireframeMesh = createSolidWireframeMesh(
-        //                                     child.geometry, 
-        //                                     createObjectMaterials(green)
-        //                                 );
-        //                     back_slide_group.add(solidWireframeMesh);
-        //                     back_slide_group.scale.setScalar(3.0);
-        //                     back_slide_group.position.set(4, -0.35, -0.5);
-
-        //                     trifecta_group.add(back_slide_group);
-        //                     }
-        //                 });
-        //             }
-        //         );
+                            bot_shell_group.position.set(-0.3, 0.0, -0.25-0.375);
 
 
+                            trifecta_group.add(bot_shell_group);
+                            }
+                        });
+                    }
+                );
 
-        //         const tail_group = new THREE.Group();
-        //         // Tail Gear
-        //         loader.load(
-        //             `${base}/assets/trifecta/TailGear.obj`,
-        //             function(tail_gear_geom) {
-        //                 const tail_gear_group = new THREE.Group();
-        //                 tail_gear_geom.traverse((child) => {
-        //                     if (child instanceof THREE.Mesh) {
-        //                         normaliseGeometry(child.geometry);
-        //                         const solidWireframeMesh = createSolidWireframeMesh(
-        //                                     child.geometry, 
-        //                                     createObjectMaterials(green)
-        //                                 );
-        //                     tail_gear_group.add(solidWireframeMesh);
-        //                     tail_gear_group.scale.setScalar(0.54);
-        //                     // tail_gear_group.position.set(7.25, -0.0, -0.45);
+                // Front L Arm
+                loader.load(
+                    `${base}/assets/trifecta/FrontArmL.obj`,
+                    function(front_arm_l_geom) {
+                        const front_arm_l_group = new THREE.Group();
+                        front_arm_l_geom.traverse((child) => {
+                            if (child instanceof THREE.Mesh) {
+                                normaliseGeometry(child.geometry);
+                                const solidWireframeMesh = createSolidWireframeMesh(
+                                            child.geometry, 
+                                            createObjectMaterials(green)
+                                        );
+                            front_arm_l_group.add(solidWireframeMesh);
+                            front_arm_l_group.scale.setScalar(3.8);
+                            front_arm_l_group.position.set(-3.96, -5.47, -0.05);
 
-        //                     tail_group.add(tail_gear_group);
-        //                     // tail_anim.push(tail_gear_group);
-        //                     }
-        //                 });
-        //             }
-        //         );
+                            trifecta_group.add(front_arm_l_group);
+                            }
+                        });
+                    }
+                );
 
-        //         // Tail Rotor Mount
-        //         loader.load(
-        //             `${base}/assets/trifecta/Tail.obj`,
-        //             function(tail_geom) {
-        //                 const tail_piece_geom = new THREE.Group();
-        //                 tail_geom.traverse((child) => {
-        //                     if (child instanceof THREE.Mesh) {
-        //                         normaliseGeometry(child.geometry);
-        //                         const solidWireframeMesh = createSolidWireframeMesh(
-        //                                     child.geometry, 
-        //                                     createObjectMaterials(green)
-        //                                 );
-        //                     tail_piece_geom.add(solidWireframeMesh);
-        //                     tail_piece_geom.scale.setScalar(1.25);
-        //                     tail_piece_geom.position.set(1.76, 0, 0)
-        //                     // tail_piece_geom.position.set(7.25, -0.0, -0.45);
+                // Front R Arm
+                loader.load(
+                    `${base}/assets/trifecta/FrontArmR.obj`,
+                    function(front_arm_l_geom) {
+                        const front_arm_l_group = new THREE.Group();
+                        front_arm_l_geom.traverse((child) => {
+                            if (child instanceof THREE.Mesh) {
+                                normaliseGeometry(child.geometry);
+                                const solidWireframeMesh = createSolidWireframeMesh(
+                                            child.geometry, 
+                                            createObjectMaterials(green)
+                                        );
+                            front_arm_l_group.add(solidWireframeMesh);
+                            front_arm_l_group.scale.setScalar(3.8);
+                            front_arm_l_group.position.set(-3.96, 5.47, -0.05);
 
-        //                     tail_group.add(tail_piece_geom);
-        //                     }
-        //                 });
-        //             }
-        //         );
+                            trifecta_group.add(front_arm_l_group);
+                            }
+                        });
+                    }
+                );
 
-        //         // Front L Motor
-        //         const front_l_group = load_motor_and_prop();
-        //         front_l_group.position.set(-5.65, -8.45, 0.5)
-        //         trifecta_group.add(front_l_group);
+                // Back Slide Arm
+                loader.load(
+                    `${base}/assets/trifecta/BackSlide.obj`,
+                    function(back_slide_geom) {
+                        const back_slide_group = new THREE.Group();
+                        back_slide_geom.traverse((child) => {
+                            if (child instanceof THREE.Mesh) {
+                                normaliseGeometry(child.geometry);
+                                const solidWireframeMesh = createSolidWireframeMesh(
+                                            child.geometry, 
+                                            createObjectMaterials(green)
+                                        );
+                            back_slide_group.add(solidWireframeMesh);
+                            back_slide_group.scale.setScalar(3.0);
+                            back_slide_group.position.set(4, -0.35, -0.5);
 
-        //         // Front R Motor
-        //         const front_r_group = load_motor_and_prop();
-        //         front_r_group.position.set(-5.65, 8.45, 0.5);
-        //         trifecta_group.add(front_r_group);
+                            trifecta_group.add(back_slide_group);
+                            }
+                        });
+                    }
+                );
 
-        //         // Tail Motor
-        //         const tail_motor = load_motor_and_prop();
-        //         tail_motor.position.set(2.1, 0.0, 0.8);
-        //         // tail_anim.push(tail_motor);
-        //         tail_group.add(tail_motor);
-        //         tail_group.position.set(7.25, 0.0, -0.45);
-        //         tail_anim.push(tail_group);
-        //         trifecta_group.add(tail_group);
+
+
+                const tail_group = new THREE.Group();
+                // Tail Gear
+                loader.load(
+                    `${base}/assets/trifecta/TailGear.obj`,
+                    function(tail_gear_geom) {
+                        const tail_gear_group = new THREE.Group();
+                        tail_gear_geom.traverse((child) => {
+                            if (child instanceof THREE.Mesh) {
+                                normaliseGeometry(child.geometry);
+                                const solidWireframeMesh = createSolidWireframeMesh(
+                                            child.geometry, 
+                                            createObjectMaterials(green)
+                                        );
+                            tail_gear_group.add(solidWireframeMesh);
+                            tail_gear_group.scale.setScalar(0.54);
+                            // tail_gear_group.position.set(7.25, -0.0, -0.45);
+
+                            tail_group.add(tail_gear_group);
+                            // tail_anim.push(tail_gear_group);
+                            }
+                        });
+                    }
+                );
+
+                // Tail Rotor Mount
+                loader.load(
+                    `${base}/assets/trifecta/Tail.obj`,
+                    function(tail_geom) {
+                        const tail_piece_geom = new THREE.Group();
+                        tail_geom.traverse((child) => {
+                            if (child instanceof THREE.Mesh) {
+                                normaliseGeometry(child.geometry);
+                                const solidWireframeMesh = createSolidWireframeMesh(
+                                            child.geometry, 
+                                            createObjectMaterials(green)
+                                        );
+                            tail_piece_geom.add(solidWireframeMesh);
+                            tail_piece_geom.scale.setScalar(1.25);
+                            tail_piece_geom.position.set(1.76, 0, 0)
+                            // tail_piece_geom.position.set(7.25, -0.0, -0.45);
+
+                            tail_group.add(tail_piece_geom);
+                            }
+                        });
+                    }
+                );
+
+                // Front L Motor
+                const front_l_group = load_motor_and_prop();
+                front_l_group.position.set(-5.65, -8.45, 0.5)
+                trifecta_group.add(front_l_group);
+
+                // Front R Motor
+                const front_r_group = load_motor_and_prop();
+                front_r_group.position.set(-5.65, 8.45, 0.5);
+                trifecta_group.add(front_r_group);
+
+                // Tail Motor
+                const tail_motor = load_motor_and_prop();
+                tail_motor.position.set(2.1, 0.0, 0.8);
+                // tail_anim.push(tail_motor);
+                tail_group.add(tail_motor);
+                tail_group.position.set(7.25, 0.0, -0.45);
+                tail_anim.push(tail_group);
+                trifecta_group.add(tail_group);
 
 
                 
-        //         const box = new THREE.Box3().setFromObject(trifecta_group);
-        //         const center = box.getCenter(new THREE.Vector3());
-        //         const size = box.getSize(new THREE.Vector3());
-        //         const maxDim = Math.max(size.x, size.y, size.z);
-        //         // const scale = 11.67/maxDim;
-        //         // aircraftGroup.scale.setScalar(scale);
+                const box = new THREE.Box3().setFromObject(trifecta_group);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                // const scale = 11.67/maxDim;
+                // aircraftGroup.scale.setScalar(scale);
 
-        //         trifecta_group.position.set(0.0, 0.0, 0.0)
-        //         scene.add(trifecta_group)
+                trifecta_group.position.set(0.0, 0.0, 0.0)
+                scene.add(trifecta_group)
 
-        //         // scene.add(trifecta_group)
-        //     },
-        // );        
+                // scene.add(trifecta_group)
+            },
+        );        
 
         let propellerSpeed = 0.08;  // Adjust for faster/slower rotation
         let ticker = 0;
@@ -577,37 +593,23 @@
     <div class="shaded-background">
 
         <div class="description">
-            <h1>Motoring Along</h1>
+            <h1>What's in a drone?</h1>
             <!-- <h3><i>NOTE: THIS PAGE IS UNDER CONSTRUCTION</i></h3> -->
-            <p>There are perhaps as many different kinds of electric motor as there are uses for them. A few basic principles remain constant though: each motor uses a difference in two magnetic fields (at least one of which is supplied by an electric current) to create a torque on the rotor. A brushed DC motor, for example, takes an input DC current, applies the voltage through physical 'brushes' (typically graphite or similar) to create an oscillating electric current that rotates a set of permanent magnets. There are AC motors, which use an alternating current input rather than DC, which doesn't require brushes. Speakers are technically motors too, except instead of rotating, they move linearly.</p>
+            <p>At the time of writing, I have been developing MultiVAC for about a year and a half now, and 6DOFs more generally for much longer than that. Up until now, I have been using my undergraduate capstone project - the ATP XW Blizzard - to demonstrate the accuracy of the simulation. It’s a good model - its dynamics model is relatively mature for the state, with a significant body of analysis backing that up. It is, however, only a <b><i>paper aircraft</i></b>. No prototype has been made and there will never be one. Perhaps I’ll make a smaller scale prototype one day, but I’m starting to find the static multicopter family to be a little dry from a dynamics standpoint. Too often will I read a paper on quadcopter dynamics only to find the dreaded `sin(θ) = θ` approximation that simplifies the problem beyond any practical interest.</p>
             <br>
-            <p>In my opinion, the most useful of these are the brushless DC motor, or BLDC. Deceptively named, the brushless DC motor <i>actually</i> uses AC current. It typically uses a DC power supply (e.g. a battery) and generates the current waveform needed through a seperate circuit (either an ESC or a servo controller). Brushless DC motors are mechanically simple, robust, and used for everything from drone propulsion to servo controls.</p>
+            <p>I will be using a small tricopter for the next few rounds of demonstrations. I built one when I was 16, and was as fascinated with it then as I am now. The frame in question is the Quanum <i>Trifecta</i>, a collapsable design that folds up into something pocket sized, but with enough power available to outspeed most other aircraft its size. </p>
+            <br>
+            <p>Unlike a quadcopter, it is <b>not</b> a symmetric aircraft. For the unfamiliar, the tricopter is laid out like a Y. It has two fixed motors in the front, and a third motor on a swivel in the back. The aircraft’s yaw (think spinning it like a disk) is primarily controlled by swiveling the tail motor in the back. This gives it a clear front, and it is better operating in some directions than others. A quadcopter generally has no preference. A tricopter behaves more like a fixed-wing aircraft in flight than a traditional quadcopter, and tends to have more ‘swoopy’ flight characteristics. From an academic standpoint, it’s much more non-linear than its quadcopter counterpart. That tail rotor rotates between +/- 45 degrees, which is not easily linearizable. The tail rotor has its own angular momentum, which is in a constantly changing plane, and the movement of the mass of the tail relative to the parent body is itself a non-linear angular momentum vector.</p>
+            <br>
         </div>
 
         <div class='image-reel'>
             <div bind:this={container} class="scene-container"></div>
         </div>
+        
     </div>
 
     <div class="shaded-background-alt">
-        <div class="image-reel">
-
-        </div>
-
-        <div class="description">
-            <h1>Model Derivation</h1>
-            <p>Mathworks has a neat little derivation of a three-phase model <a href="https://www.mathworks.com/help/sps/ref/bldc.html">here</a>, but in this article we'll be modeling a single-phase motor. Most BLDC motors are three-phase, but for the sake of computational simplicity, we'll use one.</p>
-            <br>
-            <p>A BLDC motor takes in terminal voltages and outputs a torque. The terminal voltage induces a current, and the torque causes an acceleration on the motor, changing its position. The motor will also have some kind of load torque from whatever it is driving. The states and inputs of the motor are therefore given as:</p>
-            <MathBlock>{@html `$$ \\vec{x} = \\begin{bmatrix} i \\\\ \\theta \\\\ \\dot{\\theta} \\end{bmatrix} = \\begin{bmatrix} i \\\\ \\theta \\\\ \\omega \\end{bmatrix}, \\qquad \\vec{u} = \\begin{bmatrix} V_{in} \\\\ \\tau_{load} \\end{bmatrix} $$`}</MathBlock>
-            <p>The diagram on the left (or above, on mobile) is a block diagram of a single phase motor. The input voltage is applied to the windings, which has a resistance and an inductance. This produces a current, <i>i</i>, which can be converted to a torque value using the motor torque constant K_t. The load torque is subtracted from the motor torque, as well as viscous friction, and the remaining torque is applied to the motor rotational inertia, yielding the motor rate. When a motor spins at a given speed, the rotation of the permanent magnets around the windings produces an opposing voltage, called back electromotive force (BEMF), which is subtracted from the initial input voltage. In state space form, this is fairly simple:</p>
-            <MathBlock>
-                {@html `$$ \\dot{\\vec{x}} = \\begin{bmatrix} \\frac{di}{dt} \\\\ \\omega \\\\ \\alpha \\end{bmatrix} =  \\begin{bmatrix} -\\frac{R}{L} & 0 & -\\frac{K_v}{L} \\\\ 0 & 0 & 1 \\\\ \\frac{K_t}{J} & 0 & -\\frac{B}{J} \\end{bmatrix} \\begin{bmatrix} i \\\\ \\theta \\\\ \\omega \\end{bmatrix} + \\begin{bmatrix} \\frac{1}{L} & 0 & 0 \\\\ 0 & 0 & \\frac{1}{J} \\end{bmatrix} \\begin{bmatrix} V_{in} \\\\ \\tau_{load} \\end{bmatrix}   $$`}
-            </MathBlock>
-        </div>
-    </div>
-
-    <!-- <div class="shaded-background-alt">
 
         <div class='image-reel'>
             <img src={cadplot} alt="ATP-XW Blizzard Render" />
@@ -743,8 +745,38 @@
             </MathBlock>
 
             <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. I used Bryson's rule and a brief tuning session to achieve a full-state LQR controller, the results of which are presented down below.</p>
+            <!-- <p><i>IF YOU'RE READING THIS, THIS PROJECT IS STILL BEING WORKED ON. PLEASE CHECK BACK LATER OR CONTACT <a href="mailto:jack.rhys.comey@gmail.com">JACK.RHYS.COMEY@GMAIL.COM</a>, OR <a href="mailto:jrcomey@ucla.edu">JRCOMEY@UCLA.EDU</a>. THANK YOU!</i></p> -->
         </div>
-    </div> -->
+    </div>
+
+    <div class=shaded-background-alt>
+
+        <div class='image-reel'>
+            <img src={pos_plot} alt="ATP-XW Blizzard Render" />
+        </div>
+
+        <div class="description">
+            <h1>Linear Controller Results</h1>
+            <p>This should be pretty straightforward, with a couple of explanations presented alongside each result. </p>
+            <p><b>A brief note on the dynamics model:</b> The dynamics model used to design the controller is a simplified non-linear model. It includes the following:</p>
+            <ol>
+                <li>Forces and moments calculated on the vehcile in the <b>body</b> frame of reference, and moved in the <b>translational</b> frame of reference (i.e. a tricopter at 90 degrees of pitch and full throttle will move in the +x inertial direction, not the +z direction)</li>
+                <li>Tricopter motors have been modeled as a first order system (i.e. there is a delay from controller input command to the motor to the motor outputting that force).
+                </li>
+            </ol>
+            <p>As you'd expect, tuning is primarily a trade-off between minimization of attitude error and position error. This controller is linearized around a level flight hover, and does not hold for larger disturbances (e.g. a translational error of 10m would induce a greater tilt to the aircraft than it can sustain altitude with). </p>
+            <p>This is, however, easily rectified with some nonlinear limiters. Simply restrict the maximum error bounds, which are locked to the rotating body frame, and the issue is resolved.</p>
+        </div>
+
+        <div class='image-reel'>
+            <img src={att_plot} alt="ATP-XW Blizzard Render" />
+        </div>
+
+        <div class="description">
+            <p> The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
+        </div>
+
+    </div>
 
 
 </section>

@@ -61,9 +61,9 @@
                 </p>
             </div>
             
-            <!-- <p>
+            <p>
                 To read more about it, <a href="projects/DATACOM">click here</a>.
-            </p> -->
+            </p>
         </div>
         <div class="project-image-backdrop-black">
             <img src={datacom} class="big-project-image-title-page" alt="DATACOM">
@@ -84,9 +84,9 @@
                 <p>
                     As part of my undergraduate design project, I worked with my team to develop a system for the Blizzard eVTOL UAM aircraft to withstand both significant gusts and other wind fields common to the Chicago area. I developed a fully fledged Guidance, Navigation, and Control system (GNC), using multiple controllers, to operate the aircraft during flight. I developed optimal controllers using a Linear Quadratic Regulator (LQR) from a linearized model, and demonstrated the controller using my UAV simulation. I performed dozens of simulation tests to verify flight performance under windy conditions.
                 </p>
-                <!-- <p>
+                <p>
                     To read more about it, <a href="projects/grs">click here</a>.
-                </p> -->
+                </p>
             </div>
             
             

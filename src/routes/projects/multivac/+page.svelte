@@ -309,7 +309,11 @@
 
     <div class="shaded-background">
         <div class="description">
-            <h1>Tired of Simulink?</h1>
+            <div>
+                <h1>Tired of Simulink?</h1>
+            </div>
+            <hr width="100%">
+            
              <p>
                 Named after Isaac Asimov's recurring supercomputer, MultiVAC is a <b>general purpose 6DOF simulation</b> that I wrote to serve as a proving ground for new GNC methods.
                 MultiVAC is intended as a development tool to aid in any real world applications - from industrial robotics to air and space GNC. 
@@ -333,7 +337,10 @@
             <!-- <p><i></i></p> -->
         </div>
         <div class="description">
-            <h1>Instant Prototypes</h1>
+            <div>
+                <h1>Instant Prototypes</h1>
+            </div>
+            <hr width="100%">
             <!-- <p>
                 MultiVAC, at its core, is a powerful physics simulation exposed through a simple scripting interface. In as little as a few dozen lines of RHAI, a user can set up accurate vehicle-level tests of an eight-rotor eVTOL aircraft in a variety of conditions. 
             </p> -->
@@ -374,7 +381,10 @@
 
     <div class="shaded-background">
         <div class="description">
-            <h1>Zero-Click Insights</h1>
+            <div>
+                <h1>Zero-Click Insights</h1>
+            </div>
+            <hr width='100%'>
             <p>
                 MuliVAC <b>automatically</b> generates a full teardown at the end of each run. Plots are generated of each vehicle's position, velocity, and rotation, along with a plot of the full scenario. A full LaTeX report is also generated for easy reading.
             </p>
@@ -480,6 +490,14 @@
         /* border: 5%; */
         margin: 5%;
         align-content: center;
+    }
+
+    .shaded-background h1 {
+        line-height: 0.0;
+    }
+
+    .shaded-background-alt h1 {
+        line-height: 0.0;
     }
 
     .description {

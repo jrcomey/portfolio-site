@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     let gear_pic = "/assets/gear2.svg";
     let gear_alt = "Gear pic";
     let rocket_pic = "/assets/rocket.svg";
@@ -44,4 +44,4 @@
   place-items: center;
 }
 
-</style>
+</style> -->

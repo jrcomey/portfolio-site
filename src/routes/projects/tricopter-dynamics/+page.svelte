@@ -5,6 +5,8 @@
     import Header from '../../Header.svelte';
     import MathBlock from '$lib/MathBlock.svelte';
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
+    const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`
+    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`
 
 
     import * as THREE from 'three';
@@ -252,7 +254,8 @@
             let prop_ticker = 0;
             propellers.forEach(propGroup => {
                 const check = prop_ticker % 2 == 1;
-                const direction = check ? 1 : -1;
+                // const direction = check ? 1 : -1;
+                const direction = 1;
                 prop_ticker+=1;
                 if (prop_ticker > 3) {
                     prop_ticker = 0;
@@ -284,12 +287,84 @@
             }
         }
 
+        function load_motor_and_prop() {
+            const motor_group = new THREE.Group();
+
+            // Stator
+            loader.load(
+                `${base}/assets/trifecta/stator.obj`,
+                function(prop_geom) {
+                    const stator_group = new THREE.Group();
+                    prop_geom.traverse((child) => {
+                        if (child instanceof THREE.Mesh) {
+                            normaliseGeometry(child.geometry);
+                            const solidWireframeMesh = createSolidWireframeMesh(
+                                        child.geometry, 
+                                        createObjectMaterials(green)
+                                    );
+                        stator_group.add(solidWireframeMesh);
+                        stator_group.scale.setScalar(0.75);
+                        // propellers.push(stator_group);
+                        motor_group.add(stator_group);
+                        }
+                    });
+                }
+            );
+
+            // Rotor + Prop
+            loader.load(
+                `${base}/assets/trifecta/rotor.obj`,
+                function(prop_geom) {
+                    const rotor_group = new THREE.Group();
+                    prop_geom.traverse((child) => {
+                        if (child instanceof THREE.Mesh) {
+                            normaliseGeometry(child.geometry);
+                            const solidWireframeMesh = createSolidWireframeMesh(
+                                        child.geometry, 
+                                        createObjectMaterials(green)
+                                    );
+                        rotor_group.add(solidWireframeMesh);
+                        rotor_group.scale.setScalar(1.0);
+                        rotor_group.position.set(0, 0, 1.0);
+
+                        // Load prop object
+                        // Front L Prop
+                        loader.load(
+                            `${base}/assets/prop.obj`,
+                            function(prop_geom) {
+                                const prop_group = new THREE.Group();
+                                prop_geom.traverse((child) => {
+                                    if (child instanceof THREE.Mesh) {
+                                        // normaliseGeometry(child.geometry);
+                                        const solidWireframeMesh = createSolidWireframeMesh(
+                                                    child.geometry, 
+                                                    createObjectMaterials(green)
+                                                );
+                                    prop_group.add(solidWireframeMesh);
+                                    prop_group.scale.setScalar(3.0);
+                                    rotor_group.add(prop_group);
+                                    }
+                                });
+                            }
+                        );
+
+                        propellers.push(rotor_group);
+                        motor_group.add(rotor_group);
+                        }
+                    });
+                }
+            );
+            return motor_group;
+        }
+
         loader.load(
             `${base}/assets/trifecta/TopShell.obj`,
             function(top_shell_geom) {
                 // propellerGeometry = tail_geom;
                 const trifecta_group = new THREE.Group();
                 const top_shell_group = new THREE.Group();
+
+                // Top Shell
                 top_shell_geom.traverse((child) => {
                     if (child instanceof THREE.Mesh) {
                         normaliseGeometry(child.geometry);
@@ -300,11 +375,10 @@
                     top_shell_group.add(solidWireframeMesh);
                     }
                 });
-
                 
                 top_shell_group.scale.setScalar(4.5);
                 trifecta_group.add(top_shell_group);
-                // LOAD BOTTOM SHELL
+                // Bottom Shell
                 loader.load(
                     `${base}/assets/trifecta/BotShell.obj`,
                     function(bot_shell_geom) {
@@ -328,6 +402,7 @@
                     }
                 );
 
+                // Front L Arm
                 loader.load(
                     `${base}/assets/trifecta/FrontArmL.obj`,
                     function(front_arm_l_geom) {
@@ -349,7 +424,7 @@
                     }
                 );
 
-
+                // Front R Arm
                 loader.load(
                     `${base}/assets/trifecta/FrontArmR.obj`,
                     function(front_arm_l_geom) {
@@ -394,7 +469,9 @@
                 );
 
 
+
                 const tail_group = new THREE.Group();
+                // Tail Gear
                 loader.load(
                     `${base}/assets/trifecta/TailGear.obj`,
                     function(tail_gear_geom) {
@@ -417,7 +494,7 @@
                     }
                 );
 
-
+                // Tail Rotor Mount
                 loader.load(
                     `${base}/assets/trifecta/Tail.obj`,
                     function(tail_geom) {
@@ -440,74 +517,27 @@
                     }
                 );
 
-                // Back Slide Arm
-                loader.load(
-                    `${base}/assets/prop.obj`,
-                    function(prop_geom) {
-                        const prop_group = new THREE.Group();
-                        prop_geom.traverse((child) => {
-                            if (child instanceof THREE.Mesh) {
-                                // normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
-                                        );
-                            prop_group.add(solidWireframeMesh);
-                            prop_group.scale.setScalar(3.0);
-                            prop_group.position.set(-6, -8.7, 0.5);
-                            propellers.push(prop_group);
-                            trifecta_group.add(prop_group);
-                            }
-                        });
-                    }
-                );
+                // Front L Motor
+                const front_l_group = load_motor_and_prop();
+                front_l_group.position.set(-5.65, -8.45, 0.5)
+                trifecta_group.add(front_l_group);
 
-                loader.load(
-                    `${base}/assets/prop.obj`,
-                    function(prop_geom) {
-                        const prop_group = new THREE.Group();
-                        prop_geom.traverse((child) => {
-                            if (child instanceof THREE.Mesh) {
-                                // normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
-                                        );
-                            prop_group.add(solidWireframeMesh);
-                            prop_group.scale.setScalar(3.0);
-                            prop_group.position.set(-6, 8.7, 0.5);
-                            propellers.push(prop_group);
-                            trifecta_group.add(prop_group);
-                            }
-                        });
-                    }
-                );
+                // Front R Motor
+                const front_r_group = load_motor_and_prop();
+                front_r_group.position.set(-5.65, 8.45, 0.5);
+                trifecta_group.add(front_r_group);
 
-                loader.load(
-                    `${base}/assets/prop.obj`,
-                    function(prop_geom) {
-                        const prop_group = new THREE.Group();
-                        prop_geom.traverse((child) => {
-                            if (child instanceof THREE.Mesh) {
-                                // normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
-                                        );
-                            prop_group.add(solidWireframeMesh);
-                            prop_group.scale.setScalar(3.0);
-                            prop_group.position.set(2.2, 0, 1);
-                            propellers.push(prop_group);
-                            tail_group.add(prop_group);
-                            }
-                        });
-                    }
-                );
-
-
+                // Tail Motor
+                const tail_motor = load_motor_and_prop();
+                tail_motor.position.set(2.1, 0.0, 0.8);
+                // tail_anim.push(tail_motor);
+                tail_group.add(tail_motor);
                 tail_group.position.set(7.25, 0.0, -0.45);
                 tail_anim.push(tail_group);
                 trifecta_group.add(tail_group);
+
+
+                
                 const box = new THREE.Box3().setFromObject(trifecta_group);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
@@ -522,7 +552,7 @@
             },
         );        
 
-        let propellerSpeed = 0.1;  // Adjust for faster/slower rotation
+        let propellerSpeed = 0.08;  // Adjust for faster/slower rotation
         let ticker = 0;
         const ticker_max = 3_600;
 
@@ -563,9 +593,13 @@
     <div class="shaded-background">
 
         <div class="description">
-            <h1>What's in a drone?</h1>
-            <h3><i>NOTE: THIS PAGE IS UNDER CONSTRUCTION</i></h3>
-            <p>At the time of writing, I have been developing MultiVAC for about a year and a half now, and 6DOFs more generally for much longer than that. Up until now, I have been using my undergraduate capstone project - the ATP XW Blizzard - to demonstrate the accuracy of the simulation. It’s a good model - its dynamics model is relatively mature for the state, with a significant body of analysis backing that up. It is, however, only a <b><i>paper aircraft</i></b>. No prototype has been made and there will never be one. Perhaps I’ll make a smaller scale prototype one day, but I’m starting to find the static multicopter family to be a little dry from a dynamics standpoint. Too often will I read a paper on quadcopter dynamics only to find the dreaded `sin(theta) = theta` approximation that simplifies the problem beyond any practical interest.</p>
+            <div>
+                <h1>What's in a drone?</h1>
+            </div>
+            <hr width=100%>
+            
+            <!-- <h3><i>NOTE: THIS PAGE IS UNDER CONSTRUCTION</i></h3> -->
+            <p>At the time of writing, I have been developing MultiVAC for about a year and a half now, and 6DOFs more generally for much longer than that. Up until now, I have been using my undergraduate capstone project - the ATP XW Blizzard - to demonstrate the accuracy of the simulation. It’s a good model - its dynamics model is relatively mature for the state, with a significant body of analysis backing that up. It is, however, only a <b><i>paper aircraft</i></b>. No prototype has been made and there will never be one. Perhaps I’ll make a smaller scale prototype one day, but I’m starting to find the static multicopter family to be a little dry from a dynamics standpoint. Too often will I read a paper on quadcopter dynamics only to find the dreaded `sin(θ) = θ` approximation that simplifies the problem beyond any practical interest.</p>
             <br>
             <p>I will be using a small tricopter for the next few rounds of demonstrations. I built one when I was 16, and was as fascinated with it then as I am now. The frame in question is the Quanum <i>Trifecta</i>, a collapsable design that folds up into something pocket sized, but with enough power available to outspeed most other aircraft its size. </p>
             <br>
@@ -586,7 +620,10 @@
         </div>
 
         <div class="description">
-            <h1>Building the model </h1>
+            <div>
+                <h1>Building the model </h1>
+            </div>
+            <hr width=100%>
             <p>Well, in order to get started, we’ll need mass and inertial properties to get started. We could weigh each component and get its position, and create a rough inertial model by finding the center of grav- </p>
             <p>Oh, or we could just CAD it. That wasn’t that hard, actually.</p>
             <p>A quick 3D print verifies the model is appropriately dimensioned compared to the real aircraft. There’s a few differences but that’ll do.</p>
@@ -598,7 +635,10 @@
     <div class="shaded-background-no-pic">
 
         <div class="description">
-            <h1>A Quick Controller</h1>
+            <div>
+                <h1>A Quick Controller</h1>
+            </div>
+            <hr width='100%'>
             <p>It’s a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise.</p>
             <p>We’ll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
             <MathBlock>
@@ -714,10 +754,41 @@
                     \\end{bmatrix}$$`}
             </MathBlock>
 
-            <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. </p>
-            <p><i>IF YOU'RE READING THIS, THIS PROJECT IS STILL BEING WORKED ON. PLEASE CHECK BACK LATER OR CONTACT <a href="mailto:jack.rhys.comey@gmail.com">JACK.RHYS.COMEY@GMAIL.COM</a>, OR <a href="mailto:jrcomey@ucla.edu">JRCOMEY@UCLA.EDU</a>. THANK YOU!</i></p>
-            
+            <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. I used Bryson's rule and a brief tuning session to achieve a full-state LQR controller, the results of which are presented down below.</p>
+            <!-- <p><i>IF YOU'RE READING THIS, THIS PROJECT IS STILL BEING WORKED ON. PLEASE CHECK BACK LATER OR CONTACT <a href="mailto:jack.rhys.comey@gmail.com">JACK.RHYS.COMEY@GMAIL.COM</a>, OR <a href="mailto:jrcomey@ucla.edu">JRCOMEY@UCLA.EDU</a>. THANK YOU!</i></p> -->
         </div>
+    </div>
+
+    <div class=shaded-background-alt>
+
+        <div class='image-reel'>
+            <img src={pos_plot} alt="ATP-XW Blizzard Render" />
+        </div>
+
+        <div class="description">
+            <div>
+                <h1>Linear Controller Results</h1>
+            </div>
+            <hr width='100%'>
+            <p>This should be pretty straightforward, with a couple of explanations presented alongside each result. </p>
+            <p><b>A brief note on the dynamics model:</b> The dynamics model used to design the controller is a simplified non-linear model. It includes the following:</p>
+            <ol>
+                <li>Forces and moments calculated on the vehcile in the <b>body</b> frame of reference, and moved in the <b>translational</b> frame of reference (i.e. a tricopter at 90 degrees of pitch and full throttle will move in the +x inertial direction, not the +z direction)</li>
+                <li>Tricopter motors have been modeled as a first order system (i.e. there is a delay from controller input command to the motor to the motor outputting that force).
+                </li>
+            </ol>
+            <p>As you'd expect, tuning is primarily a trade-off between minimization of attitude error and position error. This controller is linearized around a level flight hover, and does not hold for larger disturbances (e.g. a translational error of 10m would induce a greater tilt to the aircraft than it can sustain altitude with). </p>
+            <p>This is, however, easily rectified with some nonlinear limiters. Simply restrict the maximum error bounds, which are locked to the rotating body frame, and the issue is resolved.</p>
+        </div>
+
+        <div class='image-reel'>
+            <img src={att_plot} alt="ATP-XW Blizzard Render" />
+        </div>
+
+        <div class="description">
+            <p> The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
+        </div>
+
     </div>
 
 
@@ -816,7 +887,7 @@
     @media (max-width: 80em){
         .shaded-background {
             display: flex;
-            flex-direction: column;
+            flex-direction: column-reverse;
         }
         .shaded-background-alt{
             display: flex;

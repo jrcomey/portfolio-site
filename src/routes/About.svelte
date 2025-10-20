@@ -8,7 +8,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
 </script>
 
 <section class="about-me">
-  <div class="shaded-background">
+  <div class="shaded-background-about">
     <div class="about-grid">
       <img src={profile_pic} alt="Profile Picture">
       
@@ -43,7 +43,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
             </p> -->
 
           <p>
-              I have a deep passion for civil and commercial spaceflight, and believe it will continue to provide a common benefit for mankind. 
+              I have a deep passion for commercial spaceflight and drones, and believe both will continue to provide a common benefit for mankind. 
           </p>
             <p>
               <a href="/about">Click here for more.</a>
@@ -64,7 +64,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
   }
 
 
-  .shaded-background {
+  .shaded-background-about {
     background-color: #0f1112CC;
     /* display: flex; */
     /* flex-direction: row; */

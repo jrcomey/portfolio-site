@@ -15,19 +15,18 @@
         <div class="shaded-background-alt">
             <div class="image-reel">
                 <img src={flat_plate} alt="ATP-XW Blizzard Render" />
-                <p><i>Incompressible Fluid Flow Over a Flat Plate</i></p>
+                <!-- <p><i>Incompressible Fluid Flow Over a Flat Plate</i></p> -->
             </div>
             <div class="description">
                 <div>
                     <h1>Fluid Flow Analysis</h1>
                     <h2><i>November 2020</i></h2>
                 </div>
-                
+                <hr width="100%">
                 <p>As part of a larger report, I mapped incompressible fluid flow over a flat plate using numerical schemes for the differential transport equation.</p>
                 <p>The domain is first discretized into a larger grid, and a scheme for each node is derived by applying the numerical central difference stencil to the transport equation. Boundary conditions are applied for the incoming fluid velocity, and for the no-slip condition over the plate. Each column of nodes in the grid is solved for simultaneously using the Thomas tri-diagonal algorithm. </p>
             </div>
         </div>
-
     </section>
 
 <style>
