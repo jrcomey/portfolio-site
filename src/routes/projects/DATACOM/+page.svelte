@@ -45,15 +45,6 @@
         flex-direction: column;
     }
 
-    .scene-container {
-        /* position: relative; */
-        top: 0;
-        left: 0;
-        width: 100%;
-        aspect-ratio: 1.0;
-        z-index: -1;
-    }
-
     .image-reel {
         /* border: 5%; */
         margin: 5%;
@@ -96,14 +87,14 @@
         color: #00FFFF;
     }
 
-    .shaded-background-alt {
+    /* .shaded-background-alt {
         background-color: #0f1112CC;
         border-radius: 20px;
         display: grid;
         grid-template-columns: 3fr 4fr;
         margin: 5% 0%;
         align-content: left;
-    }
+    } */
     .image-reel {
         margin: 5%;
         align-content: center;
@@ -127,10 +118,10 @@
             display: flex;
             flex-direction: column-reverse;
         }
-        .shaded-background-alt{
+        /* .shaded-background-alt{
             display: flex;
             flex-direction: column;
-        }
+        } */
     }
 
 </style>

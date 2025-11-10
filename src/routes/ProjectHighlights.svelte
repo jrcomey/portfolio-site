@@ -128,17 +128,16 @@
         line-height: 0.0;
     }
     
-    .big-project-title-page {
+    /* .big-project-title-page {
         display: grid;
         grid-template-columns: 1fr 2fr;
-        /* background-color: #22272b; */
         background-color: #0f1112CC;
         border-radius: 25px;
         margin-top: 1%;
         margin-bottom: 1%;
         padding: 5% 5%;
         align-items: center;
-    }
+    } */
 
     .big-project-title-page-alt {
         display: grid;
@@ -167,10 +166,10 @@
     }
 
     @media (max-width: 60em){
-        .big-project-title-page {
+        /* .big-project-title-page {
             display: flex;
             flex-direction: column;
-        }
+        } */
         .big-project-title-page-alt{
             display: flex;
             flex-direction: column-reverse;

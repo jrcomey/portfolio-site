@@ -27,7 +27,7 @@ a {
 }
 
 section {
-  font-family: 'Futura', 'Helvetica', sans-serif;
+  font-family: 'Futura', 'Helvetica', sans-serif, system-ui;
 }
  
 a:hover {

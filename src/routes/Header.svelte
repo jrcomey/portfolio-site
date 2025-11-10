@@ -1,5 +1,5 @@
 <script>
-    export let title = "JRC Portfolio Website"
+    // export let title = "JRC Portfolio Website"
     import { base } from '$app/paths';
 </script>
 
@@ -52,9 +52,9 @@ header h1 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
   } */
 
-main section:first-child {
+/* main section:first-child {
     margin-top: 10%;
-}
+} */
 
 nav ul {
     z-index: 1;
@@ -72,7 +72,7 @@ nav ul li a {
     text-decoration: none;
 }
 
-.dropdown {
+/* .dropdown {
     position: relative;
     z-index: 1;
 }
@@ -105,7 +105,7 @@ nav ul li a {
 .dropdown-list:hover {
   display: block;
   
-}
+} */
 
 a:hover {
   text-decoration: underline;

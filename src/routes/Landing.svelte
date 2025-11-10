@@ -3,6 +3,8 @@
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -25,6 +27,14 @@
     camera.position.setX(-7);
     camera.position.setY(-5);
     const camera_target_pos = new THREE.Vector3(-1.5, 0.0, 0.0);
+    // const controls = new OrbitControls( camera, renderer.domElement );
+
+
+    // DEV
+    // const camera_target_pos = new THREE.Vector3(0.0, 0.0, 0.0);
+    // camera.position.set(-7*1.5, -5*1.5, 0)
+    // camera.position.set(0, 0, 50)
+
     camera.lookAt(camera_target_pos);
 
     renderer.render(scene, camera);
@@ -203,6 +213,7 @@
 
     let propellerGeometry = null;
     const loader = new OBJLoader();
+    const Gloader = new GLTFLoader();
 
     function createPropellerGroup(config, scale) {
         const propellerGroup = new THREE.Group();
@@ -232,6 +243,29 @@
         
         return propellerGroup;
     }
+
+    loader.load(
+        `${base}/assets/blizzard/Rooftop.obj`,
+        function(roof_geom) {
+            const roof_group = new THREE.Group();
+            roof_geom.traverse((child) => {
+               if (child instanceof THREE.Mesh) {
+                child.geometry.computeVertexNormals();
+                const solidWireframeMesh = createSolidWireframeMesh(
+                    child.geometry,
+                    bodyMaterials
+                );
+                roof_group.add(solidWireframeMesh);
+               } 
+            });
+            roof_group.position.set(-2.5,1.0,-2.8);
+            // roof_group.rotateX(-0.5*3.14159)
+            roof_group.rotateZ(0*3.14159)
+            scene.add(roof_group)
+        }
+    );
+    // roof_group.position.set(0.0, 0.0, -1000.0);
+    // scene.add(roof_group);
 
 
     // Modified loading sequence
@@ -291,6 +325,7 @@
     );
 
     let propellerSpeed = 0.01;  // Adjust for faster/slower rotation
+
 
     function animate() {
         requestAnimationFrame( animate);
@@ -413,14 +448,14 @@
         flex-direction: column; */
     }
 
-    .landing-background-animation {
+    /* .landing-background-animation {
         position: absolute;
         top: 0;
         left: 30%;
         width: 100%;
         height: 100%;
         z-index: -2;
-    }
+    } */
 
     hr {
         align: left;
@@ -491,15 +526,6 @@
         font-weight: bold;
         /* font-variant: small-caps; */
         color: #FFFFFF;
-    }
-
-    .landing-page h4 {
-        line-height: 100%;
-        /* font-family: 'JetBrains Mono', monospace; */
-        /* font-family: 'Helvetica', sans-serif; */
-        color: #FFFFFF;
-        /* font-weight: norm; */
-        position: relative;
     }
 
     .landing-page p {

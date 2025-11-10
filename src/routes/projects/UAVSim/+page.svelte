@@ -52,14 +52,13 @@
         flex-direction: column;
     }
 
-    .scene-container {
-        /* position: relative; */
+    /* .scene-container {
         top: 0;
         left: 0;
         width: 100%;
         aspect-ratio: 1.0;
         z-index: -1;
-    }
+    } */
 
     .image-reel {
         /* border: 5%; */

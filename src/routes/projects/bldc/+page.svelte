@@ -4,15 +4,17 @@
 
     import Header from '../../Header.svelte';
     import MathBlock from '$lib/MathBlock.svelte';
-    const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
     const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`
-    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`
+    // const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`
 
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
+
+    const diag = `${base}/assets/bldc/motordiag2.png`;
+
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -230,8 +232,8 @@
             const group = new THREE.Group();
             
             // Create the solid mesh
-            // const solidMesh = new THREE.Mesh(geometry, materials.solid);
-            // group.add(solidMesh);
+            const solidMesh = new THREE.Mesh(geometry, materials.solid);
+            group.add(solidMesh);
             
             // Create a slightly larger wireframe mesh
             const wireframeGeometry = geometry.clone();
@@ -239,10 +241,10 @@
             const wireframeMesh = new THREE.Mesh(wireframeGeometry, materials.wireframe);
             group.add(wireframeMesh);
 
-            const fresnel_geometry = geometry.clone();
-            fresnel_geometry.scale(mesh_scale, mesh_scale, mesh_scale);
-            const fresnelMesh = new THREE.Mesh(fresnel_geometry, materials.fresnel);
-            group.add(fresnelMesh);
+            // const fresnel_geometry = geometry.clone();
+            // fresnel_geometry.scale(mesh_scale, mesh_scale, mesh_scale);
+            // const fresnelMesh = new THREE.Mesh(fresnel_geometry, materials.fresnel);
+            // group.add(fresnelMesh);
             
             return group;
         }
@@ -591,7 +593,7 @@
 
     <div class="shaded-background-alt">
         <div class="image-reel">
-
+            <img src={diag} alt="MotorDiagram" />
         </div>
 
         <div class="description">
