@@ -42,6 +42,13 @@
             <a href="{base}/projects/bldc"><h3>Component Creation for MultiVAC</h3></a>
             <a href="{base}/projects/bldc"><p>A linear state-space model of a brushless DC motor</p></a>
         </div>
+<!-- 
+        <div class="project">
+            <a href="{base}/projects/tricopter-dynamics"><img src="{base}/assets/trifecta/render_screenshot.png" alt="MultiVAC Demo"></a>
+            <a href="{base}/projects/tricopter-dynamics"><h2>MultiVAC Scripting Engine</h2></a>
+            <a href="{base}/projects/tricopter-dynamics"><h3>RHAI Scripting Engine for Scenario Setup</h3></a>
+            <a href="{base}/projects/tricopter-dynamics"><p>Simple scripting language to setup simulation runs for both batch modes</p></a>
+        </div> -->
 
         <div class="project">
             <a href="{base}/projects/UAVSim"><img src="{base}/assets/newplot.png" alt="UAVSim Plot"></a>

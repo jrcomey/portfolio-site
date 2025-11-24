@@ -304,9 +304,6 @@
 </section>
 
 <section class="high-level-description centered">
-
-    <!-- <h1 class='centered'>DROP SIMULINK FOR THIS</h1> -->
-
     <div class="shaded-background">
         <div class="description">
             <div>
@@ -474,15 +471,9 @@
 
     .shaded-background-alt {
         background-color: #0f1112CC;
-        /* display: flex; */
-        /* flex-direction: row; */
-        /* padding: 5%; */
         border-radius: 2%;
         display: grid;
-        /* grid-row: 1; */
         grid-template-columns: 3fr 4fr;
-        /* padding: 5% 0%; */
-        /* border: 5% 0%; */
         margin: 5% 0%;
         align-content: left;
     }
@@ -492,13 +483,13 @@
         align-content: center;
     }
 
-    .shaded-background h1 {
+    /* .shaded-background h1 {
         line-height: 0.0;
-    }
+    } */
 
-    .shaded-background-alt h1 {
+    /* .shaded-background-alt h1 {
         line-height: 0.0;
-    }
+    } */
 
     .description {
         margin: 5%;
