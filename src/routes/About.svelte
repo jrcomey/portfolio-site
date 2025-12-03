@@ -45,9 +45,9 @@ let profile_pic = `${base}/assets/profile.JPG`;
           <p>
               I have a deep passion for commercial spaceflight and drones, and believe both will continue to provide a common benefit for mankind. 
           </p>
-            <p>
+            <!-- <p>
               <a href="/about">Click here for more.</a>
-            </p>
+            </p> -->
       </div>
     </div>
   </div>
