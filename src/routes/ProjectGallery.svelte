@@ -54,7 +54,7 @@
             <a href="{base}/projects/UAVSim"><img src="{base}/assets/newplot.png" alt="UAVSim Plot"></a>
             <a href="{base}/projects/UAVSim"><h2>UAVSim</h2></a>
             <a href="{base}/projects/UAVSim"><h3>Rotorcraft Dynamics Simulation Package</h3></a>
-            <a href="{base}/projects/UAVSim"><p>A package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
+            <a href="{base}/projects/UAVSim"><p>A Pythjon package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
         </div>
 
         <div class="project">
@@ -193,14 +193,14 @@
     justify-content: flex-start;
     flex-direction: column;
     text-align: center;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     background-color: #22272b;
-    border-radius: 1%;
+    /* border-radius: 25px; */
 }
 
 .project img {
   aspect-ratio: 1 / 1;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   width: 100%;
   opacity: 80%;
   object-fit: cover;
@@ -225,8 +225,8 @@
     font-style: italic;
 }
 
-section {
+/* section {
     background-color: #0f1112;
-}
+} */
 
 </style>

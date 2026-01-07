@@ -70,7 +70,7 @@
         </div>
     </div>
     
-    <div class="big-project-title-page-alt">
+    <!-- <div class="big-project-title-page-alt">
 
         
         <div class="big-project-description">
@@ -94,7 +94,7 @@
         <div class="project-image-backdrop-white">
             <img src={GRS2} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
         </div>
-    </div>
+    </div> -->
 
     <div class="big-project-title-page-alt">
         

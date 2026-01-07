@@ -408,7 +408,7 @@
         <!-- <hr> -->
         <h2>KEY SKILLS</h2>
         <hr>
-        <p>Rust | C | C++ | Python | MATLAB | Simulink </p>
+        <p>Rust | C/C++ | Python | MATLAB | Simulink </p>
         <p>Precision Servo Control | Discrete Controller Design | Kalman Filters</p>
         <!-- <p>Modern Controller/Navigation Design</p> -->
         <!-- <hr> -->

@@ -29,7 +29,7 @@
     </div>
 
     <div class="description">
-        <h1>Reverse Engineering Clementine</h1>
+        <h1>Reverse-Engineering Clementine</h1>
         
         <p>As part of a team of 5, I was tasked with reverse-engineering the 1993 Clementine lunar flyby probe in order to modify the spacecraft to prevent an ADCS error that caused mission failure.</p>
 
@@ -47,7 +47,7 @@
 </div>
 
 <br>
-
+<!-- 
 <div class="shaded-background">
     <div class="description">
         <div><h1>Report Available</h1></div>
@@ -58,7 +58,7 @@
     <div class="image-reel">
         <iframe title="clementine pdf" src="https://drive.google.com/file/d/1SeawRXB8xHjDCIufguNFvUpUdwF00irE/preview" width="640" height="480" allow="autoplay"></iframe>
     </div>
-</div>
+</div> -->
 
 </section>
 
@@ -72,7 +72,7 @@
         min-height: 90vh;
         /* align-content: center; */
         display: flex;
-        background-image: url("/assets/photography/cooks_bay.JPG");
+        /* background-image: url("/assets/photography/cooks_bay.JPG"); */
         flex-direction: column;
     }
 
