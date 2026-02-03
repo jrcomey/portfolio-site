@@ -54,7 +54,7 @@
             <a href="{base}/projects/UAVSim"><img loading="lazy" src="{base}/assets/newplot.png" alt="UAVSim Plot"></a>
             <a href="{base}/projects/UAVSim"><h2>UAVSim</h2></a>
             <a href="{base}/projects/UAVSim"><h3>Rotorcraft Dynamics Simulation Package</h3></a>
-            <a href="{base}/projects/UAVSim"><p>A Pythjon package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
+            <a href="{base}/projects/UAVSim"><p>A Python package intended to reduce testing costs in vehicle development, and to provide a testing environment if one is unavailable.</p></a>
         </div>
 
         <div class="project">
