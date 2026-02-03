@@ -10,7 +10,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
 <section class="about-me">
   <div class="shaded-background-about">
     <div class="about-grid">
-      <img src={profile_pic} alt="Profile Picture">
+      <img loading="lazy" src={profile_pic} alt="Profile Picture">
       
       <div class="bio">
         <div>

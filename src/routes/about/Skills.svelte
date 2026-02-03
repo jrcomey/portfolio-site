@@ -9,7 +9,7 @@
 <section>
     <div class="shaded-background">
         <div class="image-reel">
-            <img src={moon_pic} alt="Profile Picture" />
+            <img loading="lazy" src={moon_pic} alt="Profile Picture" />
             <h3><i>The Moon and Mars</i></h3> 
             <p>January 30<sup>th</sup>, 2023</p>
         </div>

@@ -23,7 +23,7 @@
 <section class="high-level-description centered">
 <div class="shaded-background-vertical">
     <div class="image-reel">
-        <a href="{base}/assets/poster_req_review.png"><img src={poster_path} href="{base}/assets/poster_req_review.png" alt="Clementine Poster" /></a>
+        <a href="{base}/assets/poster_req_review.png"><img loading="lazy" src={poster_path} href="{base}/assets/poster_req_review.png" alt="Clementine Poster" /></a>
         <!-- <a href="{base}/assets/poster_req_review.png"><h3><i>Clementine Model</i></h3></a> -->
         <!-- <p><i>Image Credit: Air and Space Museum</i></p> -->
     </div>

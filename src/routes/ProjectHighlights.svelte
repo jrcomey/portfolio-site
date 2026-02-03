@@ -37,7 +37,7 @@
             </p>
         </div>
         <div class="project-image-backdrop-black">
-            <img src={multivac} class="big-project-image-title-page" alt="MultiVac">
+            <img loading="lazy" src={multivac} class="big-project-image-title-page" alt="MultiVac">
         </div>
     </div>
 
@@ -66,7 +66,7 @@
             </p>
         </div>
         <div class="project-image-backdrop-black">
-            <img src={datacom} class="big-project-image-title-page" alt="DATACOM">
+            <img loading="lazy" src={datacom} class="big-project-image-title-page" alt="DATACOM">
         </div>
     </div>
     
@@ -92,7 +92,7 @@
             
         </div>
         <div class="project-image-backdrop-white">
-            <img src={GRS2} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
+            <img loading="lazy" src={GRS2} class="big-project-image-title-page" alt="MULTIROTOR GUST REDUCTION SYSTEM">
         </div>
     </div> -->
 
@@ -115,7 +115,7 @@
         </div>
 
         <div class="project-image-backdrop-white">
-            <img src={blizz_render_path} class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
+            <img loading="lazy" src={blizz_render_path} class="big-project-image-title-page" alt="ATP-XW BLIZZARD: WEATHER TOLERANT URBAN AIR MOBILITY CONCEPT">
         </div>
     </div>
 

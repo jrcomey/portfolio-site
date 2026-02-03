@@ -1,251 +1,47 @@
 <title>Tricopter Dynamics Model</title>
 
 <script>
-
     import Header from '../../Header.svelte';
     import MathBlock from '$lib/MathBlock.svelte';
-    const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
-    const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`
-    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`
-
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
+    import {
+        colors,
+        createBasicScene,
+        createFresnelMaterials,
+        createWireframeFresnelMesh,
+        normalizeGeometry,
+        disposeScene
+    } from '$lib/three-utils.js';
+
+    const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
+    const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
+    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
 
-
     onMount(() => {
-        // Initialize scene
-        let destroyed = false;
-        let w = container.clientWidth;
-        let h = container.clientHeight;
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(30, w/h, 0.1, 1000);
-        renderer = new THREE.WebGLRenderer({ antialias: true});
-
-        function fit() {
-            if (!renderer || !camera || !container) return;
-            let w = container.clientWidth;
-            let h = container.clientHeight;
-            renderer.setSize(w, h, false);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            camera.aspect= w / h;
-            camera.updateProjectionMatrix();
-        }
-        container.appendChild(renderer.domElement);
-        // const controls = new OrbitControls( camera, renderer.domElement );
-
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(w, h);
-        camera.up.set(0,0,1);
-        let in2mm = 25.4;
-
-        camera.position.setZ(4);
-        camera.position.setX(4);
-        camera.position.setY(4);
-        const camera_target_pos = new THREE.Vector3(0, 0, 0.0);
-        camera.lookAt(camera_target_pos);
-
-        // Color breakdown
-        const blue = 0x3333FF;
-        const red = 0xFF3333;
-        const green = 0x4AF626;
-        const black = 0x000000;
+        // Initialize scene using utility
+        const sceneSetup = createBasicScene(container, {
+            fov: 30,
+            cameraPosition: new THREE.Vector3(4, 4, 4),
+            cameraTarget: new THREE.Vector3(0, 0, 0),
+            useContainerSize: true
+        });
+        scene = sceneSetup.scene;
+        camera = sceneSetup.camera;
+        renderer = sceneSetup.renderer;
+        const camera_target_pos = new THREE.Vector3(0, 0, 0);
 
         // Store propeller references for animation
         const propellers = [];
         const tail_anim = [];
 
-        window.addEventListener('resize', fit);
-        let propellerGeometry = null;
         const loader = new OBJLoader();
-
-        function MeshFresnelMaterial(fresnelColor, baseColor, opts = {}) {
-            const {
-                amount = 2.0,
-                offset = 0.2,
-                intensity = 4,
-                alphaMix = 1.0 // 0 = pure base, 1 = full rim mix
-            } = opts;
-
-            return new THREE.ShaderMaterial({
-                uniforms: {
-                uFresnelColor: { value: new THREE.Color(fresnelColor) },
-                uBaseColor:    { value: new THREE.Color(0x000000) },
-                uAmount:       { value: amount },
-                uOffset:       { value: offset },
-                uIntensity:    { value: intensity },
-                uAlphaMix:     { value: alphaMix }
-                },
-                vertexShader: /* glsl */`
-                varying vec3 vWPos;
-                varying vec3 vWNorm;
-                void main() {
-                    vec4 wp   = modelMatrix * vec4(position, 1.0);
-                    vWPos     = wp.xyz;
-                    vWNorm    = normalize(mat3(transpose(inverse(modelMatrix))) * normal);
-                    gl_Position = projectionMatrix * viewMatrix * wp;
-                }
-                `,
-                fragmentShader: /* glsl */`
-                uniform vec3  uFresnelColor, uBaseColor;
-                uniform float uAmount, uOffset, uIntensity, uAlphaMix;
-                varying vec3  vWPos, vWNorm;
-
-                void main() {
-                    //vec3  N = normalize(vWNorm);
-                    //vec3  V = normalize(cameraPosition - vWPos);
-                    //float fres = uOffset + (1.0 - uOffset) * pow(1.0 - max(dot(N, V), 0.0), uAmount);
-
-                    //vec3 rim  = uFresnelColor * fres * uIntensity;
-                    //vec3 col  = mix(uBaseColor, rim, clamp(fres * uAlphaMix, 0.0, 1.0));
-
-                    //gl_FragColor = vec4(col, 1.0); // opaque
-
-                    vec3 N = normalize(vWNorm);
-                    vec3 V = normalize(cameraPosition - vWPos);
-                    float dotNV = clamp(dot(N, V), 0.0, 1.0);
-
-                    // Params
-                    float threshold = 0.97;  // where rim starts
-                    float width     = 0.06;  // softness of transition
-                    float curve     = 2.0;   // >1 harder center, <1 softer
-
-                    // Smooth rim mask
-                    float x = 1.0 - dotNV;
-                    float rim = smoothstep(threshold - width, threshold + width, x);
-                    rim = pow(rim, curve);   // optional shaping
-
-                    vec3 col = uFresnelColor * rim * uIntensity;  // base stays black
-                    gl_FragColor = vec4(col, 1.0);
-                }
-                `,
-                transparent: true,
-                depthWrite: true,
-                blending: THREE.AdditiveBlending,
-                side: THREE.FrontSide,
-                // polygonOffset: true,
-                // polygonOffsetFactor: 5,
-                // polygonOffsetUnits: 5.0,
-            });
-        }
-
-        // Opaque rim highlight (black base)
-        function FresnelRimMaterial(color, {bias=0.4, scale=1.0, power=0.2, width=0.8, curve=1.5, intensity=3.0} = {}) {
-        return new THREE.ShaderMaterial({
-            uniforms: {
-            uRim:   { value: new THREE.Color(color) },
-            uBias:  { value: bias },   // shifts start of rim
-            uScale: { value: scale },  // strength before shaping
-            uPower: { value: power },  // falloff exponent
-            uWidth: { value: width },  // smooth edge width
-            uCurve: { value: curve },  // gamma on mask
-            uInt:   { value: intensity }
-            },
-            vertexShader: /*glsl*/`
-            varying vec3 vWPos, vWNorm;
-            void main(){
-                vec4 wp = modelMatrix * vec4(position,1.0);
-                vWPos = wp.xyz;
-                vWNorm = normalize(mat3(transpose(inverse(modelMatrix))) * normal);
-                gl_Position = projectionMatrix * viewMatrix * wp;
-            }
-            `,
-            fragmentShader: /*glsl*/`
-            uniform vec3 uRim;
-            uniform float uBias, uScale, uPower, uWidth, uCurve, uInt;
-            varying vec3 vWPos, vWNorm;
-            void main(){
-                vec3  N = normalize(vWNorm);
-                vec3  V = normalize(cameraPosition - vWPos);
-                float dotNV = clamp(dot(N, V), 0.0, 1.0);
-
-                // Fresnel core
-                float fres = uBias + uScale * pow(1.0 - dotNV, uPower);
-
-                // Soft rim band around the edge
-                float x = 1.0 - dotNV; // 0=center, 1=edge
-                float rim = smoothstep(1.0 - uWidth, 1.0, x); // softness
-                rim = pow(rim * fres, uCurve);                // shape
-
-                vec3 col = uRim * rim * uInt; // base is black
-                gl_FragColor = vec4(col, 1.0);
-            }
-            `,
-            // side: THREE.DoubleSide,
-            transparent: true,
-            depthWrite: true,
-            // blending: THREE.NoBlending,
-            // toneMapped: false
-            polygonOffset: true,
-            polygonOffsetFactor: 1,
-            polygonOffsetUnits: 1,
-        });
-        }
-
-        // Function to create materials for a specific color
-        function createObjectMaterials(color) {
-            let fresnel = new MeshFresnelMaterial(color, 0x000000);
-            fresnel.toneMapped=false;
-
-            return {
-                solid: new THREE.MeshBasicMaterial({
-                    color: black,
-                    polygonOffset: true,
-                    polygonOffsetFactor: 1,
-                    polygonOffsetUnits: 1
-                }),
-                wireframe: new THREE.MeshBasicMaterial({
-                    color: color,
-                    wireframe: true,
-                    wireframeLinewidth: 1
-                }),
-                fresnel: new FresnelRimMaterial(color)
-            };
-        }
-
-        function normaliseGeometry(geom) {
-            // make sure bounds are up to date
-            geom.computeBoundingBox();
-
-            // 1. centre vertices at origin
-            const c = geom.boundingBox.getCenter(new THREE.Vector3()).negate();
-            geom.translate(c.x, c.y, c.z);      // mutates position attribute
-
-            // 2. uniform scale so largest edge spans 2 units  (-1 → +1)
-            const size = geom.boundingBox.getSize(new THREE.Vector3());
-            const k    = 2 / Math.max(size.x, size.y, size.z);
-            geom.scale(k, k, k);
-
-            // 3. done – geometry now lives inside [-1,1]
-            geom.computeBoundingBox();          // optional: refresh meta
-        }
-
-        // Function to create a solid wireframe mesh from a geometry
-        function createSolidWireframeMesh(geometry, materials, mesh_scale = 1.0001) {
-            const group = new THREE.Group();
-            
-            // Create the solid mesh
-            // const solidMesh = new THREE.Mesh(geometry, materials.solid);
-            // group.add(solidMesh);
-            
-            // Create a slightly larger wireframe mesh
-            const wireframeGeometry = geometry.clone();
-            wireframeGeometry.scale(mesh_scale, mesh_scale, mesh_scale);
-            const wireframeMesh = new THREE.Mesh(wireframeGeometry, materials.wireframe);
-            group.add(wireframeMesh);
-
-            const fresnel_geometry = geometry.clone();
-            fresnel_geometry.scale(mesh_scale, mesh_scale, mesh_scale);
-            const fresnelMesh = new THREE.Mesh(fresnel_geometry, materials.fresnel);
-            group.add(fresnelMesh);
-            
-            return group;
-        }
 
         function animate() {
             requestAnimationFrame(animate);
@@ -297,10 +93,10 @@
                     const stator_group = new THREE.Group();
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
-                            normaliseGeometry(child.geometry);
-                            const solidWireframeMesh = createSolidWireframeMesh(
-                                        child.geometry, 
-                                        createObjectMaterials(green)
+                            normalizeGeometry(child.geometry);
+                            const solidWireframeMesh = createWireframeFresnelMesh(
+                                        child.geometry,
+                                        createFresnelMaterials(colors.green)
                                     );
                         stator_group.add(solidWireframeMesh);
                         stator_group.scale.setScalar(0.75);
@@ -318,10 +114,10 @@
                     const rotor_group = new THREE.Group();
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
-                            normaliseGeometry(child.geometry);
-                            const solidWireframeMesh = createSolidWireframeMesh(
-                                        child.geometry, 
-                                        createObjectMaterials(green)
+                            normalizeGeometry(child.geometry);
+                            const solidWireframeMesh = createWireframeFresnelMesh(
+                                        child.geometry,
+                                        createFresnelMaterials(colors.green)
                                     );
                         rotor_group.add(solidWireframeMesh);
                         rotor_group.scale.setScalar(1.0);
@@ -335,10 +131,10 @@
                                 const prop_group = new THREE.Group();
                                 prop_geom.traverse((child) => {
                                     if (child instanceof THREE.Mesh) {
-                                        // normaliseGeometry(child.geometry);
-                                        const solidWireframeMesh = createSolidWireframeMesh(
-                                                    child.geometry, 
-                                                    createObjectMaterials(green)
+                                        // normalizeGeometry(child.geometry);
+                                        const solidWireframeMesh = createWireframeFresnelMesh(
+                                                    child.geometry,
+                                                    createFresnelMaterials(colors.green)
                                                 );
                                     prop_group.add(solidWireframeMesh);
                                     prop_group.scale.setScalar(3.0);
@@ -367,10 +163,10 @@
                 // Top Shell
                 top_shell_geom.traverse((child) => {
                     if (child instanceof THREE.Mesh) {
-                        normaliseGeometry(child.geometry);
-                        const solidWireframeMesh = createSolidWireframeMesh(
-                                    child.geometry, 
-                                    createObjectMaterials(green)
+                        normalizeGeometry(child.geometry);
+                        const solidWireframeMesh = createWireframeFresnelMesh(
+                                    child.geometry,
+                                    createFresnelMaterials(colors.green)
                                 );
                     top_shell_group.add(solidWireframeMesh);
                     }
@@ -382,13 +178,13 @@
                 loader.load(
                     `${base}/assets/trifecta/BotShell.obj`,
                     function(bot_shell_geom) {
-                        const bot_shell_group = new THREE.Group
+                        const bot_shell_group = new THREE.Group()
                         bot_shell_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
-                                normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
+                                normalizeGeometry(child.geometry);
+                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                            child.geometry,
+                                            createFresnelMaterials(colors.green)
                                         );
                             bot_shell_group.add(solidWireframeMesh);
                             bot_shell_group.scale.setScalar(4.18);
@@ -409,10 +205,10 @@
                         const front_arm_l_group = new THREE.Group();
                         front_arm_l_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
-                                normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
+                                normalizeGeometry(child.geometry);
+                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                            child.geometry,
+                                            createFresnelMaterials(colors.green)
                                         );
                             front_arm_l_group.add(solidWireframeMesh);
                             front_arm_l_group.scale.setScalar(3.8);
@@ -431,10 +227,10 @@
                         const front_arm_l_group = new THREE.Group();
                         front_arm_l_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
-                                normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
+                                normalizeGeometry(child.geometry);
+                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                            child.geometry,
+                                            createFresnelMaterials(colors.green)
                                         );
                             front_arm_l_group.add(solidWireframeMesh);
                             front_arm_l_group.scale.setScalar(3.8);
@@ -453,10 +249,10 @@
                         const back_slide_group = new THREE.Group();
                         back_slide_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
-                                normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
+                                normalizeGeometry(child.geometry);
+                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                            child.geometry,
+                                            createFresnelMaterials(colors.green)
                                         );
                             back_slide_group.add(solidWireframeMesh);
                             back_slide_group.scale.setScalar(3.0);
@@ -478,10 +274,10 @@
                         const tail_gear_group = new THREE.Group();
                         tail_gear_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
-                                normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
+                                normalizeGeometry(child.geometry);
+                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                            child.geometry,
+                                            createFresnelMaterials(colors.green)
                                         );
                             tail_gear_group.add(solidWireframeMesh);
                             tail_gear_group.scale.setScalar(0.54);
@@ -501,10 +297,10 @@
                         const tail_piece_geom = new THREE.Group();
                         tail_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
-                                normaliseGeometry(child.geometry);
-                                const solidWireframeMesh = createSolidWireframeMesh(
-                                            child.geometry, 
-                                            createObjectMaterials(green)
+                                normalizeGeometry(child.geometry);
+                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                            child.geometry,
+                                            createFresnelMaterials(colors.green)
                                         );
                             tail_piece_geom.add(solidWireframeMesh);
                             tail_piece_geom.scale.setScalar(1.25);
@@ -561,28 +357,8 @@
   });
 
     onDestroy(() => {
-    // Clean up Three.js resources
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-    }
-    if (renderer) {
-      renderer.dispose();
-    }
-    if (scene) {
-      scene.traverse((object) => {
-        if (object.geometry) {
-          object.geometry.dispose();
-        }
-        if (object.material) {
-          if (Array.isArray(object.material)) {
-            object.material.forEach(material => material.dispose());
-          } else {
-            object.material.dispose();
-          }
-        }
-      });
-    }
-  });
+        disposeScene(scene, renderer, animationFrameId);
+    });
 
 </script>
 
@@ -616,7 +392,7 @@
     <div class="shaded-background-alt">
 
         <div class='image-reel'>
-            <img src={cadplot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={cadplot} alt="ATP-XW Blizzard Render" />
         </div>
 
         <div class="description">
@@ -771,7 +547,7 @@
     <div class=shaded-background-alt>
 
         <div class='image-reel'>
-            <img src={pos_plot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={pos_plot} alt="ATP-XW Blizzard Render" />
         </div>
 
         <div class="description">
@@ -791,7 +567,7 @@
         </div>
 
         <div class='image-reel'>
-            <img src={att_plot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={att_plot} alt="ATP-XW Blizzard Render" />
         </div>
 
         <div class="description">

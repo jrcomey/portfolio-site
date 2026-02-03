@@ -16,7 +16,7 @@
 
     <div class="shaded-background-alt">
         <div class="image-reel">
-                <img src={pic} alt="ATP-XW Blizzard Render" />
+                <img loading="lazy" src={pic} alt="ATP-XW Blizzard Render" />
                 <p><i>Demonstration of octocopter issued different position comands</i></p>
         </div>  
         <div class="description">

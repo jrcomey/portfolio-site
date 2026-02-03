@@ -27,7 +27,7 @@
             <p>The packet interface allows for much more than it's original purpose, and can serve as a visual interface for any program provided that the correct interface is set up on the server side (here, either a vehicle or a sim like MultiVAC).</p>
         </div>
         <div class="image-reel">
-            <img src={masada} alt="DATACOM Test">
+            <img loading="lazy" src={masada} alt="DATACOM Test">
         </div>
     </div>
 </section>

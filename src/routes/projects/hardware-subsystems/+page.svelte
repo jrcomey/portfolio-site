@@ -612,7 +612,7 @@
     <div class="shaded-background-alt">
 
         <div class='image-reel'>
-            <img src={cadplot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={cadplot} alt="ATP-XW Blizzard Render" />
         </div>
 
         <div class="description">
@@ -752,7 +752,7 @@
     <div class=shaded-background-alt>
 
         <div class='image-reel'>
-            <img src={pos_plot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={pos_plot} alt="ATP-XW Blizzard Render" />
         </div>
 
         <div class="description">
@@ -769,7 +769,7 @@
         </div>
 
         <div class='image-reel'>
-            <img src={att_plot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={att_plot} alt="ATP-XW Blizzard Render" />
         </div>
 
         <div class="description">

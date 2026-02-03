@@ -14,7 +14,7 @@
         
         <div class="shaded-background-alt">
             <div class="image-reel">
-                <img src={flat_plate} alt="ATP-XW Blizzard Render" />
+                <img loading="lazy" src={flat_plate} alt="ATP-XW Blizzard Render" />
                 <!-- <p><i>Incompressible Fluid Flow Over a Flat Plate</i></p> -->
             </div>
             <div class="description">

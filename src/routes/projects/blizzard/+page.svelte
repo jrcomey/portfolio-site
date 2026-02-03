@@ -3,187 +3,77 @@
     export let data;
     import Header from '../../Header.svelte';
 
-
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
+    import {
+        colors,
+        createBasicScene,
+        createBasicMaterials,
+        createSolidWireframeMesh,
+        disposeScene
+    } from '$lib/three-utils.js';
 
     const blizz_render_path = `${base}/assets/blizz.png`;
     const carpet_plot = `${base}/assets/blizzard/carpet_plot.png`;
     const impulse_response = `${base}/assets/blizzard/impulse_response.png`;
     const monte_carlo = `${base}/assets/blizzard/monte-carlo.png`;
 
-    let gifIndex = 1;
-    let totalGifs = 3; // Total number of GIFs
-
     let container;
     let scene, camera, renderer, animationFrameId;
+
     onMount(() => {
-    // Initialize scene
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    
-    // Set size and append to container
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
-
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.up.set(0,0,1);
-    camera.position.setZ(5);
-    camera.position.setX(-7);
-    camera.position.setY(0);
-    const camera_target_pos = new THREE.Vector3(-1.5, 0.0, 0.0);
-    camera.lookAt(camera_target_pos);
-
-    renderer.render(scene, camera);
-
-    // const loader = OBJLoader();
-    // loader.load("assets/blizzard.obj");
-
-    const blue = 0x3333FF;
-    const red = 0xFF3333;
-    const green = 0x4AF626   ;
-    const black = 0x000000;
-    // Create two materials for the solid wireframe effect
-    const bodyMaterials = {
-        solid: new THREE.MeshBasicMaterial({
-            color: black,
-            polygonOffset: true,
-            polygonOffsetFactor: 1,
-            polygonOffsetUnits: 1
-        }),
-        wireframe: new THREE.MeshBasicMaterial({
-            color: green,
-            wireframe: true,
-            wireframeLinewidth: 1
-        })
-    };
-
-    // Store propeller references for animation
-    const propellers = [];
-
-    // Define different propeller configurations
-    const propellerConfigs = [
-        {   // BRT
-            position: { x: 4.220, y: 2.982, z: 1.041+0.15 },
-            color: blue,    // Green
-            clockwise: true
-        },
-        {   // BRB
-            position: { x: 4.220, y: 2.982, z: 1.041-0.15 },
-            color: red,    // Red
-            clockwise: false
-        },
-        {   //BLT
-            position: { x: 4.220, y: -2.982, z: 1.041+0.15 },
-            color: blue,    // Green
-            clockwise: true
-        },
-        {   //BLB
-            position: { x: 4.220, y: -2.982, z: 1.041-0.15 },
-            color: red,    // Red
-            clockwise: false
-        },
-        {   //FRT
-            position: { x: -0.720, y: 2.982, z: 1.041+0.15 },
-            color: blue,    // Red
-            clockwise: true
-        },
-        {   // FRB
-            position: { x: -0.720, y: 2.982, z: 1.041-0.15 },
-            color: red,    // Red
-            clockwise: false
-        },
-        {   //FLT
-            position: { x: -0.720, y: -2.982, z: 1.041+0.15 },
-            color: red,    // Red
-            clockwise: false
-        },
-        {   // FLB
-            position: { x: -0.720, y: -2.982, z: 1.041-0.15 },
-            color: blue,    // Red
-            clockwise: true
-        },
-    ];
-
-    function handleResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-
-
-    // Function to create materials for a specific color
-    function createPropellerMaterials(color) {
-        return {
-            solid: new THREE.MeshBasicMaterial({
-                color: black,
-                polygonOffset: true,
-                polygonOffsetFactor: 1,
-                polygonOffsetUnits: 1
-            }),
-            wireframe: new THREE.MeshBasicMaterial({
-                color: color,
-                wireframe: true,
-                wireframeLinewidth: 1
-            })
-        };
-    }
-
-    // Function to create a solid wireframe mesh from a geometry
-    function createSolidWireframeMesh(geometry, materials, scale = 1.0001) {
-        const group = new THREE.Group();
-        
-        // Create the solid mesh
-        const solidMesh = new THREE.Mesh(geometry, materials.solid);
-        group.add(solidMesh);
-        
-        // Create a slightly larger wireframe mesh
-        const wireframeGeometry = geometry.clone();
-        wireframeGeometry.scale(scale, scale, scale);
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, materials.wireframe);
-        group.add(wireframeMesh);
-        
-        return group;
-    }
-
-    let propellerGeometry = null;
-    const loader = new OBJLoader();
-
-    function createPropellerGroup(config, scale) {
-        const propellerGroup = new THREE.Group();
-        
-        // Create materials for this specific propeller
-        const materials = createPropellerMaterials(config.color);
-        
-        // Clone the loaded propeller geometry and create solid wireframe
-        propellerGeometry.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-                const solidWireframeProp = createSolidWireframeMesh(
-                    child.geometry, 
-                    materials
-                );
-                propellerGroup.add(solidWireframeProp);
-            }
+        // Initialize scene using utility
+        const sceneSetup = createBasicScene(container, {
+            fov: 40,
+            cameraPosition: new THREE.Vector3(-7, 0, 5),
+            cameraTarget: new THREE.Vector3(-1.5, 0, 0)
         });
-        
-        propellerGroup.position.set(
-            config.position.x * scale, 
-            config.position.y * scale, 
-            config.position.z * scale
-        );
-        
-        // Store the rotation direction with the group
-        propellerGroup.userData.clockwise = config.clockwise;
-        
-        return propellerGroup;
-    }
+        scene = sceneSetup.scene;
+        camera = sceneSetup.camera;
+        renderer = sceneSetup.renderer;
+
+        const bodyMaterials = createBasicMaterials(colors.green);
+
+        // Store propeller references for animation
+        const propellers = [];
+
+        // Define different propeller configurations
+        const propellerConfigs = [
+            { position: { x: 4.220, y: 2.982, z: 1.041+0.15 }, color: colors.blue, clockwise: true },
+            { position: { x: 4.220, y: 2.982, z: 1.041-0.15 }, color: colors.red, clockwise: false },
+            { position: { x: 4.220, y: -2.982, z: 1.041+0.15 }, color: colors.blue, clockwise: true },
+            { position: { x: 4.220, y: -2.982, z: 1.041-0.15 }, color: colors.red, clockwise: false },
+            { position: { x: -0.720, y: 2.982, z: 1.041+0.15 }, color: colors.blue, clockwise: true },
+            { position: { x: -0.720, y: 2.982, z: 1.041-0.15 }, color: colors.red, clockwise: false },
+            { position: { x: -0.720, y: -2.982, z: 1.041+0.15 }, color: colors.red, clockwise: false },
+            { position: { x: -0.720, y: -2.982, z: 1.041-0.15 }, color: colors.blue, clockwise: true },
+        ];
+
+        let propellerGeometry = null;
+        const loader = new OBJLoader();
+
+        function createPropellerGroup(config, scale) {
+            const propellerGroup = new THREE.Group();
+            const materials = createBasicMaterials(config.color);
+
+            propellerGeometry.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                    const solidWireframeProp = createSolidWireframeMesh(child.geometry, materials);
+                    propellerGroup.add(solidWireframeProp);
+                }
+            });
+
+            propellerGroup.position.set(
+                config.position.x * scale,
+                config.position.y * scale,
+                config.position.z * scale
+            );
+            propellerGroup.userData.clockwise = config.clockwise;
+
+            return propellerGroup;
+        }
 
 
     // Modified loading sequence
@@ -266,29 +156,9 @@
 
   });
 
-  onDestroy(() => {
-    // Clean up Three.js resources
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-    }
-    if (renderer) {
-      renderer.dispose();
-    }
-    if (scene) {
-      scene.traverse((object) => {
-        if (object.geometry) {
-          object.geometry.dispose();
-        }
-        if (object.material) {
-          if (Array.isArray(object.material)) {
-            object.material.forEach(material => material.dispose());
-          } else {
-            object.material.dispose();
-          }
-        }
-      });
-    }
-  });
+    onDestroy(() => {
+        disposeScene(scene, renderer, animationFrameId);
+    });
 
 
 </script>
@@ -332,7 +202,7 @@
             <p> Among many other things, I designed the propellers and selected motors for the aircraft, but my biggest contribution to the project was a full autopilot system for the aircraft. This system included guidance, navigation, and control components, and aircraft dynamic behavior was verified through the multirotor simulator I had designed the previous summer. To verify our flight controller, I ran Monte Carlo simulations to verify aircraft stability under randomized conditions.</p> -->
         </div>
         <div class="image-reel">
-            <img src={blizz_render_path} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={blizz_render_path} alt="ATP-XW Blizzard Render" />
             <h3><i>ATP-XW Blizzard</i></h3> 
             <p><i>Render. Image Credit: Muhannad Mazin</i></p>
         </div>
@@ -341,7 +211,7 @@
 
     <div class="shaded-background-alt">
         <div class="image-reel">
-            <img src={impulse_response} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={impulse_response} alt="ATP-XW Blizzard Render" />
         </div>
         <div class="description">
             <h1>Dynamics Modeling</h1>
@@ -357,13 +227,13 @@
         </div>
 
         <div class="image-reel">
-            <img src={carpet_plot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={carpet_plot} alt="ATP-XW Blizzard Render" />
         </div>
     </div>
 
     <div class="shaded-background-alt">
         <div class="image-reel">
-            <img src={monte_carlo} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={monte_carlo} alt="ATP-XW Blizzard Render" />
         </div>
         <div class="description">
             <h1>Monte Carlo Simulation</h1>

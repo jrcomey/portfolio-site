@@ -28,14 +28,14 @@
             <p>The main vulnerability of the Blizzard aircraft is the relatively slow motor response time. This could be avoided be implementing a variable pitch mechanism, but that would leave the aircraft vulnerable to icing conditions due to increased mechanical complexity. Our team has decided to bypass this by implementing a secondary controller, which preemptively begins aircraft maneuvers at the instant the aircraft is affected by a gust, instead of waiting for the aircraft to tilt before correction. The feedback controller is still under development. </p>
         </div>
         <div class="image-reel">
-            <img src={grs} alt="Gust Reduction System">
+            <img loading="lazy" src={grs} alt="Gust Reduction System">
         </div>
     </div>
 
     <div class="shaded-background-alt">
 
         <div class="image-reel">
-            <img src={yaw} alt="Gust Reduction System Yaw Response">
+            <img loading="lazy" src={yaw} alt="Gust Reduction System Yaw Response">
         </div>
 
         <div class="description">
@@ -67,7 +67,7 @@
         </div>
 
          <div class="image-reel">
-            <img src={adf} alt="Gust Reduction System Yaw Response">
+            <img loading="lazy" src={adf} alt="Gust Reduction System Yaw Response">
         </div>
     </div>
 
