@@ -3,6 +3,7 @@
 <script>
     import Header from '../../Header.svelte';
     import MathBlock from '$lib/MathBlock.svelte';
+    import ProjectSection from '$lib/ProjectSection.svelte';
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
@@ -365,50 +366,38 @@
 <Header/>
 
 <section>
-
-    <div class="shaded-background">
-
-        <div class="description">
-            <div>
-                <h1>What's in a drone?</h1>
-            </div>
+    <ProjectSection>
+        <div slot="description">
+            <h1>What's in a drone?</h1>
             <hr width=100%>
-            
             <!-- <h3><i>NOTE: THIS PAGE IS UNDER CONSTRUCTION</i></h3> -->
-            <p>At the time of writing, I have been developing MultiVAC for about a year and a half now, and 6DOFs more generally for much longer than that. Up until now, I have been using my undergraduate capstone project - the ATP XW Blizzard - to demonstrate the accuracy of the simulation. It’s a good model - its dynamics model is relatively mature for the state, with a significant body of analysis backing that up. It is, however, only a <b><i>paper aircraft</i></b>. No prototype has been made and there will never be one. Perhaps I’ll make a smaller scale prototype one day, but I’m starting to find the static multicopter family to be a little dry from a dynamics standpoint. Too often will I read a paper on quadcopter dynamics only to find the dreaded `sin(θ) = θ` approximation that simplifies the problem beyond any practical interest.</p>
+            <p>At the time of writing, I have been developing MultiVAC for about a year and a half now, and 6DOFs more generally for much longer than that. Up until now, I have been using my undergraduate capstone project - the ATP XW Blizzard - to demonstrate the accuracy of the simulation. It's a good model - its dynamics model is relatively mature for the state, with a significant body of analysis backing that up. It is, however, only a <b><i>paper aircraft</i></b>. No prototype has been made and there will never be one. Perhaps I'll make a smaller scale prototype one day, but I'm starting to find the static multicopter family to be a little dry from a dynamics standpoint. Too often will I read a paper on quadcopter dynamics only to find the dreaded `sin(θ) = θ` approximation that simplifies the problem beyond any practical interest.</p>
             <br>
             <p>I will be using a small tricopter for the next few rounds of demonstrations. I built one when I was 16, and was as fascinated with it then as I am now. The frame in question is the Quanum <i>Trifecta</i>, a collapsable design that folds up into something pocket sized, but with enough power available to outspeed most other aircraft its size. </p>
             <br>
-            <p>Unlike a quadcopter, it is <b>not</b> a symmetric aircraft. For the unfamiliar, the tricopter is laid out like a Y. It has two fixed motors in the front, and a third motor on a swivel in the back. The aircraft’s yaw (think spinning it like a disk) is primarily controlled by swiveling the tail motor in the back. This gives it a clear front, and it is better operating in some directions than others. A quadcopter generally has no preference. A tricopter behaves more like a fixed-wing aircraft in flight than a traditional quadcopter, and tends to have more ‘swoopy’ flight characteristics. From an academic standpoint, it’s much more non-linear than its quadcopter counterpart. That tail rotor rotates between +/- 45 degrees, which is not easily linearizable. The tail rotor has its own angular momentum, which is in a constantly changing plane, and the movement of the mass of the tail relative to the parent body is itself a non-linear angular momentum vector.</p>
+            <p>Unlike a quadcopter, it is <b>not</b> a symmetric aircraft. For the unfamiliar, the tricopter is laid out like a Y. It has two fixed motors in the front, and a third motor on a swivel in the back. The aircraft's yaw (think spinning it like a disk) is primarily controlled by swiveling the tail motor in the back. This gives it a clear front, and it is better operating in some directions than others. A quadcopter generally has no preference. A tricopter behaves more like a fixed-wing aircraft in flight than a traditional quadcopter, and tends to have more 'swoopy' flight characteristics. From an academic standpoint, it's much more non-linear than its quadcopter counterpart. That tail rotor rotates between +/- 45 degrees, which is not easily linearizable. The tail rotor has its own angular momentum, which is in a constantly changing plane, and the movement of the mass of the tail relative to the parent body is itself a non-linear angular momentum vector.</p>
             <br>
         </div>
-
-        <div class='image-reel'>
+        <div slot="image">
             <div bind:this={container} class="scene-container"></div>
         </div>
-        
-    </div>
+    </ProjectSection>
 
-    <div class="shaded-background-alt">
-
-        <div class='image-reel'>
+    <ProjectSection imagePosition="left">
+        <div slot="image">
             <img loading="lazy" src={cadplot} alt="ATP-XW Blizzard Render" />
         </div>
-
-        <div class="description">
-            <div>
-                <h1>Building the model </h1>
-            </div>
+        <div slot="description">
+            <h1>Building the model</h1>
             <hr width=100%>
-            <p>Well, in order to get started, we’ll need mass and inertial properties to get started. We could weigh each component and get its position, and create a rough inertial model by finding the center of grav- </p>
-            <p>Oh, or we could just CAD it. That wasn’t that hard, actually.</p>
-            <p>A quick 3D print verifies the model is appropriately dimensioned compared to the real aircraft. There’s a few differences but that’ll do.</p>
+            <p>Well, in order to get started, we'll need mass and inertial properties to get started. We could weigh each component and get its position, and create a rough inertial model by finding the center of grav- </p>
+            <p>Oh, or we could just CAD it. That wasn't that hard, actually.</p>
+            <p>A quick 3D print verifies the model is appropriately dimensioned compared to the real aircraft. There's a few differences but that'll do.</p>
             <p>Not all inertial properties of the aircraft are static. That tail moves, and as it moves the moment of inertia will change with it. A good time to show off the dynamic mass and inertia calculation capabilities in MultiVAC for nonlinear models.</p>
         </div>
-    </div>
+    </ProjectSection>
 
     <!-- <div class="shaded-background-no-pic">
-
         <div class="description">
             <div>
                 <h1>The Nonlinear Dynamics Model</h1>
@@ -417,23 +406,18 @@
     </div> -->
 
 
-    <div class="shaded-background-no-pic">
-
-        <div class="description">
-            <div>
-                <h1>A Quick Controller</h1>
-            </div>
+    <ProjectSection imagePosition="none">
+        <div slot="description">
+            <h1>A Quick Controller</h1>
             <hr width='100%'>
-            <p>It’s a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise.</p>
-            <p>We’ll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
+            <p>It's a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise.</p>
+            <p>We'll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
             <MathBlock>
                 {@html `$$\\vec{u} = \\begin{bmatrix} \\omega_1 \\\\ \\omega_2 \\\\ \\omega_3 \\\\ \\theta_{s} \\end{bmatrix} \\propto \\begin{bmatrix} T_1 \\\\ T_2 \\\\ T_3 \\\\ \\theta_{s} \\end{bmatrix}$$`}
             </MathBlock>
             <br>
             <hr width="100%">
-        </div>
 
-        <div class="description">
             <h2>Linearization</h2>
             <p>A quick summation of forces and moments in the body frame demonstrates the nonlinearity of the tricopter:</p>
             <MathBlock>
@@ -482,9 +466,7 @@
             <p>All of this is already tracked in MultiVAC as part of the subassembly system. Again, the only purpose of this model is to derive a controller.</p>
             <br>
             <hr width="100%">
-        </div>
 
-        <div class="description">
             <h2>LQR Controller Design</h2>
             <p>Setting up a basic state space model in the body frame of reference:</p>
             <MathBlock>
@@ -492,7 +474,7 @@
             </MathBlock>
 
             <MathBlock>
-                {@html `$$ \\dot{x}_x = \\begin{bmatrix} 
+                {@html `$$ \\dot{x}_x = \\begin{bmatrix}
                 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
                 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
                 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
@@ -505,7 +487,7 @@
                 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
                 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
                 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                \\end{bmatrix} \\begin{bmatrix} 
+                \\end{bmatrix} \\begin{bmatrix}
                 x \\\\
                 y \\\\
                 z \\\\
@@ -522,8 +504,8 @@
             </MathBlock>
 
             <MathBlock>
-                {@html `$$ \\dot{x}_u = 
-                
+                {@html `$$ \\dot{x}_u =
+
                 \\begin{bmatrix} \\frac{1}{m} \\begin{bmatrix}I\\end{bmatrix} & \\begin{bmatrix}0\\end{bmatrix}\\\\ \\begin{bmatrix}0\\end{bmatrix} & \\begin{bmatrix}J\\end{bmatrix}^{-1}  \\end{bmatrix} \\begin{bmatrix}
                     0   & 0     & 0     & 0\\\\
                     0   & 0     & 0     & 1\\\\
@@ -542,39 +524,34 @@
             <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. I used Bryson's rule and a brief tuning session to achieve a full-state LQR controller, the results of which are presented down below.</p>
             <!-- <p><i>IF YOU'RE READING THIS, THIS PROJECT IS STILL BEING WORKED ON. PLEASE CHECK BACK LATER OR CONTACT <a href="mailto:jack.rhys.comey@gmail.com">JACK.RHYS.COMEY@GMAIL.COM</a>, OR <a href="mailto:jrcomey@ucla.edu">JRCOMEY@UCLA.EDU</a>. THANK YOU!</i></p> -->
         </div>
-    </div>
+    </ProjectSection>
 
-    <div class=shaded-background-alt>
-
-        <div class='image-reel'>
-            <img loading="lazy" src={pos_plot} alt="ATP-XW Blizzard Render" />
+    <ProjectSection imagePosition="left">
+        <div slot="image">
+            <img loading="lazy" src={pos_plot} alt="Position Plot" />
         </div>
-
-        <div class="description">
-            <div>
-                <h1>Linear Controller Results</h1>
-            </div>
+        <div slot="description">
+            <h1>Linear Controller Results</h1>
             <hr width='100%'>
             <p>This should be pretty straightforward, with a couple of explanations presented alongside each result. </p>
             <p><b>A brief note on the dynamics model:</b> The dynamics model used to design the controller is a simplified non-linear model. It includes the following:</p>
             <ol>
                 <li>Forces and moments calculated on the vehcile in the <b>body</b> frame of reference, and moved in the <b>translational</b> frame of reference (i.e. a tricopter at 90 degrees of pitch and full throttle will move in the +x inertial direction, not the +z direction)</li>
-                <li>Tricopter motors have been modeled as a first order system (i.e. there is a delay from controller input command to the motor to the motor outputting that force).
-                </li>
+                <li>Tricopter motors have been modeled as a first order system (i.e. there is a delay from controller input command to the motor to the motor outputting that force).</li>
             </ol>
             <p>As you'd expect, tuning is primarily a trade-off between minimization of attitude error and position error. This controller is linearized around a level flight hover, and does not hold for larger disturbances (e.g. a translational error of 10m would induce a greater tilt to the aircraft than it can sustain altitude with). </p>
             <p>This is, however, easily rectified with some nonlinear limiters. Simply restrict the maximum error bounds, which are locked to the rotating body frame, and the issue is resolved.</p>
         </div>
+    </ProjectSection>
 
-        <div class='image-reel'>
-            <img loading="lazy" src={att_plot} alt="ATP-XW Blizzard Render" />
+    <ProjectSection imagePosition="left">
+        <div slot="image">
+            <img loading="lazy" src={att_plot} alt="Attitude Plot" />
         </div>
-
-        <div class="description">
-            <p> The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
+        <div slot="description">
+            <p>The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
         </div>
-
-    </div>
+    </ProjectSection>
 
 
 </section>
@@ -600,84 +577,4 @@
         aspect-ratio: 1.0;
         z-index: -1;
     }
-
-    .image-reel {
-        /* border: 5%; */
-        margin: 5%;
-        align-content: center;
-    }
-
-    .description {
-        margin: 5%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .image-reel img {
-            width: 100%;
-            object-fit: contain;
-            aspect-ratio: 1;
-            border-radius: 5%;
-            /* padding: 5%; */
-        }
-
-    .shaded-background {
-        background-color: #0f1112CC;
-        border-radius: 20px;
-        display: grid;
-        grid-template-columns: 4fr 3fr;
-        margin: 5% 0%;
-        align-content: left;
-    }
-
-    .shaded-background-no-pic {
-        background-color: #0f1112CC;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        margin: 5% 0%;
-        align-content: left;
-    }
-
-    b {
-        color: #00FFFF;
-    }
-
-    .shaded-background-alt {
-        background-color: #0f1112CC;
-        border-radius: 20px;
-        display: grid;
-        grid-template-columns: 3fr 4fr;
-        margin: 5% 0%;
-        align-content: left;
-    }
-    .image-reel {
-        margin: 5%;
-        align-content: center;
-    }
-
-    .description {
-        margin: 5%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .image-reel img {
-            width: 100%;
-            object-fit: contain;
-            aspect-ratio: 1;
-            border-radius: 5%;
-        }
-
-    @media (max-width: 80em){
-        .shaded-background {
-            display: flex;
-            flex-direction: column-reverse;
-        }
-        .shaded-background-alt{
-            display: flex;
-            flex-direction: column;
-        }
-    }
-
 </style>

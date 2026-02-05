@@ -1,9 +1,8 @@
 <title>MultiVAC</title>
 
 <script>
-    /** @type {import('./$types').PageData} */
-    export let data;
     import Header from '../../Header.svelte';
+    import ProjectSection from '$lib/ProjectSection.svelte';
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
@@ -16,7 +15,6 @@
         createSolidWireframeMesh,
         disposeScene
     } from '$lib/three-utils.js';
-
     const blizz_render_path = `${base}/assets/basic-sixdof-process.png`;
     const pos_plot = `${base}/assets/Blizzard_0_pos_plot.png`;
     const threeDplot = `${base}/assets/tracking_plot_anim.gif`;
@@ -172,52 +170,40 @@
     <h1>MULTIVAC</h1>
 </section>
 
+
+
 <section class="high-level-description centered">
-    <div class="shaded-background">
-        <div class="description">
-            <div>
-                <h1>Tired of Simulink?</h1>
-            </div>
+    <ProjectSection>
+        <div slot="description">
+            <h1>Tired of Simulink?</h1>
             <hr width="100%">
-            
-             <p>
+            <p>
                 Named after Isaac Asimov's recurring supercomputer, MultiVAC is a <b>general purpose 6DOF simulation</b> that I wrote to serve as a proving ground for new GNC methods.
-                MultiVAC is intended as a development tool to aid in any real world applications - from industrial robotics to air and space GNC. 
+                MultiVAC is intended as a development tool to aid in any real world applications - from industrial robotics to air and space GNC.
             </p>
-            <!-- <br> -->
             <p>
                 MultiVAC is <b>fast and flexible</b> - its scripting interface allows for quick iterations to your design while retaining calculation speed.
             </p>
         </div>
-        <div class="image-reel">
+        <div slot="image">
             <img loading="lazy" src={blizz_render_path} alt="ATP-XW Blizzard Render" />
-            <!-- <h3>The Basic Process</h3>  -->
-            <!-- <p><i></i></p> -->
         </div>
-    </div>
+    </ProjectSection>
 
-    <div class="shaded-background-alt">
-        <div class="image-reel">
+    <ProjectSection imagePosition="left">
+        <div slot="image">
             <img loading="lazy" src={threeDplot} alt="ATP-XW Blizzard Render" />
-            <!-- <h3>An example scenario setup structure using <i>Blizzard</i></h3>  -->
-            <!-- <p><i></i></p> -->
         </div>
-        <div class="description">
-            <div>
-                <h1>Instant Prototypes</h1>
-            </div>
+        <div slot="description">
+            <h1>Instant Prototypes</h1>
             <hr width="100%">
-            <!-- <p>
-                MultiVAC, at its core, is a powerful physics simulation exposed through a simple scripting interface. In as little as a few dozen lines of RHAI, a user can set up accurate vehicle-level tests of an eight-rotor eVTOL aircraft in a variety of conditions. 
-            </p> -->
             <p>
-                MultiVAC's user interface is built on a simple RHAI layer. Each scenario is composed of a few configurable environment types (such as basic gravity), along with simulated physics objects. 
+                MultiVAC's user interface is built on a simple RHAI layer. Each scenario is composed of a few configurable environment types (such as basic gravity), along with simulated physics objects.
             </p>
             <p>Each object is defined in its own RHAI script, through a combination of state-space matricies (which define equations of motion) and controllable components (which affect the objects position).</p>
             <p>Objects can be supplemented with any combination of controller, sensor processing scripts, and custom guidance scripts to define behavior. Need to make a change to your guidance loop? No worries - MultiVAC doesn't even need to recompile, allowing you to focus your time on what matters most.</p>
         </div>
-        
-    </div>  
+    </ProjectSection>  
 
     <!-- <div class="shaded-background">
         <div class="description">
@@ -245,25 +231,19 @@
         </div>
     </div>   -->
 
-    <div class="shaded-background">
-        <div class="description">
-            <div>
-                <h1>Zero-Click Insights</h1>
-            </div>
+    <ProjectSection>
+        <div slot="description">
+            <h1>Zero-Click Insights</h1>
             <hr width='100%'>
             <p>
                 MuliVAC <b>automatically</b> generates a full teardown at the end of each run. Plots are generated of each vehicle's position, velocity, and rotation, along with a plot of the full scenario. A full LaTeX report is also generated for easy reading.
             </p>
             <p>The full data for each run is saved to a single HDF5 file, allowing you to generate your own plots as well.</p>
         </div>
-        <div class="image-reel">
+        <div slot="image">
             <img loading="lazy" src={pos_plot} alt="ATP-XW Blizzard Render" />
-            <!-- <h3><i>The Basic Process</i></h3>  -->
-            <!-- <p><i></i></p> -->
         </div>
-        
-        
-    </div>  
+    </ProjectSection>  
 
 </section>
 
@@ -319,70 +299,8 @@
     }
 
 
-    .shaded-background {
-        background-color: #0f1112CC;
-        /* display: flex; */
-        /* flex-direction: row; */
-        /* padding: 5%; */
-        border-radius: 2%;
-        display: grid;
-        /* grid-row: 1; */
-        grid-template-columns: 4fr 3fr;
-        /* padding: 5% 0%;
-        border: 5% 0%; */
-        margin: 5% 0%;
-        align-content: left;
-    }
-
     b {
         color: #00FFFF;
-    }
-
-    .shaded-background-alt {
-        background-color: #0f1112CC;
-        border-radius: 2%;
-        display: grid;
-        grid-template-columns: 3fr 4fr;
-        margin: 5% 0%;
-        align-content: left;
-    }
-    .image-reel {
-        /* border: 5%; */
-        margin: 5%;
-        align-content: center;
-    }
-
-    /* .shaded-background h1 {
-        line-height: 0.0;
-    } */
-
-    /* .shaded-background-alt h1 {
-        line-height: 0.0;
-    } */
-
-    .description {
-        margin: 5%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .image-reel img {
-            width: 100%;
-            object-fit: contain;
-            aspect-ratio: 1;
-            border-radius: 5%;
-            /* padding: 5%; */
-        }
-
-    @media (max-width: 60em){
-        .shaded-background {
-            display: flex;
-            flex-direction: column-reverse;
-        }
-        .shaded-background-alt{
-            display: flex;
-            flex-direction: column;
-        }
     }
 
 </style>

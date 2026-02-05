@@ -3,6 +3,7 @@
 <script>
     import Header from '../../Header.svelte';
     import MathBlock from '$lib/MathBlock.svelte';
+    import ProjectSection from '$lib/ProjectSection.svelte';
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
@@ -344,28 +345,24 @@
 <Header/>
 
 <section>
-
-    <div class="shaded-background">
-
-        <div class="description">
+    <ProjectSection>
+        <div slot="description">
             <h1>Motoring Along</h1>
             <!-- <h3><i>NOTE: THIS PAGE IS UNDER CONSTRUCTION</i></h3> -->
             <p>There are perhaps as many different kinds of electric motor as there are uses for them. A few basic principles remain constant though: each motor uses a difference in two magnetic fields (at least one of which is supplied by an electric current) to create a torque on the rotor. A brushed DC motor, for example, takes an input DC current, applies the voltage through physical 'brushes' (typically graphite or similar) to create an oscillating electric current that rotates a set of permanent magnets. There are AC motors, which use an alternating current input rather than DC, which doesn't require brushes. Speakers are technically motors too, except instead of rotating, they move linearly.</p>
             <br>
             <p>In my opinion, the most useful of these are the brushless DC motor, or BLDC. Deceptively named, the brushless DC motor <i>actually</i> uses AC current. It typically uses a DC power supply (e.g. a battery) and generates the current waveform needed through a seperate circuit (either an ESC or a servo controller). Brushless DC motors are mechanically simple, robust, and used for everything from drone propulsion to servo controls.</p>
         </div>
-
-        <div class='image-reel'>
+        <div slot="image">
             <div bind:this={container} class="scene-container"></div>
         </div>
-    </div>
+    </ProjectSection>
 
-    <div class="shaded-background-alt">
-        <div class="image-reel">
+    <ProjectSection imagePosition="left">
+        <div slot="image">
             <img loading="lazy" src={diag} alt="MotorDiagram" />
         </div>
-
-        <div class="description">
+        <div slot="description">
             <h1>Model Derivation</h1>
             <p>Mathworks has a neat little derivation of a three-phase model <a href="https://www.mathworks.com/help/sps/ref/bldc.html">here</a>, but in this article we'll be modeling a single-phase motor. Most BLDC motors are three-phase, but for the sake of computational simplicity, we'll use one.</p>
             <br>
@@ -376,7 +373,7 @@
                 {@html `$$ \\dot{\\vec{x}} = \\begin{bmatrix} \\frac{di}{dt} \\\\ \\omega \\\\ \\alpha \\end{bmatrix} =  \\begin{bmatrix} -\\frac{R}{L} & 0 & -\\frac{K_v}{L} \\\\ 0 & 0 & 1 \\\\ \\frac{K_t}{J} & 0 & -\\frac{B}{J} \\end{bmatrix} \\begin{bmatrix} i \\\\ \\theta \\\\ \\omega \\end{bmatrix} + \\begin{bmatrix} \\frac{1}{L} & 0 & 0 \\\\ 0 & 0 & \\frac{1}{J} \\end{bmatrix} \\begin{bmatrix} V_{in} \\\\ \\tau_{load} \\end{bmatrix}   $$`}
             </MathBlock>
         </div>
-    </div>
+    </ProjectSection>
 
     <!-- <div class="shaded-background-alt">
 
@@ -541,84 +538,4 @@
         aspect-ratio: 1.0;
         z-index: -1;
     }
-
-    .image-reel {
-        /* border: 5%; */
-        margin: 5%;
-        align-content: center;
-    }
-
-    .description {
-        margin: 5%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .image-reel img {
-            width: 100%;
-            object-fit: contain;
-            aspect-ratio: 1;
-            border-radius: 5%;
-            /* padding: 5%; */
-        }
-
-    .shaded-background {
-        background-color: #0f1112CC;
-        border-radius: 20px;
-        display: grid;
-        grid-template-columns: 4fr 3fr;
-        margin: 5% 0%;
-        align-content: left;
-    }
-
-    .shaded-background-no-pic {
-        background-color: #0f1112CC;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        margin: 5% 0%;
-        align-content: left;
-    }
-
-    b {
-        color: #00FFFF;
-    }
-
-    .shaded-background-alt {
-        background-color: #0f1112CC;
-        border-radius: 20px;
-        display: grid;
-        grid-template-columns: 3fr 4fr;
-        margin: 5% 0%;
-        align-content: left;
-    }
-    .image-reel {
-        margin: 5%;
-        align-content: center;
-    }
-
-    .description {
-        margin: 5%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .image-reel img {
-            width: 100%;
-            object-fit: contain;
-            aspect-ratio: 1;
-            border-radius: 5%;
-        }
-
-    @media (max-width: 80em){
-        .shaded-background {
-            display: flex;
-            flex-direction: column-reverse;
-        }
-        .shaded-background-alt{
-            display: flex;
-            flex-direction: column;
-        }
-    }
-
 </style>
