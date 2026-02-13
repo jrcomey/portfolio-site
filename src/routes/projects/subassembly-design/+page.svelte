@@ -27,7 +27,7 @@
         <div slot="description">
             <h1>The Problem with Monoliths</h1>
             <hr width=100%>
-            <p>PLACEHOLDER</p>
+            <p>When I first started writing 6DOF simulations, everything lived in one big struct. Mass, inertia, forces, moments - all hardcoded into a single vehicle object. Want to change a motor? Rewrite the force equations. Want to add a servo? Rewrite the moment equations. Want to model a motor that's mounted on a servo? Good luck.</p>
             
             <p>This works fine for anything that can be reduced to a rigid body dynamics problem, like a quadcopter. Each motor/propeller pair has a counterpart, regardless of what kind of input is being sent to the vehicle. To fit anything more complex than that (e.g. a multibody joint with several pivot points) into a linearized model is reductive.But the moment you try to model something more interesting - say, a tricopter with a tilting tail - the whole thing falls apart.</p>
             
