@@ -2,7 +2,6 @@
     import { base } from '$app/paths';
     let profile_pic = `${base}/assets/profile.JPG`;
     let moon_pic = `${base}/assets/moon_pic.JPG`;
-
 </script>
 
 
@@ -17,7 +16,7 @@
             <h1>A Little More Background</h1>
             <p>I grew up in California's southern Bay Area.</p>
             <p>I've always had a passion for spaceflight. Like many engineers, I grew up watching the Space Shuttle launches, and always wanted to work on spacecraft like that. It had always seemed like a pipe dream, but the longer I worked, the more practical of an option it became. I've now graduated with two B.S.'s in engineering, and started my career over two years ago with Lockheed Martin Space.</p>
-            <p>In my free time, I like to hike in many of the fantastic national and state parks the California has to offer, often as part of a nature photography trip. You may see some of my work scattered around the background of this website, and if you see something that you'd like to visit yourself, please don't hesitate to reach out.</p>
+            <p>In my free time, I like to hike in many of the fantastic national and state parks the California has to offer, often as part of a nature photography trip. You may see some of my work scattered around the background of this website, and if you see something that you'd like to visit yourself, <a href="mailto:jack.rhys.comey@gmail.com">please don't hesitate to reach out.</a></p>
         </div>
     </div>
 </section>

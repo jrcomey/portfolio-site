@@ -6,13 +6,32 @@
 <section id="misc-projects" class="dark centered">
     <h1>Project Gallery</h1>
 
+    
+
     <div class="project-grid">
+
+        <!-- <ProjectCard
+            href="{base}/projects/algorithm-builder"
+            imageSrc="{base}/assets/trifecta/helicopter_subassembly.png"
+            title="MultiVAC Algorithm Builder"
+            subtitle="Complex Nonlinear Assembly Structure"
+            description="A method for creating large flight control algorithms through program declaration"
+        /> -->
+
         <ProjectCard
             href="{base}/projects/tricopter-dynamics"
             imageSrc="{base}/assets/trifecta/render_screenshot.png"
             title="Tricopter Dynamics Model"
             subtitle="Nonlinear Dynamics Model for Experimentation"
             description="Derivation of a nonlinear dynamics model for a folding tricopter."
+        />
+
+        <ProjectCard
+            href="{base}/projects/subassembly-design"
+            imageSrc="{base}/assets/trifecta/helicopter_subassembly.png"
+            title="MultiVAC Subassemblies"
+            subtitle="Complex Nonlinear Assembly Structure"
+            description="A method for creating nonlinear plant models for 6DOF simulations."
         />
 
         <ProjectCard

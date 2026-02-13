@@ -1,32 +1,30 @@
 <script>
 
     import { base } from '$app/paths';
-
-    let profile_pic = "src/assets/profile.JPG";
-    let moon_pic = "src/assets/moon_pic.jpg";
+    let profile_pic = `${base}/assets/profile.JPG`;
+    let moon_pic = `${base}/assets/moon_pic.JPG`;
 
 </script>
 
 <section>
     <div class="shaded-background">
         <div class="image-reel">
-            <img src={moon_pic} alt="Profile Picture" />
+            <img loading="lazy" src={moon_pic} alt="Profile Picture" />
             <h3><i>The Moon and Mars</i></h3> 
             <p>January 30<sup>th</sup>, 2023</p>
         </div>
         <div class="description">
             <h1>Why A Website?</h1>
+            <hr width="100%">
 
             <p><i>If an image is worth a thousand words, an interactive website with images and animations is worth millions.</i></p>
-            <hr>
             <p>The longer answer is that there are two primary lines of thinking that lead to the same conclusion:</p>
             <ul>
                 <li>People who are not themselves engineers, but work with them on a regular basis often complain about a lack of communications skills in the discipline. This is not always true, but true often enough to be warranted. Any engineer who is able to not only <i>design</i> well, but can also <i>present</i> well (whether to an internal audience, customers, or investors) sets themselves far apart from other candidates. Think of it as a force multiplier for good design.</li>
                 <li>The internet is inseperable from modern life and modern communication. The modern western economy has largely left behind printed documents for webpages not merely because it is more cost-effective, but because they are <b>significantly better for communicating ideas with greater capabilities than a paper document could allow.</b> A simple visual demonstration, through animation or images, will inform and engage the reader far better than simple text can permit.</li>
             </ul>
-            <p><i>Of course, should you prefer a well-formatted resume, <a>you can find mine here.</a></i></p>
-            <hr>
-            <p>If you are intrigued by what you've seen here, <a href="{base}/contact">please don't hesitate to reach out.</a></p>
+            <!-- <p><i>Of course, should you prefer a well-formatted resume, <a>you can find mine here.</a></i></p> -->
+            <p>If you are intrigued by what you've seen here, <a href="mailto:jack.rhys.comey@gmail.com">please don't hesitate to reach out!</a></p>
         </div>
         
     </div>
@@ -71,9 +69,4 @@
             border-radius: 5%;
             /* padding: 5%; */
         }
-
-        b {
-        color: #00C1D4;
-        font-variant: bold;
-    }
 </style>

@@ -369,6 +369,7 @@
     <ProjectSection>
         <div slot="description">
             <h1>What's in a drone?</h1>
+            <hr width=100%>
             <!-- <h3><i>NOTE: THIS PAGE IS UNDER CONSTRUCTION</i></h3> -->
             <p>At the time of writing, I have been developing MultiVAC for about a year and a half now, and 6DOFs more generally for much longer than that. Up until now, I have been using my undergraduate capstone project - the ATP XW Blizzard - to demonstrate the accuracy of the simulation. It's a good model - its dynamics model is relatively mature for the state, with a significant body of analysis backing that up. It is, however, only a <b><i>paper aircraft</i></b>. No prototype has been made and there will never be one. Perhaps I'll make a smaller scale prototype one day, but I'm starting to find the static multicopter family to be a little dry from a dynamics standpoint. Too often will I read a paper on quadcopter dynamics only to find the dreaded `sin(θ) = θ` approximation that simplifies the problem beyond any practical interest.</p>
             <br>
@@ -388,6 +389,7 @@
         </div>
         <div slot="description">
             <h1>Building the model</h1>
+            <hr width=100%>
             <p>Well, in order to get started, we'll need mass and inertial properties to get started. We could weigh each component and get its position, and create a rough inertial model by finding the center of grav- </p>
             <p>Oh, or we could just CAD it. That wasn't that hard, actually.</p>
             <p>A quick 3D print verifies the model is appropriately dimensioned compared to the real aircraft. There's a few differences but that'll do.</p>
@@ -395,9 +397,19 @@
         </div>
     </ProjectSection>
 
+    <!-- <div class="shaded-background-no-pic">
+        <div class="description">
+            <div>
+                <h1>The Nonlinear Dynamics Model</h1>
+            </div>
+        </div>
+    </div> -->
+
+
     <ProjectSection imagePosition="none">
         <div slot="description">
             <h1>A Quick Controller</h1>
+            <hr width='100%'>
             <p>It's a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise.</p>
             <p>We'll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
             <MathBlock>
@@ -520,6 +532,7 @@
         </div>
         <div slot="description">
             <h1>Linear Controller Results</h1>
+            <hr width='100%'>
             <p>This should be pretty straightforward, with a couple of explanations presented alongside each result. </p>
             <p><b>A brief note on the dynamics model:</b> The dynamics model used to design the controller is a simplified non-linear model. It includes the following:</p>
             <ol>
@@ -539,6 +552,8 @@
             <p>The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
         </div>
     </ProjectSection>
+
+
 </section>
 
 <style>

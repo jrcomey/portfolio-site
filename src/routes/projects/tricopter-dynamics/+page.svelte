@@ -20,7 +20,7 @@
 
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
     const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
-    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
+    const subassembly_diagram = `${base}/assets/trifecta/tricopter_subassembly.png`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -383,7 +383,7 @@
         </div>
     </ProjectSection>
 
-    <ProjectSection imagePosition="left">
+    <ProjectSection imagePosition="right">
         <div slot="image">
             <img loading="lazy" src={cadplot} alt="ATP-XW Blizzard Render" />
         </div>
@@ -397,159 +397,15 @@
         </div>
     </ProjectSection>
 
-    <!-- <div class="shaded-background-no-pic">
-        <div class="description">
-            <div>
-                <h1>The Nonlinear Dynamics Model</h1>
-            </div>
-        </div>
-    </div> -->
-
-
-    <ProjectSection imagePosition="none">
-        <div slot="description">
-            <h1>A Quick Controller</h1>
-            <hr width='100%'>
-            <p>It's a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise.</p>
-            <p>We'll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
-            <MathBlock>
-                {@html `$$\\vec{u} = \\begin{bmatrix} \\omega_1 \\\\ \\omega_2 \\\\ \\omega_3 \\\\ \\theta_{s} \\end{bmatrix} \\propto \\begin{bmatrix} T_1 \\\\ T_2 \\\\ T_3 \\\\ \\theta_{s} \\end{bmatrix}$$`}
-            </MathBlock>
-            <br>
-            <hr width="100%">
-
-            <h2>Linearization</h2>
-            <p>A quick summation of forces and moments in the body frame demonstrates the nonlinearity of the tricopter:</p>
-            <MathBlock>
-                {@html `$$F_x = 0$$`}
-            </MathBlock>
-            <MathBlock>
-                {@html `$$F_y = T_3\\sin{\\theta}$$`}
-            </MathBlock>
-            <MathBlock>
-                {@html `$$F_z = T_1 + T_2 + T_3\\cos{\\theta}$$`}
-            </MathBlock>
-            <MathBlock>
-                {@html `$$\\tau_{\\phi} = -r_1T_1 + r_2T_2 + d_3\\sin{\\theta}T_3\\cos{\\theta}$$`}
-            </MathBlock>
-            <MathBlock>
-                {@html `$$\\tau_{\\theta} = r_1T_1 + r_2T_2 - T_3\\cos{\\theta} + a_3T_3\\sin{\\theta}$$`}
-            </MathBlock>
-            <MathBlock>
-                {@html `$$\\tau_{\\psi} = a_1T_1 + a_2T_2 + a_3T_3\\cos{\\theta}+ r_3T_3sin{\\theta}$$`}
-            </MathBlock>
-
-            <p>Where those <i>a</i> coefficients are an approximation of motor torque to propeller thrust. We'll get into that later. Be assured that motor torque, motor electrical dynamics, and motor/propeller angular momentum are all modeled in MultiVAC.</p>
-
-            <p>But just look at all that trig! Gross. For those who are counting, that's three cos terms, two sin terms, and one sin*cos term. Very nonlinear.</p>
-            <p>All we really need to end up with is three throttle values and and angle. Notice how the tail rotor thrust never shows up on it's own? We can simply adjust our last two elements of the input vector to use the cos and sin components respentively.</p>
-            <p>If we ignore the sin*cos term, we have a "linear" system:</p>
-
-            <MathBlock>
-                {@html `$$ \\begin{bmatrix} F_x \\\\ F_y \\\\ F_z \\\\ \\tau_{\\phi} \\\\ \\tau_{\\theta} \\\\ \\tau_{\\psi} \\end{bmatrix} = \\begin{bmatrix}
-                    0   & 0     & 0     & 0\\\\
-                    0   & 0     & 0     & 1\\\\
-                    1   & 1     & 1     & 0\\\\
-                    -r_1&r_2    &0      &0\\\\
-                    r_1 &r_2    &1      &a_3\\\\
-                    a_1&a_2     &a_3    & r_3
-                    \\end{bmatrix} \\begin{bmatrix}
-                    T_1\\\\
-                    T_2\\\\
-                    T_3\\cos{\\theta}\\\\
-                    T_3\\sin{\\theta}
-                    \\end{bmatrix}
-                $$`}
-            </MathBlock>
-
-            <p>That's really as close as you're going to get with a linear model here. There's a lot more to take into account, and the real problem to model is conservation of angular momentum. That tail motor is effectively a rotating disk that changes position relative to the parent body as it moves, which imparts not only a change in angular momentum on the system, but also alters the center of mass of the vehicle. Later in the nonlinear system, we'll add a post-processing to the controller outputs that will map the combination of u3 and u4 using an inverse tangent to obtain the target motor speed and tail deflection. For now though, this will do.</p>
-            <p>All of this is already tracked in MultiVAC as part of the subassembly system. Again, the only purpose of this model is to derive a controller.</p>
-            <br>
-            <hr width="100%">
-
-            <h2>LQR Controller Design</h2>
-            <p>Setting up a basic state space model in the body frame of reference:</p>
-            <MathBlock>
-                {@html `$$ \\dot{x} = A\\vec{x} + B\\vec{u} $$`}
-            </MathBlock>
-
-            <MathBlock>
-                {@html `$$ \\dot{x}_x = \\begin{bmatrix}
-                0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & g & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & -g & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\
-                \\end{bmatrix} \\begin{bmatrix}
-                x \\\\
-                y \\\\
-                z \\\\
-                \\dot{x} \\\\
-                \\dot{y} \\\\
-                \\dot{z} \\\\
-                \\phi \\\\
-                \\theta \\\\
-                \\psi \\\\
-                \\dot{\\phi} \\\\
-                \\dot{\\theta}\\\\
-                \\dot{\\psi}\\\\
-                \\end{bmatrix}$$`}
-            </MathBlock>
-
-            <MathBlock>
-                {@html `$$ \\dot{x}_u =
-
-                \\begin{bmatrix} \\frac{1}{m} \\begin{bmatrix}I\\end{bmatrix} & \\begin{bmatrix}0\\end{bmatrix}\\\\ \\begin{bmatrix}0\\end{bmatrix} & \\begin{bmatrix}J\\end{bmatrix}^{-1}  \\end{bmatrix} \\begin{bmatrix}
-                    0   & 0     & 0     & 0\\\\
-                    0   & 0     & 0     & 1\\\\
-                    1   & 1     & 1     & 0\\\\
-                    -r_1&r_2    &0      &0\\\\
-                    r_1 &r_2    &-r_3      &a_3\\\\
-                    a_1&a_2     &a_3    & r_3
-                    \\end{bmatrix} \\begin{bmatrix}
-                    T_1\\\\
-                    T_2\\\\
-                    T_3\\cos{\\theta}\\\\
-                    T_3\\sin{\\theta}
-                    \\end{bmatrix}$$`}
-            </MathBlock>
-
-            <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. I used Bryson's rule and a brief tuning session to achieve a full-state LQR controller, the results of which are presented down below.</p>
-            <!-- <p><i>IF YOU'RE READING THIS, THIS PROJECT IS STILL BEING WORKED ON. PLEASE CHECK BACK LATER OR CONTACT <a href="mailto:jack.rhys.comey@gmail.com">JACK.RHYS.COMEY@GMAIL.COM</a>, OR <a href="mailto:jrcomey@ucla.edu">JRCOMEY@UCLA.EDU</a>. THANK YOU!</i></p> -->
-        </div>
-    </ProjectSection>
-
-    <ProjectSection imagePosition="left">
+    <ProjectSection imagePosition="right">
         <div slot="image">
-            <img loading="lazy" src={pos_plot} alt="Position Plot" />
+            <img loading="lazy" src={subassembly_diagram} alt="ATP-XW Blizzard Render" />
         </div>
         <div slot="description">
-            <h1>Linear Controller Results</h1>
-            <hr width='100%'>
-            <p>This should be pretty straightforward, with a couple of explanations presented alongside each result. </p>
-            <p><b>A brief note on the dynamics model:</b> The dynamics model used to design the controller is a simplified non-linear model. It includes the following:</p>
-            <ol>
-                <li>Forces and moments calculated on the vehcile in the <b>body</b> frame of reference, and moved in the <b>translational</b> frame of reference (i.e. a tricopter at 90 degrees of pitch and full throttle will move in the +x inertial direction, not the +z direction)</li>
-                <li>Tricopter motors have been modeled as a first order system (i.e. there is a delay from controller input command to the motor to the motor outputting that force).</li>
-            </ol>
-            <p>As you'd expect, tuning is primarily a trade-off between minimization of attitude error and position error. This controller is linearized around a level flight hover, and does not hold for larger disturbances (e.g. a translational error of 10m would induce a greater tilt to the aircraft than it can sustain altitude with). </p>
-            <p>This is, however, easily rectified with some nonlinear limiters. Simply restrict the maximum error bounds, which are locked to the rotating body frame, and the issue is resolved.</p>
-        </div>
-    </ProjectSection>
-
-    <ProjectSection imagePosition="left">
-        <div slot="image">
-            <img loading="lazy" src={att_plot} alt="Attitude Plot" />
-        </div>
-        <div slot="description">
-            <p>The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
+            <h1>Building the model</h1>
+            <hr width=100%>
+            <p>Thanks to MultiVAC's subassembly system, the dynamics model for the tricopter is extremely trivial to set up once defined. The tail rotor is defined as a child of the tail servo, and so the system is able to accurately account for the effects of the changing position and rotation of the tail assembly on the parent body's inertial properties and angular momentum.</p>
+            <p></p>
         </div>
     </ProjectSection>
 
@@ -562,10 +418,7 @@
         position: relative;
         z-index: -10;
         min-height: 90vh;
-        /* align-content: center; */
         display: flex;
-        /* background-image: url("/assets/photography/cooks_bay.JPG"); */
-        /* background-color: #000000FF; */
         flex-direction: column;
     }
 

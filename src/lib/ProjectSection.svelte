@@ -48,10 +48,13 @@
   @media (max-width: 80em) {
     .project-section:not(.no-image) {
       display: flex;
-      flex-direction: column;
-    }
-    .project-section.image-left {
       flex-direction: column-reverse;
+    }
+    .image-reel :global(img) {
+      max-height: 50vh;
+      width: auto;
+      max-width: 100%;
+      margin: 0 auto;
     }
   }
 
@@ -70,7 +73,6 @@
     width: 100%;
     object-fit: contain;
     aspect-ratio: 1;
-    border-radius: 5%;
   }
 
   .project-section :global(b) {

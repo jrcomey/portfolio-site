@@ -1,4 +1,4 @@
-<title>MultiVAC</title>
+<title>About Me</title>
 
 
 
@@ -19,6 +19,7 @@ TO DO:
     import PersonalInfo from './PersonalInfo.svelte';
     import WhyAWebsite from './WhyAWebsite.svelte';
     import Skills from './Skills.svelte';
+    import ProjectSection from '$lib/ProjectSection.svelte';
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -36,8 +37,9 @@ TO DO:
 <!-- <Academics/> -->
 
 <!-- <WorkExperience/> -->
+ 
 
-<!-- <WhyAWebsite/> -->
+<WhyAWebsite/>
 
 
 
@@ -96,9 +98,6 @@ TO DO:
         padding: 5vw;
         align-content: center;
 
-    }
-    .about h1 {
-        text-decoration: underline;
     }
 
 
