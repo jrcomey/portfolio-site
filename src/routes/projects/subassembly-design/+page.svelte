@@ -14,6 +14,7 @@
     let container;
     let scene, camera, renderer, animationFrameId;
     const tricopter_subassembly_diagram = `${base}/assets/trifecta/tricopter_subassembly.png`;
+    const quadcopter_subassembly_diagram = `${base}/assets/trifecta/quadcopter_nobatt.png`
     const helicopter_subassembly_diagram = `${base}/assets/trifecta/helicopter_subassembly.png`;
     const component_diagram = `${base}/assets/trifecta/component.png`;
 
@@ -25,14 +26,12 @@
 
     <ProjectSection imagePosition="right">
         <div slot="description">
-            <h1>The Problem with Monoliths</h1>
+            <h1>The Great Nonlinear Migration</h1>
             <hr width=100%>
-            <p>When I first started writing 6DOF simulations, everything lived in one big struct. Mass, inertia, forces, moments - all hardcoded into a single vehicle object. Want to change a motor? Rewrite the force equations. Want to add a servo? Rewrite the moment equations. Want to model a motor that's mounted on a servo? Good luck.</p>
+            <p>Previous versions of MultiVAC used a system of second order transfer functions for a delayed series of linear inputs to a rotating state space equation. This works fine for anything that can be reduced to a rigid body dynamics problem, like a quadcopter. Each motor/propeller pair for that vehicle can be reduced to a force/moment vector generator. To fit anything more complex than that (e.g. a multibody joint with several pivot points) into a linearized model is reductive. But the moment you try to model something more interesting - say, a tricopter with a tilting tail - the assumptions no longer hold and the model is no longer useful.</p>
             
-            <p>This works fine for anything that can be reduced to a rigid body dynamics problem, like a quadcopter. Each motor/propeller pair has a counterpart, regardless of what kind of input is being sent to the vehicle. To fit anything more complex than that (e.g. a multibody joint with several pivot points) into a linearized model is reductive.But the moment you try to model something more interesting - say, a tricopter with a tilting tail - the whole thing falls apart.</p>
-            
-            <p>MultiVAC's subsystem architecture breaks a vehicle down into a graph of interconnected components, each responsible for its own dynamics calculations. A motor doesn't know it's on a tricopter or that it has a propeller on it, just that receives a voltage and has a load torque. A propeller doesn't know it's on a motor, just its relative angular and translational velocities with respect to the free stream. They just expose dynamics quantities through a common interface, and the graph takes care of the rest. </p>
-            
+            <p>MultiVAC's subsystem architecture solves this by breaking a vehicle down into independent sets (or graphs, in CS parlance) of interconnected components, each responsible for its own dynamics calculations. A motor doesn't know it's on a tricopter or that it has a propeller on it, just that it can receive a voltage and a load torque that causes it to move. A propeller doesn't know it's on a motor, just how it moves relative to the freestream airflow, and what kind of lift and drag it produces. Each component exposes relational quantities through a common interface, and the graph takes care of the rest.</p>
+                        
             <p>The end result is a user-definable interface of interconnected nonlinear systems. Any user (whether a human designer or iterative script) can modify both architecture and parameters on the fly without requiring a complete rework of the equations of motion or even recompilation of the simulation program.</p>
         </div>
         <div slot="image">
@@ -44,14 +43,14 @@
         <div slot="description">
                 <h1>SubAssemblies</h1>
                 <hr width=100%>
-                <p>The fundamental organizational unit in MultiVAC is the SubAssembly. It's a directed graph of components - each node is a part (motor, propeller, ESC, servo), and each edge defines a dependency. Components can receive inputs from other components, and they can be positionally parented to other components.</p>
+                <p>Subassemblies are a fundamental organizational    unit of MultiVAC. They are directed graphs of individual dynamics models of simple components with a series of interdependent relationships between components. Each node is a part (such as a motor, propeller, ESC, et.c.), and each edge defines a dependency between components. Components can receive inputs from any number of other components, and they can be also be positionally parented to any other component in the model.</p>
                 
-                <p>That distinction is important. A dependency link says "I need data from this component”. A propeller needs the motor's dynamics data to calculate its lift and drag. A parent link says "I am physically attached to this component, and when it moves, I move with it." A propeller is parented to a motor. A motor on the tail is parented to a servo. When the servo deflects, the motor and propeller both rotate with it.</p>
+                <p>In plainer language, a dependency link says "I need data from this component”. A propeller needs the motor's dynamics data to calculate its lift and drag. A parent link says "I am physically attached to this component, and when it moves, I move with it." A propeller is parented to a motor. A motor on the tail is parented to a servo. When the servo deflects, the motor and propeller both rotate with it.</p>
                 
-                <p>When the SubAssembly collects physics outputs from its components, it walks the parent chain. Each component reports its forces, moments, angular momentum, mass, and inertia in its own local frame. The assembly then transforms each of these up through every parent in the chain until they're all in the assembly frame of reference. If a propeller is mounted on a motor that's mounted on a servo, then the dynamics data of the propeller is walked up the parent chain. For example, not only does the propeller's angular momentum vector gets rotated twice - once into the motor frame, and once into the servo frame - before it reaches the vehicle body, but the translational movement of the propeller mass from the moving servo is also accounted for in the angular momentum calculation. </p>
+                <p>When the SubAssembly collects outputs from its components, it walks up the parent chain. Each component reports its forces, moments, angular momentum, mass, and inertia in its own local frame. The assembly then transforms each of these up through every parent in the chain until they're all in the assembly frame of reference. If a propeller is mounted on a motor that's mounted on a servo, then the dynamics data of the propeller is walked from the propeller frame to the motor to the servo to the center of gravity of the vehicle. Not only does the propeller's angular momentum vector gets rotated twice - once into the motor frame, and once into the servo frame - before it reaches the vehicle body, but the translational movement of the propeller mass from the moving servo is also accounted for in the angular momentum calculation.</p>
         </div>
         <div slot="image">
-            <img loading="lazy" src={helicopter_subassembly_diagram} alt="Trifecta Diagram" />
+            <img loading="lazy" src={quadcopter_subassembly_diagram} alt="Trifecta Diagram" />
         </div>
     </ProjectSection>
 
@@ -59,17 +58,7 @@
         <div slot="description">
                 <h1>The Component Interface</h1>
                 <hr width=100%>
-                <p>Every component in the graph implements a common set of behaviors, which defines the interface between them. At its core, the interface asks three questions of each component: </p>
-                <ul>
-                    <li><p>What are your dynamics properties?</p></li>
-                    <li>
-                        <p>Do you take signals from the flight controller, and if so what do they do?</p>
-                    </li>
-                    <li>
-                        <p>Do you send signals back to the flight controller, and if so, what are they?</p>
-                    </li>
-                </ul>
-                <p>Physics exchange happens through a common interface, consisting of a structured package containing force, moment, linear momentum, angular momentum,  and other dynamics quantities. Every component produces one of these at each intermediate step. For example, a motor's bus carries its rotor angular momentum and reaction torque. A propeller's bus carries thrust, drag torque, and the angular momentum of its spinning disk. An ESC's bus is null - it produces no physical effect, only electrical output. </p>
+                <p>Every component in the graph implements a common set of behaviors, which defines the interface between them. Exchange happens through a common interface, consisting of a structured package containing force, moment, linear momentum, angular momentum,  and other dynamics quantities. Every component produces one of these at each intermediate step. For example, a motor's bus carries its rotor angular momentum and reaction torque. A propeller's bus carries thrust, drag torque, and the angular momentum of its spinning disk. An ESC's bus is null - it produces no physical effect, only electrical output. </p>
         </div>
         <div slot="image">
             <img loading="lazy" src={component_diagram} alt="Trifecta Diagram" />
@@ -78,9 +67,9 @@
 
      <ProjectSection imagePosition="right">
         <div slot="description">
-                <h1>A Concrete Example</h1>
+                <h1>Example</h1>
                 <hr width='100%'>
-            <p>Let's put this all together with a real configuration. The tricopter's propulsion SubAssembly consists of twelve components: three motors, three propellers, three ESCs, and a servo on the tail. Setting it up in RHAI looks something like this (simplified for readability):</p>
+            <p>Let's put this all together with a real configuration, as displayed in the accompanying diagram. The tricopter's propulsion SubAssembly consists of twelve components: three motors, three propellers, three ESCs, and a servo on the tail. Setting it up in RHAI looks something like this:</p>
             
             <pre><code>{`let assembly = SubAssembly(
     "propulsion",       // name
@@ -121,7 +110,7 @@
             <img loading="lazy" src={tricopter_subassembly_diagram} alt="Trifecta Diagram" />
         </div>
     </ProjectSection>
-
+<!-- 
     <div class="shaded-background-no-pic">
 
         <div class="description">
@@ -135,7 +124,7 @@
             
             <p>This is the foundation that everything else in MultiVAC is built on. The dynamics model, the controller, the scripting interface - they all depend on the subsystem architecture being correct and general. Get this right, and the rest follows.</p>
         </div>
-    </div>
+    </div> -->
 
 
 </section>
