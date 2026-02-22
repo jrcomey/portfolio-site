@@ -82,13 +82,13 @@
             description="As part of a team of 5, I was tasked with reverse-engineering the 1993 Clementine lunar flyby probe in order to modify the spacecraft to prevent an ADCS error that caused mission failure."
         />
 
-        <ProjectCard
+        <!-- <ProjectCard
             href="{base}/projects/flat-plate-drag"
             imageSrc="{base}/assets/Prob1bResults1.png"
             title="Flat Plate Drag"
             subtitle="CFD & Fluid Flow Analysis"
             description="Two-dimensional analysis of subsonic fluid flow over a flat plate using numerical methods"
-        />
+        /> -->
     </div>
 </section>
 
