@@ -676,7 +676,7 @@
 
     <ProjectSection imagePosition="left">
         <div slot="image">
-            <img loading="lazy" src={pos_plot} alt="Position Plot" />
+            <img src={pos_plot} alt="Position Plot" />
         </div>
         <div slot="description">
             <h1>Linear Controller Results</h1>
@@ -694,7 +694,7 @@
 
     <ProjectSection imagePosition="left">
         <div slot="image">
-            <img loading="lazy" src={att_plot} alt="Attitude Plot" />
+            <img src={att_plot} alt="Attitude Plot" />
         </div>
         <div slot="description">
             <p>The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
