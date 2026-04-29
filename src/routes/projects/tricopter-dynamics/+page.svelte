@@ -19,8 +19,8 @@
     } from '$lib/three-utils.js';
 
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
-    const pos_plot = `${base}/assets/trifecta/trifecta_0_pos_plot.png`;
-    const att_plot = `${base}/assets/trifecta/trifecta_0_att_plot.png`;
+    const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
+    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
