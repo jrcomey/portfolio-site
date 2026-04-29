@@ -10,13 +10,13 @@
 
     <div class="project-grid">
 
-        <!-- <ProjectCard
+        <ProjectCard
             href="{base}/projects/algorithm-builder"
-            imageSrc="{base}/assets/trifecta/helicopter_subassembly.png"
+            imageSrc="{base}/assets/diagrams/H2OptimalControl.png"
             title="MultiVAC Algorithm Builder"
             subtitle="Complex Nonlinear Assembly Structure"
             description="A method for creating large flight control algorithms through program declaration"
-        /> -->
+        />
 
         <ProjectCard
             href="{base}/projects/tricopter-dynamics"
@@ -74,13 +74,13 @@
             description="Eight rotor eVTOL aircraft designed to transport passengers around Chicago at cost-competitive rates. Design won the 2020-2021 NASA ARMD University Design Challenge."
         />
 
-        <ProjectCard
+        <!-- <ProjectCard
             href="{base}/projects/clementine"
             imageSrc="{base}/assets/poster_req_review.png"
             title="Clementine"
             subtitle="Space Systems Engineering"
             description="As part of a team of 5, I was tasked with reverse-engineering the 1993 Clementine lunar flyby probe in order to modify the spacecraft to prevent an ADCS error that caused mission failure."
-        />
+        /> -->
 
         <!-- <ProjectCard
             href="{base}/projects/flat-plate-drag"

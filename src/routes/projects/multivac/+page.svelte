@@ -292,7 +292,7 @@
     </ProjectSection>  
 
 
-    <ProjectSection imagePosition="left">
+    <!-- <ProjectSection imagePosition="left">
         <div slot="image">
             <img loading="lazy" src={threeDplot} alt="ATP-XW Blizzard Render" />
         </div>
@@ -307,7 +307,7 @@
 </p>
             <p>Between the event system and the snapshot mechanism, MultiVAC can handle scenarios that go well beyond single-vehicle dynamics. Multiple vehicles, interacting in a shared environment, each with their own flight computer and component graph, each aware of the others. </p>
         </div>
-    </ProjectSection>  
+    </ProjectSection>   -->
     
 
     <!-- <div class="shaded-background">

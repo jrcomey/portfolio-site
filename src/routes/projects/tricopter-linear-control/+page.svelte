@@ -19,8 +19,8 @@
     } from '$lib/three-utils.js';
 
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
-    const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
-    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
+    const pos_plot = `${base}/assets/trifecta/trifecta_0_pos_plot.png`;
+    const att_plot = `${base}/assets/trifecta/trifecta_0_att_plot.png`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -405,12 +405,12 @@
         </div>
     </div> -->
 
-
     <ProjectSection imagePosition="none">
         <div slot="description">
             <h1>A Quick Controller</h1>
             <hr width='100%'>
-            <p>It's a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise.</p>
+            <p>It's a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise. The simulations itself still runs the full nonlinear quaternion-based dynamics.</p>
+
             <p>We'll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
             <MathBlock>
                 {@html `$$\\vec{u} = \\begin{bmatrix} \\omega_1 \\\\ \\omega_2 \\\\ \\omega_3 \\\\ \\theta_{s} \\end{bmatrix} \\propto \\begin{bmatrix} T_1 \\\\ T_2 \\\\ T_3 \\\\ \\theta_{s} \\end{bmatrix}$$`}
@@ -418,7 +418,156 @@
             <br>
             <hr width="100%">
 
+            A quick note that the front left motor and the front right motor both spin counterclockwise, while the front right motor spins clockwise to offset the front left. The servo on the tail will be the primary source of yaw authority. 
+
+            <br>
+            <hr width="100%">
+
+            <h2>Hover Operating Point</h2>
+
+            <p>Before linearizing, we need a point to linearize about. For a quad this is trivial — every motor sits at the same throttle. The tricopter is geometrically asymmetric, and the operating point isn't.</p>
+
+            <p>Pinning the airframe in hover gives three constraints. Vertical lift must equal weight:</p>
+
+            <MathBlock>
+                {@html `$$2 T_{front} + T_{tail} = m g$$`}
+            </MathBlock>
+
+            <p>Pitch moment about the body x-axis must vanish — front motors at <code>-x</code>, tail at <code>+x</code>:</p>
+
+            <MathBlock>
+                {@html `$$2 \\, r_{x,front} \\, T_{front} + r_{x,tail} \\, T_{tail} = 0$$`}
+            </MathBlock>
+
+            <p>And the yaw torque must vanish. The two front motors spin in opposite directions, so their reaction torques cancel by symmetry. The tail motor leaves a residual reaction torque that the servo cancels by tilting the tail thrust laterally and letting the moment arm do the rest:</p>
+
+            <MathBlock>
+                {@html `$$\\delta_{trim} = \\frac{Q_{tail}}{r_{x,tail} \\, T_{tail}}$$`}
+            </MathBlock>
+
+            <p>Solving the lift and pitch constraints jointly gives a closed-form thrust split. Going from thrust to ESC throttle requires sweeping through the steady-state motor model — back-EMF, winding resistance, propeller <code>C_T</code>/<code>C_Q</code>, viscous damping, the lot — and that part is a numerical root-find rather than anything pretty. The result is a hover bias vector:</p>
+
+            <MathBlock>
+                {@html `$$\\vec{u}_{hover} = \\begin{bmatrix} u_{FL,h} & u_{FR,h} & u_{tail,h} & u_{servo,h} \\end{bmatrix}^T$$`}
+            </MathBlock>
+
+            <p>which the controller will feed forward at runtime so the LQR feedback only has to handle perturbations.</p>
+
+            <br>
+            <hr width="100%">
+
             <h2>Linearization</h2>
+
+            <p>Quaternions are great for the simulation but awkward for LQR — four components describing three rotational degrees of freedom, on a manifold rather than a vector space. The standard move is to linearize against a small-angle Euler perturbation, design the controller in 12-state error space, and lift the resulting gain back to quaternion form for deployment.</p>
+
+            <p>Define the reduced error state:</p>
+
+            <MathBlock>
+                {@html `$$\\delta \\vec{x} = \\begin{bmatrix} \\delta p_x & \\delta p_y & \\delta p_z & \\delta v_x & \\delta v_y & \\delta v_z & \\delta \\phi & \\delta \\theta & \\delta \\psi & \\delta \\omega_x & \\delta \\omega_y & \\delta \\omega_z \\end{bmatrix}^T$$`}
+            </MathBlock>
+
+            <p>Then the linearized dynamics are the usual:</p>
+
+            <MathBlock>
+                {@html `$$\\dot{\\delta x} = A \\, \\delta \\vec{x} + B \\, \\delta \\vec{u}$$`}
+            </MathBlock>
+
+            <p>The A matrix carries the position/velocity and attitude/rate kinematics, plus a gravity coupling block from the tilted body — pitch nose-up accelerates forward, roll right accelerates left:</p>
+
+            <MathBlock>
+                {@html `$$A = \\begin{bmatrix}
+                0_{3\\times 3} & I_{3} & 0_{3\\times 3} & 0_{3\\times 3} \\\\
+                0_{3\\times 3} & 0_{3\\times 3} & G & 0_{3\\times 3} \\\\
+                0_{3\\times 3} & 0_{3\\times 3} & 0_{3\\times 3} & I_{3} \\\\
+                0_{3\\times 3} & 0_{3\\times 3} & 0_{3\\times 3} & 0_{3\\times 3} \\\\
+                \\end{bmatrix}, \\qquad G = \\begin{bmatrix} 0 & g & 0 \\\\ -g & 0 & 0 \\\\ 0 & 0 & 0 \\end{bmatrix}$$`}
+            </MathBlock>
+
+            <p>The B matrix maps ESC perturbations to body forces and torques. Computing it analytically would mean differentiating the entire motor-prop chain by hand and ends up grim, so I just numerically perturb the steady-state model around the hover throttle for each motor and pull off finite-difference sensitivities:</p>
+
+            <MathBlock>
+                {@html `$$\\frac{\\partial T}{\\partial u}\\bigg|_{u_h}, \\quad \\frac{\\partial Q}{\\partial u}\\bigg|_{u_h}, \\quad \\frac{\\partial F_y}{\\partial u_{servo}}\\bigg|_{u_h}$$`}
+            </MathBlock>
+
+            <p>From those, build the control effectiveness matrix. Each motor contributes a vertical thrust derivative, roll/pitch moments via its arm position, and a yaw moment from its prop reaction torque. The servo contributes a lateral force, and therefore a yaw moment via the tail moment arm:</p>
+
+            <MathBlock>
+                {@html `$$B_{eff} = \\begin{bmatrix}
+                0 & 0 & 0 & 0 \\\\
+                0 & 0 & 0 & \\partial F_y \\\\
+                \\partial T_{FL} & \\partial T_{FR} & \\partial T_{tail} & 0 \\\\
+                r_{y,FL} \\, \\partial T_{FL} & r_{y,FR} \\, \\partial T_{FR} & 0 & -r_{z,tail} \\, \\partial F_y \\\\
+                -r_{x,FL} \\, \\partial T_{FL} & -r_{x,FR} \\, \\partial T_{FR} & -r_{x,tail} \\, \\partial T_{tail} & 0 \\\\
+                -s_{FL} \\, \\partial Q_{FL} & -s_{FR} \\, \\partial Q_{FR} & -s_{tail} \\, \\partial Q_{tail} & r_{x,tail} \\, \\partial F_y
+                \\end{bmatrix}$$`}
+            </MathBlock>
+
+            <p>where <code>s_i &isin; &plusmn;1</code> is the spin direction of motor <code>i</code>. Promote that 6×4 to the full 12×4 B by dividing the force rows by mass and the moment rows by the inertia matrix:</p>
+
+            <MathBlock>
+                {@html `$$B = \\begin{bmatrix} 0_{3\\times 4} \\\\ \\frac{1}{m} B_{eff}^{F} \\\\ 0_{3\\times 4} \\\\ J^{-1} B_{eff}^{\\tau} \\end{bmatrix}$$`}
+            </MathBlock>
+
+            <p>A quick rank check on the controllability matrix <code>[B, AB, A²B, …]</code> confirms it's full rank — twelve, as expected. All of the underlying motor electrical dynamics, propeller torque, and tail-rotor angular momentum bookkeeping that the linear model abstracts away are still tracked in MultiVAC's SubAssembly system. Again, the only purpose of this model is to derive a controller.</p>
+
+            <br>
+            <hr width="100%">
+
+            <h2>LQR Controller Design</h2>
+
+            <p>With (A, B) in hand, the controller drops out of the continuous-time algebraic Riccati equation, the derivation of which is left as an exercise to the reader:</p>
+
+            <MathBlock>
+                {@html `$$A^T P + P A - P B R^{-1} B^T P + Q = 0$$`}
+            </MathBlock>
+
+            <MathBlock>
+                {@html `$$K = R^{-1} B^T P$$`}
+            </MathBlock>
+
+            <p>Picking <code>Q</code> and <code>R</code> is the entire game. Bryson's rule — set diagonal entries to <code>1/x_max²</code> for each state — gets close on the first pass, and from there it's tuning. Position weights dominate over velocity, attitude dominates over rate, yaw gets a slight bump because the servo is a comparatively slow channel and I want a tighter loop on it. <code>R</code> is small relative to <code>Q</code> because the throttles have a wide range to play with.</p>
+
+            <p>Solving gives a 4×12 gain matrix mapping the Euler error state to ESC perturbations. Closed-loop eigenvalues all sit in the left half plane, which is the bare minimum bar to clear before flying anything.</p>
+
+            <h3>Mapping back to quaternions</h3>
+
+            <p>The simulation doesn't speak Euler angles, so the gain has to be lifted back into the 13-state quaternion world. Near hover, a small rotation linearizes against small Euler angles via:</p>
+
+            <MathBlock>
+                {@html `$$q \\approx \\begin{bmatrix} 1 & \\tfrac{1}{2}\\delta\\phi & \\tfrac{1}{2}\\delta\\theta & \\tfrac{1}{2}\\delta\\psi \\end{bmatrix}^T \\quad \\implies \\quad \\delta\\phi \\approx 2 q_x, \\;\\; \\delta\\theta \\approx 2 q_y, \\;\\; \\delta\\psi \\approx 2 q_z$$`}
+            </MathBlock>
+
+            <p>which makes the embedding simple. The position and velocity columns pass through directly, the <code>q_w</code> column is zeroed (no useful error signal there at hover), the <code>q_x</code>/<code>q_y</code>/<code>q_z</code> columns are the original attitude columns scaled by 2, and the angular rate columns pass through. Negate the whole thing so the regulator drives the state to zero rather than away from it, and the deployable feedback law becomes:</p>
+
+            <MathBlock>
+                {@html `$$\\vec{u} = \\vec{u}_{hover} - K_{13} \\, \\vec{x}$$`}
+            </MathBlock>
+
+            <p>The whole controller lives inside the BuildAnAlgo graph as three components in series — a <code>mat_mul</code> for the LQR feedback, a <code>bias_and_scale</code> for the hover trim, and a <code>limiter</code> to keep the ESC commands inside [0, 1000]. <code>K_13</code> is the mat_mul's matrix, the hover bias vector is the bias_and_scale's offset, and the saturation limits are the limiter's clamps. No special-case controller code, just the same primitives that build every other algorithm in MultiVAC.</p>
+
+            <p>This is a regulator about hover, not a tracker — sufficient for stability and station-keeping, and the foundation for whatever guidance loop sits on top. Trajectory tracking, gain scheduling for off-hover regimes, and eventually a swap-in MPC for aggressive maneuvers are all on the roadmap. The results of the current full-state LQR are presented below.</p>
+        </div>
+    </ProjectSection>
+
+
+    <!-- <ProjectSection imagePosition="none">
+        <div slot="description">
+            <h1>A Quick Controller</h1>
+            <hr width='100%'>
+            <p>It's a nonlinear model, yes, but to create a controller for it and get some nice visuals, we will have to linearize it to some degree. Just for the controller, I promise. The simulations itself still runs the full nonlinear quaternion-based dynamics.</p>
+
+            <p>We'll be using a relatively straightforward state space model in six degrees of freedom. The A matrix is uninteresting and left as an exercise to the reader. The tricopter in question has four pinouts - PWM speed control outputs to each of the three motors, and a fourth PWM output to the tail servo. In vector form it is as follows:</p>
+            <MathBlock>
+                {@html `$$\\vec{u} = \\begin{bmatrix} \\omega_1 \\\\ \\omega_2 \\\\ \\omega_3 \\\\ \\theta_{s} \\end{bmatrix} \\propto \\begin{bmatrix} T_1 \\\\ T_2 \\\\ T_3 \\\\ \\theta_{s} \\end{bmatrix}$$`}
+            </MathBlock>
+            <br>
+            <hr width="100%">
+
+            A quick note that the front left motor and the front right motor both spin counterclockwise, while the front right motor spins clockwise to offset the front left. The servo on the tail will be the primary source of yaw authority. 
+
+            <h2>Linearization</h2>
+
+            <p>We'll be linearizing around a small-angle perturbation for the tricopter and design the controller around a 12 item vector state-space, and modify the final gain to fit the true thirteen vector state estimate used by the </p>
             <p>A quick summation of forces and moments in the body frame demonstrates the nonlinearity of the tricopter:</p>
             <MathBlock>
                 {@html `$$F_x = 0$$`}
@@ -521,10 +670,9 @@
                     \\end{bmatrix}$$`}
             </MathBlock>
 
-            <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. I used Bryson's rule and a brief tuning session to achieve a full-state LQR controller, the results of which are presented down below.</p>
-            <!-- <p><i>IF YOU'RE READING THIS, THIS PROJECT IS STILL BEING WORKED ON. PLEASE CHECK BACK LATER OR CONTACT <a href="mailto:jack.rhys.comey@gmail.com">JACK.RHYS.COMEY@GMAIL.COM</a>, OR <a href="mailto:jrcomey@ucla.edu">JRCOMEY@UCLA.EDU</a>. THANK YOU!</i></p> -->
+            <p>Looks good. That just leaves calculating the controller, which is fairly straightforward and left as an exercise for the reader. I used Bryson's rule and a brief tuning session to achieve a full-state LQR controller, the results of which are presented down below.</p>\
         </div>
-    </ProjectSection>
+    </ProjectSection> -->
 
     <ProjectSection imagePosition="left">
         <div slot="image">
