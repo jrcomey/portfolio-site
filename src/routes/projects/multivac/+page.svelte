@@ -20,6 +20,7 @@
     const threeDplot = `${base}/assets/tracking_plot_anim.gif`;
     const helicopter_subassembly_diagram = `${base}/assets/trifecta/helicopter_subassembly.png`;
     const component_diagram = `${base}/assets/trifecta/component.png`;
+    const h2_plot = `${base}/assets/diagrams/H2OptimalControl.png`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -228,7 +229,7 @@
 
     <ProjectSection imagePosition="left">
         <div slot="image">
-            <img loading="lazy" src={threeDplot} alt="ATP-XW Blizzard Render" />
+            <img loading="lazy" src={h2_plot} alt="ATP-XW Blizzard Render" />
         </div>
         <div slot="description">
             <div>
