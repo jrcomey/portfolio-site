@@ -21,6 +21,7 @@
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
     const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
     const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
+    const cube_plot = `${base}/assets/trifecta/run_full_plot_anim.gif`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -682,13 +683,8 @@
             <h1>Linear Controller Results</h1>
             <hr width='100%'>
             <p>This should be pretty straightforward, with a couple of explanations presented alongside each result. </p>
-            <p><b>A brief note on the dynamics model:</b> The dynamics model used to design the controller is a simplified non-linear model. It includes the following:</p>
-            <ol>
-                <li>Forces and moments calculated on the vehcile in the <b>body</b> frame of reference, and moved in the <b>translational</b> frame of reference (i.e. a tricopter at 90 degrees of pitch and full throttle will move in the +x inertial direction, not the +z direction)</li>
-                <li>Tricopter motors have been modeled as a first order system (i.e. there is a delay from controller input command to the motor to the motor outputting that force).</li>
-            </ol>
-            <p>As you'd expect, tuning is primarily a trade-off between minimization of attitude error and position error. This controller is linearized around a level flight hover, and does not hold for larger disturbances (e.g. a translational error of 10m would induce a greater tilt to the aircraft than it can sustain altitude with). </p>
-            <p>This is, however, easily rectified with some nonlinear limiters. Simply restrict the maximum error bounds, which are locked to the rotating body frame, and the issue is resolved.</p>
+            <p>The aircraft is able to stabilize pretty easily with the previously calculated LQR, with some steady state error. This is inevitable with the current controller design, which would require some kind of integration component in order to correct for the error. For further development of the model, I intend to use a cascaded position/velocity/attitude loop in order to switch to a trajectory-based control scheme as I use this dynamics model for future projects.</p>
+
         </div>
     </ProjectSection>
 
@@ -698,6 +694,15 @@
         </div>
         <div slot="description">
             <p>The attitude results take a little bit of explanation. At first, it seems like the positive roll would destabilize the aircraft, but is in fact expected steady state behavior. The thrust from the propellers to maintain altitude creates a yaw moment on the vehicle. To counteract the yaw moment, the tail rotor tilts. This, however, creates a force on the vehicle in the y-direction, which must be counteracted with a vehicle roll. The result is a slightly tilted vehicle with a slight tail deflection. In this, another <i>disadvantage</i> of the tricopter becomes clear - the vehicle is not <i>level</i> when stable!</p>
+        </div>
+    </ProjectSection>
+
+    <ProjectSection imagePosition="left">
+        <div slot="image">
+            <img src={cube_plot} alt="CubeGif" />
+        </div>
+        <div slot="description">
+            <p>Here's a little demo with some waypoint guidance added. </p>
         </div>
     </ProjectSection>
 
