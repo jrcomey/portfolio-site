@@ -23,9 +23,11 @@
             </div>
             <hr width="100%">
             
-            <p>If you've read the <a href="{base}/projects/hardware-subsystems">hardware subsystems</a> page, you'll be familiar with how MultiVAC's <code>SubAssembly</code> system works. Components — motors, propellers, ESCs, servos — are wired together in a directed graph, passing signals and physics between each other to form an accurate model of the plant. It's a powerful pattern. Powerful enough, in fact, that I started to wonder why I was only using it for plant models.</p>
+            <p>If you've read the hardware subsystems page, you'll be familiar with how MultiVAC's subassembly system works. Components are wired together in a directed graph, passing signals and physics between each other to form an accurate nonlinear model of the plant. It allows for complex models to be set up with a simple scripting interface. A similar structure now exists for flight control and sensor processing algorithms. </p>
             <br>
-            <p>The flight computer has always been the odd one out in MultiVAC's architecture, and has previous required a rigid implementation of guidance, navigation, and control modules, which cannot be expanded. That's fine for a textbook state-feedback controller on a linear plant, but is so inflexible as to be obstructive. It is not usable when you want to, say, cascade a position controller into an attitude controller, pull in a GPS signal from a modeled constellation, or integrate vehicle to vehicle communications modules. The old architecture forced you into a single GNC pipeline with no room for the kind of algorithmic composition that real flight software demands.</p>
+            <p>Like the subassemblies, they consist of a series of independently verified blocks that can be put together for rapid prototyping of a new flight control architecture. The Python integration allows for any upstream changes (whether to the plant, the flight computer, etc) to be re-verified quickly through a series of increasingly complex unit and integration tests of your own design. This allows the end user to test hardware like software. A potential HIL pipeline could run a series of tests and simulations before compiling a build to be tested on real hardware stored in a test facility of some kind. </p>
+            <br>
+            <p>Addition of new components is a simple process, and requires only that the new components use the existing IO interface and have constructors enabled in the Python interface. The component library is currently somewhat barebones but is expanding rapidly. </p>
         </div>
 
         <div slot="image">
