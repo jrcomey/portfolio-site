@@ -182,9 +182,9 @@
             <h1>MultiVAC</h1>
                 <h3><i>General Purpose 6DOF Simulation</i></h3>
             <hr width=100%>
-            <p>Named after Isaac Asimov's recurring supercomputer, MultiVAC is a <b>general purpose six degree-of-freedom simulation</b>. Written from scratch in Rust, it’s intended as an end-to-end design tool for vehicle dynamics and a proving ground for GNC method; a tool to design and test hardware like it’s software. You can experiment with rapid prototypes, or ensure that your established design still meets performance criteria through a series of unit and integration tests. A place to build a vehicle, throw a controller at it, and see what happens, as fast and as often as you need to.</p>
-            <p>MultiVAC is, at its core, a Rust-based simulation with an exposed Python API. Vehicle definition, scenario setup, post-processing, and flight computer algorithms are all defined by the end user in <b>Python</b>. All dynamics calculations, data recording, and flight control is handled by the core Rust code. The boundary between the two is deliberate, and it means you spend your time on GNC design rather than constant rehashing and recompilation.</p>
-            <p>MultiVAC is intended as a development companion for real-world applications. Air vehicles, spacecraft, ground robots - if it moves in three dimensions, it deserves to be modeled here.</p>
+            <p>Named after Isaac Asimov's recurring supercomputer, MultiVAC is a <b>general purpose six degree-of-freedom simulation</b>. Written from scratch in Rust, it’s intended as an end-to-end design tool for vehicle dynamics and a proving ground for GNC methods; a tool to design and test hardware like software. You can experiment with rapid prototypes, or ensure that your established design still meets performance criteria through a series of unit and integration tests.</p>
+            <p>MultiVAC is, at its core, a Rust-based simulation with an exposed Python API. Vehicle definition, scenario setup, post-processing, and flight computer algorithms are all defined by the end user in <b>Python</b>. All dynamics calculations, data recording, and flight control is handled by the core Rust code. The end result is a versatile, fast, and accurate simulation that any engineer can use.</p>
+            <p>MultiVAC is intended as a development companion for real-world applications. Anything that moves deserves to be modeled here.</p>
         </div>
         <div slot="image">
             <img loading="lazy" src={blizz_render_path} alt="ATP-XW Blizzard Render" />
@@ -204,7 +204,7 @@
 </p>
             <p>Python means access to the entire scientific computing ecosystem. Want to optimize your controller gains with SciPy? Go ahead. Want to train a guidance policy in PyTorch and drop it into the sim? Nothing stopping you. Want to write a loop that runs a thousand scenarios with randomized initial conditions and aggregates the results? That's just a for loop now.
 </p>
-            <p>More importantly, Python enables adaptive and automatic iterative design. The simulation isn't just something you run once and stare at the plots. It's something you can wrap in an optimization loop, a parameter sweep, or a learning algorithm. The boundary between "running a sim" and "designing a vehicle" gets very blurry very fast, and that's the point.
+            <p>More importantly, Python enables adaptive and automatic iterative design. The simulation isn't just something you run once and stare at the plots. It's something you can wrap in an optimization loop, a parameter sweep, or a learning algorithm. 
 </p>
         </div>
     </ProjectSection>  
@@ -218,9 +218,9 @@
                 <h1>The Plant Model</h1>
             </div>
             <hr width='100%'>
-            <p>Vehicles in MultiVAC are built on the subassembly system - a directed graph of physical components that each compute their own contributions to the vehicle's dynamics. There are no linearized state-space matrices here. Each component - a motor, a propeller, a servo, whatever you need - is a node in the hardware graph, connected to other components by physical dependency links and parent links.
+            <p>Vehicles in MultiVAC are built on the subassembly system - a directed graph of physical components that each compute their own contributions to the vehicle's dynamics. This enables the quick buildup of an accurate nonlinear model using previously verified hardware models. Each component - a motor, a propeller, a servo, et.c. - is a node in the hardware graph, connected to other components by physical dependency links and parent links.
 </p>
-            <p>Dependency links describe who needs data from whom. A propeller needs the motor's shaft output to calculate thrust. A motor needs the ESC's voltage to calculate torque. Parent links describe physical hierarchy. A propeller is mounted on a motor. A motor on the tail is mounted on a servo. When the servo deflects, everything downstream rotates with it, and all the forces, moments, and angular momentum vectors transform through the parent chain automatically.
+            <p>Dependency links describe how these nonlinear components interact. A propeller needs the motor's shaft output and rotational velocity to calculate thrust. A motor needs the ESC's voltage to calculate torque. Parent links describe physical hierarchy. A propeller is mounted on a motor. A motor on a tricopter tail is mounted on a servo. When the servo deflects, everything downstream rotates with it, and all the forces, moments, and angular momentum vectors transform through the parent chain automatically.
 </p>
             <p>This means that moving parts are first-class citizens. A tilting rotor isn't a special case handled with trigonometric substitutions, but rather a nonlinear component with a rotating reference frame. The system computes the correct dynamics - inertia tensor shifts, angular momentum coupling, force direction changes - without approximation.
 </p>
