@@ -1,3 +1,5 @@
+<title>Three-Body Problem</title>
+
 <script>
     /** @type {import('./$types').PageData} */
     export let data;

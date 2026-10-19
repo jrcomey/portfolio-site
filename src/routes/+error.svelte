@@ -1,5 +1,6 @@
 <script>
     import { page } from '$app/stores';
+    import { base } from '$app/paths';
     import Header from './Header.svelte';
 </script>
 
@@ -9,7 +10,7 @@
 <section class="error">
     <h1>{$page.status}: {$page.error.message}</h1>
 
-    <a href="/">
+    <a href="{base}/">
         <h2>Go to homepage</h2>
     </a>
 </section>

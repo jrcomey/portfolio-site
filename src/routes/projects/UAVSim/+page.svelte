@@ -1,3 +1,5 @@
+<title>UAVSim</title>
+
 <script>
     import Header from '../../Header.svelte';
     import ProjectSection from '$lib/ProjectSection.svelte';
@@ -31,7 +33,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         display: flex;
         flex-direction: column;

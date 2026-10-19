@@ -11,7 +11,8 @@
     import {
         colors,
         createBasicScene,
-        createBasicMaterials,
+        createVectorMaterials,
+        vectorStyle,
         createSolidWireframeMesh,
         disposeScene
     } from '$lib/three-utils.js';
@@ -25,9 +26,14 @@
     let container;
     let scene, camera, renderer, animationFrameId;
 
+    // 3D model render disabled for now - uncomment this block and the scene-container div below to restore
+    /*
     onMount(() => {
         // Initialize scene using utility
+        // Per-page tweaks go here, e.g. vectorStyle({ phosphor: null })
+        const style = vectorStyle();
         const sceneSetup = createBasicScene(container, {
+            style,
             fov: 40,
             cameraPosition: new THREE.Vector3(-7, 0, 5),
             cameraTarget: new THREE.Vector3(-1.5, 0, 0)
@@ -35,8 +41,9 @@
         scene = sceneSetup.scene;
         camera = sceneSetup.camera;
         renderer = sceneSetup.renderer;
+        const render = sceneSetup.render;
 
-        const bodyMaterials = createBasicMaterials(colors.green);
+        const bodyMaterials = createVectorMaterials(colors.green, style);
 
         // Store propeller references for animation
         const propellers = [];
@@ -58,7 +65,7 @@
 
         function createPropellerGroup(config, scale) {
             const propellerGroup = new THREE.Group();
-            const materials = createBasicMaterials(config.color);
+            const materials = createVectorMaterials(config.color, style);
 
             propellerGeometry.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
@@ -137,7 +144,7 @@
     let propellerSpeed = 0.8;  // Adjust for faster/slower rotation
 
     function animate() {
-        requestAnimationFrame( animate);
+        animationFrameId = requestAnimationFrame(animate);
         // Rotate aircraft (if desired)
         // scene.children.forEach(child => {
         //     if (child instanceof THREE.Group) {
@@ -151,7 +158,7 @@
             const direction = propGroup.userData.clockwise ? 1 : -1;
             propGroup.rotation.z += propellerSpeed * direction;
         });
-        renderer.render( scene, camera);
+        render();
     }
 
     animate()
@@ -161,17 +168,18 @@
     onDestroy(() => {
         disposeScene(scene, renderer, animationFrameId);
     });
+    */
 
 
 </script>
 
 <Header/>
 
-<section class="title-page">
+<!-- <section class="title-page">
     <div class="gradient-background"></div>
     <div bind:this={container} class="scene-container"></div>
     <h1>MULTIVAC</h1>
-</section>
+</section> -->
 
 
 
@@ -362,7 +370,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         /* align-content: center; */
         display: flex;

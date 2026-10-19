@@ -1,3 +1,5 @@
+<title>Contact</title>
+
 <script>
     /** @type {import('./$types').PageData} */
     import Header from '../Header.svelte';

@@ -1,3 +1,5 @@
+<title>Blizzard</title>
+
 <script>
     import Header from '../../Header.svelte';
     import ProjectSection from '$lib/ProjectSection.svelte';
@@ -9,7 +11,8 @@
     import {
         colors,
         createBasicScene,
-        createBasicMaterials,
+        createVectorMaterials,
+        vectorStyle,
         createSolidWireframeMesh,
         disposeScene
     } from '$lib/three-utils.js';
@@ -23,7 +26,31 @@
     let scene, camera, renderer, animationFrameId;
 
     onMount(() => {
+        // Retro vector look for this page. Any feature can be set to null to turn it off.
+        // Values start at the shared defaults (vectorStyleDefaults in three-utils.js).
+        const style = vectorStyle({
+            // Silhouette outline (inverted hull)
+            outline: {
+                width: 4,               // CSS pixels
+                opacity: 1              // 0-1
+            },
+            // Feature-edge wireframe (null = full triangle wireframe)
+            edges: {
+                thresholdAngle: 20,      // degrees; higher = fewer lines (0-2 near-full wireframe, 20-30 hard edges only)
+                opacity: 0.8,           // 0-1
+                width: 0.5,             // CSS pixels; null = native 1px lines
+                glow: {                 // null = no glow
+                    width: 4,           // CSS pixels
+                    opacity: 0.25       // 0-1
+                }
+            },
+            // Phosphor trails on moving lines
+            phosphor: {
+                decay: 0.85              // brightness kept per frame; 0.8 short, 0.95 long, must stay < 1
+            }
+        });
         const sceneSetup = createBasicScene(container, {
+            style,
             fov: 40,
             cameraPosition: new THREE.Vector3(-7, 0, 5),
             cameraTarget: new THREE.Vector3(-1.5, 0, 0)
@@ -31,8 +58,9 @@
         scene = sceneSetup.scene;
         camera = sceneSetup.camera;
         renderer = sceneSetup.renderer;
+        const render = sceneSetup.render;
 
-        const bodyMaterials = createBasicMaterials(colors.green);
+        const bodyMaterials = createVectorMaterials(colors.green, style);
         const propellers = [];
 
         const propellerConfigs = [
@@ -51,7 +79,7 @@
 
         function createPropellerGroup(config, scale) {
             const propellerGroup = new THREE.Group();
-            const materials = createBasicMaterials(config.color);
+            const materials = createVectorMaterials(config.color, style);
 
             propellerGeometry.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
@@ -112,12 +140,12 @@
         let propellerSpeed = 0.8;
 
         function animate() {
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
             propellers.forEach(propGroup => {
                 const direction = propGroup.userData.clockwise ? 1 : -1;
                 propGroup.rotation.z += propellerSpeed * direction;
             });
-            renderer.render(scene, camera);
+            render();
         }
 
         animate();
@@ -156,7 +184,7 @@
         </div>
         <div slot="description">
             <h1>Dynamics Modeling</h1>
-            <p>Using my simulation program <a href="projects/UAVSim">UAVSim</a>, I was able to test the aircraft against a variety of maneuverability tests, as laid out in ADS-33E-PRF, a military standard which contains, among other elements, a list of response tests for rotary-wing aircraft in windy conditions. While not required to certify the Blizzard for its intended use, these standards provide a clear pass/fail test used for other fast-response aircraft in similar conditions. My plan is to repeat these tests once the aerodynamic model is fully completed, for wind conditions, temperatures, and precipitation consistent with Chicago winter weather.</p>
+            <p>Using my simulation program <a href="{base}/projects/UAVSim">UAVSim</a>, I was able to test the aircraft against a variety of maneuverability tests, as laid out in ADS-33E-PRF, a military standard which contains, among other elements, a list of response tests for rotary-wing aircraft in windy conditions. While not required to certify the Blizzard for its intended use, these standards provide a clear pass/fail test used for other fast-response aircraft in similar conditions. My plan is to repeat these tests once the aerodynamic model is fully completed, for wind conditions, temperatures, and precipitation consistent with Chicago winter weather.</p>
         </div>
     </ProjectSection>
 
@@ -218,7 +246,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         display: flex;
         flex-direction: column;

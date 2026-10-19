@@ -20,6 +20,11 @@
 	<slot />
 </div> -->
 
+<script context="module">
+  // Shared by every MathBlock, so the MathJax script is only added to the page once
+  let mathJaxLoading;
+</script>
+
 <script>
   import { onMount, onDestroy } from 'svelte';
 
@@ -27,6 +32,14 @@
   let observer;
 
   function ensureMathJax() {
+    mathJaxLoading ??= loadMathJax().catch((e) => {
+      mathJaxLoading = undefined; // allow a retry on the next mount
+      throw e;
+    });
+    return mathJaxLoading;
+  }
+
+  function loadMathJax() {
     return new Promise((resolve, reject) => {
       if (window.MathJax && window.MathJax.typesetPromise) return resolve();
 
@@ -46,7 +59,8 @@
       const s = document.createElement('script');
       s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
       s.defer = true;
-      s.onload = () => resolve();
+      // typesetPromise only exists once MathJax's async startup finishes
+      s.onload = () => window.MathJax.startup.promise.then(resolve, reject);
       s.onerror = (e) => reject(e);
       document.head.appendChild(s);
     });

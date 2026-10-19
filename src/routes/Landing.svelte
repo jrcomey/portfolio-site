@@ -4,17 +4,38 @@
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { createVectorMaterials, createSolidWireframeMesh, createPhosphorPersistence, vectorStyle } from '$lib/three-utils.js';
 
 
     let container;
-    let scene, camera, renderer, animationFrameId;
+    let scene, camera, renderer, animationFrameId, phosphor;
     
 
     onMount(() => {
     // Initialize scene
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    // Retro vector look for this page. Any feature can be set to null to turn it off.
+    // Values start at the shared defaults (vectorStyleDefaults in three-utils.js).
+    const style = vectorStyle({
+        // Silhouette outline (inverted hull)
+        outline: {
+            width: 2,               // CSS pixels
+            opacity: 1.0              // 0-1
+        },
+        // Feature-edge wireframe (null = full triangle wireframe)
+        edges: null,
+        // Phosphor trails on moving lines
+        phosphor: {
+            decay: 0.9              // brightness kept per frame; 0.8 short, 0.95 long, must stay < 1
+        }
+    });
+
+    renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        stencil: true,                          // for edge glow
+        preserveDrawingBuffer: !!style.phosphor // trails draw over the previous frame
+    });
     
     // Set size and append to container
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -98,22 +119,8 @@
     const blue = 0x3333FF;
     const red = 0xFF3333;
     const green = 0x4AF626   ;
-    const black = 0x000000;
-    // Create two materials for the solid wireframe effect
-    const bodyMaterials = {
-        solid: new THREE.MeshBasicMaterial({
-            color: black,
-            polygonOffset: true,
-            polygonOffsetFactor: 1,
-            polygonOffsetUnits: 1
-        }),
-        wireframe: new THREE.MeshBasicMaterial({
-            color: green,
-            wireframe: true,
-            wireframeLinewidth: 1
-        }),
-        // fresnel: FresnelRimMaterial(green),
-    };
+
+    const bodyMaterials = createVectorMaterials(green, style);
 
     // Store propeller references for animation
     const propellers = [];
@@ -172,44 +179,6 @@
 
 
 
-    // Function to create materials for a specific color
-    function createPropellerMaterials(color) {
-        return {
-            solid: new THREE.MeshBasicMaterial({
-                color: black,
-                polygonOffset: true,
-                polygonOffsetFactor: 1,
-                polygonOffsetUnits: 1
-            }),
-            wireframe: new THREE.MeshBasicMaterial({
-                color: color,
-                wireframe: true,
-                wireframeLinewidth: 1
-            }),
-            // fresnel: FresnelRimMaterial(color)
-        };
-    }
-
-    // Function to create a solid wireframe mesh from a geometry
-    function createSolidWireframeMesh(geometry, materials, scale = 1.0001) {
-        const group = new THREE.Group();
-        
-        // Create the solid mesh
-        const solidMesh = new THREE.Mesh(geometry, materials.solid);
-        group.add(solidMesh);
-        
-        // Create a slightly larger wireframe mesh
-        const wireframeGeometry = geometry.clone();
-        wireframeGeometry.scale(scale, scale, scale);
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, materials.wireframe);
-        group.add(wireframeMesh);
-
-        // const fresnel_geometry = geometry.clone();
-        // const fresnelMesh = new THREE.Mesh(fresnel_geometry, materials.fresnel);
-        // group.add(fresnelMesh);
-        
-        return group;
-    }
 
     let propellerGeometry = null;
     const loader = new OBJLoader();
@@ -219,7 +188,7 @@
         const propellerGroup = new THREE.Group();
         
         // Create materials for this specific propeller
-        const materials = createPropellerMaterials(config.color);
+        const materials = createVectorMaterials(config.color, style);
         
         // Clone the loaded propeller geometry and create solid wireframe
         propellerGeometry.traverse((child) => {
@@ -324,11 +293,15 @@
         }
     );
 
+    if (style.phosphor) {
+        phosphor = createPhosphorPersistence(renderer, style.phosphor);
+    }
+
     let propellerSpeed = 0.01;  // Adjust for faster/slower rotation
 
 
     function animate() {
-        requestAnimationFrame( animate);
+        animationFrameId = requestAnimationFrame( animate);
         // Rotate aircraft (if desired)
         // scene.children.forEach(child => {
         //     if (child instanceof THREE.Group) {
@@ -342,17 +315,25 @@
             const direction = propGroup.userData.clockwise ? 1 : -1;
             propGroup.rotation.z += propellerSpeed * direction;
         });
-        renderer.render( scene, camera);
+        if (phosphor) {
+            phosphor.render(scene, camera);
+        } else {
+            renderer.render( scene, camera);
+        }
     }
 
     animate()
 
+    return () => window.removeEventListener('resize', handleResize);
   });
 
   onDestroy(() => {
     // Clean up Three.js resources
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
+    }
+    if (phosphor) {
+      phosphor.dispose();
     }
     if (renderer) {
       renderer.dispose();
@@ -389,7 +370,8 @@
             <!-- <h1>JACK RHYS COMEY</h1> -->
             <h1>Jack Rhys Comey</h1>
             <p>Guidance, Navigation, and Control Engineer</p>
-            <p>Currently at: Lockheed Martin Space</p>
+            <p>Currently at: Anduril</p>
+            <p>Previously at: Lockheed Martin Space</p>
             <p>2021 NASA ARMD University Design Challenge Winner</p>
     </div>
     <br>
@@ -400,7 +382,7 @@
         <p>M.S. UCLA: Aerospace Engineering (exp. 2027)</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>4 years of Industry Experience</p>
+        <p>5 years of Industry Experience</p>
         <!-- <hr> -->
     </div>
     <br>

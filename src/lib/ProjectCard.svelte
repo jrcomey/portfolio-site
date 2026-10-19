@@ -38,7 +38,6 @@
     opacity: 80%;
     object-fit: cover;
     background-color: #000000;
-
   }
 
   /* TEST */
