@@ -20,8 +20,10 @@ export const vectorStyleDefaults = {
     // Silhouette outline (inverted hull): pct of the model's projected bounding radius,
     // clamped to [minPx, maxPx] CSS pixels
     outline: { pct: 0.015, minPx: 1, maxPx: 4 },
-    // Feature-edge wireframe; null falls back to the full triangle wireframe
-    edges: { thresholdAngle: 2 },
+    // Feature-edge wireframe; null falls back to the full triangle wireframe.
+    // minCurvature (1/model units) replaces the thresholdAngle test while set;
+    // combine: 'and' draws an edge only when it passes both.
+    edges: { minCurvature: 0.2, thresholdAngle: 2, combine: null },
     // Fading trails on moving lines, e.g. { decay: 0.9 }
     phosphor: null
 };
@@ -29,7 +31,9 @@ export const vectorStyleDefaults = {
 /**
  * Builds a style from the defaults with per-page tweaks.
  * Each feature's settings are merged over the default; pass null to disable a feature.
- * @example vectorStyle({ phosphor: null, edges: { thresholdAngle: 20 } })
+ * In dev, URL params pick the edge test for live tuning: ?curvature=<1/units>, ?angle=<degrees>
+ * (alone, angle replaces curvature), and ?combine=and to require both.
+ * @example vectorStyle({ phosphor: null, edges: { minCurvature: null, thresholdAngle: 20 } })
  * @param {Object} [overrides]
  */
 export function vectorStyle(overrides = {}) {
@@ -44,6 +48,16 @@ export function vectorStyle(overrides = {}) {
         } else {
             style[key] = { ...base, ...override };
         }
+    }
+    if (import.meta.env.DEV && style.edges && typeof location !== 'undefined') {
+        const params = new URLSearchParams(location.search);
+        const curvature = parseFloat(params.get('curvature'));
+        const angle = parseFloat(params.get('angle'));
+        const combine = params.get('combine');
+        if (curvature >= 0) style.edges = { ...style.edges, minCurvature: curvature };
+        if (angle >= 0) style.edges = { ...style.edges, thresholdAngle: angle };
+        if (angle >= 0 && !(curvature >= 0) && combine !== 'and') style.edges.minCurvature = null;
+        if (combine !== null) style.edges = { ...style.edges, combine: combine === 'and' ? 'and' : null };
     }
     return style;
 }
@@ -375,11 +389,16 @@ export function createOutlineMesh(geometry, material) {
 
 /**
  * Creates a line material for feature-edge wireframes
- * Only edges where adjacent faces meet at more than thresholdAngle are drawn,
- * dropping the diagonals across flat surfaces for a cleaner vector-display look.
+ * Only edges where adjacent faces meet at more than thresholdAngle are drawn, or, with
+ * minCurvature set, only edges where the surface bends tighter than that curvature
+ * (see CurvatureEdgesGeometry). Either way the diagonals across flat surfaces drop out
+ * for a cleaner vector-display look.
  * @param {number} color - Line color
  * @param {Object} [opts]
  * @param {number} [opts.thresholdAngle=20] - Minimum crease angle in degrees to draw an edge
+ * @param {number} [opts.minCurvature] - Minimum curvature (1/model units, i.e. 1/bend radius)
+ *   to draw an edge; replaces thresholdAngle when set
+ * @param {string} [opts.combine] - 'and' to draw only edges passing both minCurvature and thresholdAngle
  * @param {number} [opts.opacity=1] - Line opacity
  * @param {number} [opts.width] - Line width in CSS pixels; omit or null for native 1px lines
  * @param {Object} [opts.glow] - Phosphor glow: a wide, faint line drawn under the core line.
@@ -390,6 +409,8 @@ export function createOutlineMesh(geometry, material) {
 export function EdgesMaterial(color, opts = {}) {
     const {
         thresholdAngle = 20,
+        minCurvature = null,
+        combine = null,
         opacity = 1,
         width,
         glow
@@ -408,6 +429,8 @@ export function EdgesMaterial(color, opts = {}) {
             opacity
         });
     material.userData.thresholdAngle = thresholdAngle;
+    material.userData.minCurvature = minCurvature;
+    material.userData.combine = combine;
 
     if (glow) {
         material.userData.glowMaterial = new LineMaterial({
@@ -426,6 +449,69 @@ export function EdgesMaterial(color, opts = {}) {
     }
 
     return material;
+}
+
+/**
+ * Feature edges by curvature: draws the edges where the surface bends tighter than minCurvature
+ * Each interior edge's discrete curvature is its dihedral angle over the distance across it,
+ * k = theta * |e| / (A1 + A2) (the two faces' areas over the edge length is their mean height
+ * from the edge). Unlike a plain angle threshold this doesn't depend on tessellation: a cylinder
+ * of radius r gives k = 1/r however finely it's faceted. Big flat faces meeting at a hard edge
+ * give a small k, so sharp edges on large panels can drop out (an angle test catches those).
+ * Flat-face diagonals (theta = 0) never draw; boundary edges (one face) always do.
+ * Positions are welded by WELD so split vertices along hard edges still find their neighbour.
+ * @param {THREE.BufferGeometry} geometry - Source geometry (not modified)
+ * @param {number} minCurvature - Minimum curvature in 1/model units (1 / bend radius)
+ * @param {number} [minAngle=0] - Also require at least this crease angle in degrees (AND)
+ * @returns {THREE.BufferGeometry} Line segment geometry
+ */
+export function CurvatureEdgesGeometry(geometry, minCurvature, minAngle = 0) {
+    const minTheta = THREE.MathUtils.degToRad(minAngle);
+    const pos = geometry.getAttribute('position');
+    const index = geometry.getIndex();
+    const count = index ? index.count : pos.count;
+    const corner = (i) => (index ? index.getX(i) : i);
+    const key = (i) => `${Math.round(pos.getX(i) / WELD)},${Math.round(pos.getY(i) / WELD)},${Math.round(pos.getZ(i) / WELD)}`;
+
+    // edge key -> { a, b (position indices), faces: [{ n, area }] }
+    const edgeFaces = new Map();
+    const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+    for (let t = 0; t + 2 < count; t += 3) {
+        const v = [corner(t), corner(t + 1), corner(t + 2)];
+        const k = v.map(key);
+        if (k[0] === k[1] || k[1] === k[2] || k[0] === k[2]) continue;
+        a.fromBufferAttribute(pos, v[0]); b.fromBufferAttribute(pos, v[1]); c.fromBufferAttribute(pos, v[2]);
+        const n = new THREE.Vector3().subVectors(b, a).cross(c.sub(a));
+        const area = n.length() / 2;
+        if (!(area > 0) || !Number.isFinite(area)) continue;
+        const face = { n: n.normalize(), area };
+        for (let j = 0; j < 3; j++) {
+            const i0 = v[j], i1 = v[(j + 1) % 3];
+            const k0 = k[j], k1 = k[(j + 1) % 3];
+            const ek = k0 < k1 ? `${k0}|${k1}` : `${k1}|${k0}`;
+            let edge = edgeFaces.get(ek);
+            if (!edge) edgeFaces.set(ek, edge = { a: i0, b: i1, faces: [] });
+            edge.faces.push(face);
+        }
+    }
+
+    const out = [];
+    for (const { a: i0, b: i1, faces } of edgeFaces.values()) {
+        a.fromBufferAttribute(pos, i0);
+        b.fromBufferAttribute(pos, i1);
+        if (faces.length >= 2) {
+            // Non-manifold edges (3+ faces) compare their first two, as EdgesGeometry does
+            const [f1, f2] = faces;
+            const theta = Math.acos(THREE.MathUtils.clamp(f1.n.dot(f2.n), -1, 1));
+            const curvature = theta * a.distanceTo(b) / (f1.area + f2.area);
+            if (curvature < minCurvature || theta < minTheta) continue;
+        }
+        out.push(a.x, a.y, a.z, b.x, b.y, b.z);
+    }
+
+    const edges = new THREE.BufferGeometry();
+    edges.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
+    return edges;
 }
 
 // Fat lines size themselves from a resolution uniform, so keep it in sync with the canvas
@@ -448,7 +534,10 @@ function trackLineResolution(line) {
 export function createEdgesMesh(geometry, material, meshScale = 1.0001) {
     const scaled = geometry.clone();
     scaled.scale(meshScale, meshScale, meshScale);
-    const edges = new THREE.EdgesGeometry(scaled, material.userData.thresholdAngle ?? 20);
+    const { thresholdAngle = 20, minCurvature = null, combine = null } = material.userData;
+    const edges = minCurvature != null
+        ? CurvatureEdgesGeometry(scaled, minCurvature, combine === 'and' ? thresholdAngle : 0)
+        : new THREE.EdgesGeometry(scaled, thresholdAngle);
     scaled.dispose();
 
     const glowMaterial = material.userData.glowMaterial;
