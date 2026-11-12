@@ -15,21 +15,9 @@
     // Initialize scene
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight, 0.1, 1000);
-    // Retro vector look for this page. Any feature can be set to null to turn it off.
-    // Values start at the shared defaults (vectorStyleDefaults in three-utils.js).
-    const style = vectorStyle({
-        // Silhouette outline (inverted hull)
-        outline: {
-            width: 2,               // CSS pixels
-            opacity: 1.0              // 0-1
-        },
-        // Feature-edge wireframe (null = full triangle wireframe)
-        edges: null,
-        // Phosphor trails on moving lines
-        phosphor: {
-            decay: 0.9              // brightness kept per frame; 0.8 short, 0.95 long, must stay < 1
-        }
-    });
+    // Shared retro vector look (vectorStyleDefaults in three-utils.js).
+    // Per-page tweaks go here, e.g. vectorStyle({ phosphor: null })
+    const style = vectorStyle();
 
     renderer = new THREE.WebGLRenderer({
         antialias: true,

@@ -27,29 +27,9 @@
 
     onMount(() => {
         // Initialize scene using utility
-        // Retro vector look for this page. Any feature can be set to null to turn it off.
-        // Values start at the shared defaults (vectorStyleDefaults in three-utils.js).
-        const style = vectorStyle({
-            // Silhouette outline (inverted hull)
-            outline: {
-                width: 4,               // CSS pixels
-                opacity: 1              // 0-1
-            },
-            // Feature-edge wireframe (null = full triangle wireframe)
-            edges: {
-                thresholdAngle: 10,      // degrees; higher = fewer lines (0-2 near-full wireframe, 20-30 hard edges only)
-                opacity: 0.8,           // 0-1
-                width: 0.5,             // CSS pixels; null = native 1px lines
-                glow: {                 // null = no glow
-                    width: 4,           // CSS pixels
-                    opacity: 0.25       // 0-1
-                }
-            },
-            // Phosphor trails on moving lines
-            phosphor: {
-                decay: 0.6             // brightness kept per frame; 0.8 short, 0.95 long, must stay < 1
-            }
-        });
+        // Shared retro vector look (vectorStyleDefaults in three-utils.js).
+        // Per-page tweaks go here, e.g. vectorStyle({ phosphor: null })
+        const style = vectorStyle();
         const sceneSetup = createBasicScene(container, {
             style,
             fov: 20,

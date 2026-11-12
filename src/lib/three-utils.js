@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
@@ -13,16 +12,18 @@ export const colors = {
 };
 
 /**
- * Default retro vector-display look, shared by every page.
- * Set any feature to null to turn it off.
+ * Default retro vector-display look, shared by every page. Matches BROWSERCOM's viewer
+ * (web/viewer.js): native 1px feature edges at 2 degrees, an outline sized to the model on
+ * screen, and no phosphor trails. Set any feature to null to turn it off.
  */
 export const vectorStyleDefaults = {
-    // Silhouette outline (inverted hull)
-    outline: { width: 4 },
+    // Silhouette outline (inverted hull): pct of the model's projected bounding radius,
+    // clamped to [minPx, maxPx] CSS pixels
+    outline: { pct: 0.015, minPx: 1, maxPx: 4 },
     // Feature-edge wireframe; null falls back to the full triangle wireframe
-    edges: { thresholdAngle: 2, opacity: 0.8, width: 0.5, glow: { width: 4, opacity: 0.25 } },
-    // Fading trails on moving lines
-    phosphor: { decay: 0.9 }
+    edges: { thresholdAngle: 2 },
+    // Fading trails on moving lines, e.g. { decay: 0.9 }
+    phosphor: null
 };
 
 /**
@@ -243,81 +244,130 @@ export function FresnelRimMaterial(color, opts = {}) {
 }
 
 /**
- * Creates an inverted hull outline material (constant pixel-width silhouette line)
- * Renders back faces pushed outward in screen space, so only a thin band shows around
- * the object's edge. Needs something opaque in front (e.g. the solid underlayer) to
- * hide the hull's interior.
+ * Creates an inverted hull outline material (silhouette line sized to the model on screen)
+ * From BROWSERCOM's viewer (itself based on DATACOM's outline_shader.wgsl): back faces of a
+ * welded hull, each vertex pushed out along its normal's direction on screen. The push is pct
+ * of the model's bounding radius projected to CSS px at the vertex's depth (radius in model
+ * units, times the largest axis scale of the model matrix), clamped to [minPx, maxPx]. So close
+ * up it caps at maxPx, and zoomed out it thins to minPx instead of swamping a small silhouette.
+ * Needs something opaque in front (e.g. the solid underlayer) to hide the hull's interior.
+ * `radius` is set by createOutlineMesh(); until then (0) the outline is minPx.
  * @param {number} color - Outline color
  * @param {Object} [opts]
- * @param {number} [opts.width=2] - Outline width in CSS pixels (thickness also accepted)
- * @param {number} [opts.opacity=1] - Outline opacity
+ * @param {number} [opts.pct=0.015] - Fraction of the projected bounding radius
+ * @param {number} [opts.minPx=1] - Minimum width in CSS pixels
+ * @param {number} [opts.maxPx=4] - Maximum width in CSS pixels
  */
 export function OutlineMaterial(color, opts = {}) {
     const {
-        width = opts.thickness ?? 2,
-        opacity = 1
+        pct = 0.015,
+        minPx = 1,
+        maxPx = 4
     } = opts;
-    const thickness = width;
 
     return new THREE.ShaderMaterial({
+        side: THREE.BackSide,
         uniforms: {
-            uColor: { value: new THREE.Color(color) },
-            uOpacity: { value: opacity },
-            uThickness: { value: thickness },
-            uResolution: { value: new THREE.Vector2(1, 1) }
+            color: { value: new THREE.Color(color) },
+            radius: { value: 0 },
+            pct: { value: pct },
+            minPx: { value: minPx },
+            maxPx: { value: maxPx },
+            resolution: { value: new THREE.Vector2(1, 1) }
         },
         vertexShader: /* glsl */`
-            uniform float uThickness;
-            uniform vec2 uResolution;
+            uniform float radius, pct, minPx, maxPx;
+            uniform vec2 resolution;
             void main() {
-                vec4 clip = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-
-                // Push vertex outward along its screen-space normal direction
-                vec3 vn = normalize(normalMatrix * normal);
-                vec2 dir = (projectionMatrix * vec4(vn, 0.0)).xy;
+                mat4 mvp = projectionMatrix * modelViewMatrix;
+                vec4 clip = mvp * vec4(position, 1.0);
+                float scale = max(length(modelMatrix[0].xyz), max(length(modelMatrix[1].xyz), length(modelMatrix[2].xyz)));
+                float radiusPx = radius * scale * projectionMatrix[1][1] / max(clip.w, 1e-6) * resolution.y * 0.5;
+                float width = clamp(pct * radiusPx, minPx, maxPx);
+                vec2 dir = (mvp * vec4(normal, 0.0)).xy;
                 float len = length(dir);
-                if (len > 1e-5) {
-                    clip.xy += (dir / len) * uThickness * clip.w * 2.0 / uResolution;
-                }
-
+                if (len > 1e-5) clip.xy += (dir / len) * width * clip.w * 2.0 / resolution;
                 gl_Position = clip;
             }
         `,
         fragmentShader: /* glsl */`
-            uniform vec3 uColor;
-            uniform float uOpacity;
+            uniform vec3 color;
             void main() {
-                gl_FragColor = vec4(uColor, uOpacity);
+                gl_FragColor = vec4(color, 1.0);
                 #include <colorspace_fragment>
             }
-        `,
-        side: THREE.BackSide,
-        transparent: opacity < 1
+        `
     });
+}
+
+// Vertices closer than this are one (BROWSERCOM's WELD, DATACOM's WELD_TOLERANCE)
+const WELD = 1e-4;
+
+/**
+ * Builds the outline hull for a geometry (BROWSERCOM's buildHull, DATACOM style.rs build_hull_with)
+ * Positions welded by WELD, each normal the area-weighted average of its faces, degenerate
+ * triangles dropped, winding kept.
+ * @param {THREE.BufferGeometry} geometry - Source geometry (not modified)
+ */
+function buildHull(geometry) {
+    const pos = geometry.getAttribute('position');
+    const index = geometry.getIndex();
+    const count = index ? index.count : pos.count;
+    const corner = (i) => (index ? index.getX(i) : i);
+    const ids = new Map(), positions = [], sums = [], tris = [];
+    const key = (x, y, z) => `${Math.round(x / WELD)},${Math.round(y / WELD)},${Math.round(z / WELD)}`;
+    const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), n = new THREE.Vector3();
+    for (let t = 0; t + 2 < count; t += 3) {
+        const v = [corner(t), corner(t + 1), corner(t + 2)];
+        const k = v.map((i) => key(pos.getX(i), pos.getY(i), pos.getZ(i)));
+        if (k[0] === k[1] || k[1] === k[2] || k[0] === k[2]) continue;
+        a.fromBufferAttribute(pos, v[0]); b.fromBufferAttribute(pos, v[1]); c.fromBufferAttribute(pos, v[2]);
+        n.subVectors(b, a).cross(c.clone().sub(a));  // length = twice the area: area-weighted
+        if (!Number.isFinite(n.x + n.y + n.z)) continue;
+        for (let j = 0; j < 3; j++) {
+            let id = ids.get(k[j]);
+            if (id === undefined) {
+                id = positions.length / 3;
+                ids.set(k[j], id);
+                positions.push(pos.getX(v[j]), pos.getY(v[j]), pos.getZ(v[j]));
+                sums.push(0, 0, 0);
+            }
+            sums[3 * id] += n.x; sums[3 * id + 1] += n.y; sums[3 * id + 2] += n.z;
+            tris.push(id);
+        }
+    }
+    for (let i = 0; i < sums.length; i += 3) {
+        const l = Math.hypot(sums[i], sums[i + 1], sums[i + 2]);
+        for (let j = 0; j < 3; j++) sums[i + j] = l > 0 && Number.isFinite(l) ? sums[i + j] / l : 0;
+    }
+    const hull = new THREE.BufferGeometry();
+    hull.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    hull.setAttribute('normal', new THREE.Float32BufferAttribute(sums, 3));
+    hull.setIndex(tris);
+    return hull;
 }
 
 /**
  * Creates an outline (inverted hull) mesh for a geometry
- * Vertices are welded and normals averaged so the hull doesn't split at hard edges.
  * @param {THREE.BufferGeometry} geometry - Source geometry (not modified)
  * @param {THREE.ShaderMaterial} material - Material from OutlineMaterial()
  */
 export function createOutlineMesh(geometry, material) {
-    const hull = geometry.clone();
-    for (const name of Object.keys(hull.attributes)) {
-        if (name !== 'position') hull.deleteAttribute(name);
+    const hull = buildHull(geometry);
+    const mesh = new THREE.Mesh(hull, material);
+
+    // Model-space bounding radius, so the outline width follows the model's size on screen.
+    // Meshes sharing a material keep the largest, so all parts of a model get one width
+    // (as BROWSERCOM uses one radius per OBJ).
+    hull.computeBoundingBox();
+    if (!hull.boundingBox.isEmpty()) {
+        const radius = hull.boundingBox.getBoundingSphere(new THREE.Sphere()).radius;
+        material.uniforms.radius.value = Math.max(material.uniforms.radius.value, radius);
     }
-    const welded = mergeVertices(hull, 1e-4);
-    hull.dispose();
-    welded.computeVertexNormals();
 
-    const mesh = new THREE.Mesh(welded, material);
-
-    // Keep thickness in CSS pixels across resizes and pixel ratios
-    const size = new THREE.Vector2();
+    // Keep widths in CSS pixels across resizes and pixel ratios
     mesh.onBeforeRender = (renderer) => {
-        renderer.getSize(size);
-        material.uniforms.uResolution.value.copy(size);
+        renderer.getSize(material.uniforms.resolution.value);
     };
 
     return mesh;
