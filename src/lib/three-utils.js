@@ -23,7 +23,7 @@ export const vectorStyleDefaults = {
     // Feature-edge wireframe; null falls back to the full triangle wireframe.
     // minCurvature (1/model units) replaces the thresholdAngle test while set;
     // combine: 'and' draws an edge only when it passes both.
-    edges: { minCurvature: 0.2, thresholdAngle: 2, combine: null },
+    edges: { minCurvature: 0.2, thresholdAngle: 2, combine: 'and' },
     // Fading trails on moving lines, e.g. { decay: 0.9 }
     phosphor: null
 };
