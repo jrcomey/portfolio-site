@@ -175,9 +175,9 @@
 
     // Rotor speed in RPM, by elapsed time so it's the same on 60 and 120 Hz displays.
     // A 2-blade prop looks like it reverses past ~900 RPM at 60 fps (90 deg/frame).
-    const propellerRPM = 150;
+    const propellerRPM = 60;
     // Motion blur: faded copies of each prop's edge lines trailing behind the blade, spread over the
-    // angle it turns while a camera shutter is open for blurShutter seconds (45 deg at 150 RPM)
+    // angle it turns while a camera shutter is open for blurShutter seconds (18 deg at 60 RPM)
     const blurCopies = 6;
     const blurShutter = 1 / 20;  // [s]
 
@@ -332,8 +332,11 @@
     if (new URLSearchParams(location.search).get('winter') !== '0') {
         winter = createWinter(renderer, scene, camera, {
             ground: -1.27,      // helipad top: Rooftop.obj's Helipad at roof_group's z offset
-            density: 0.18,      // thick enough to swallow the far roof and most of the sky
-            height: 6,          // reaches up past the rotors
+            density: 0.25,      // thick inside the bank
+            height: 6,
+            ceiling: -0.4,      // fog bank top at the aircraft's belly: gear and pad in it, rotors above
+            ceilingSoftness: 0.25,
+            aboveHaze: 0.12,
             kick: 5,
             snowCount: 8000,
             snowOpacity: 0.8,

@@ -131,6 +131,10 @@ function createNoiseTexture(size = 64) {
  * @param {number} [opts.density=0.06] - Fog extinction per world unit at the floor, before noise
  * @param {number} [opts.floor=-3] - World z where the fog is thickest
  * @param {number} [opts.height=4] - Fog falls off by 1/e every this many units above the floor
+ * @param {number|null} [opts.ceiling=null] - World z of the top of a fog bank: full fog below a wavy surface
+ *   (the noise lifts and lowers it), thin haze above. null for a plain exponential fall-off
+ * @param {number} [opts.ceilingSoftness=0.4] - Half-thickness of the bank's top edge, world units
+ * @param {number} [opts.aboveHaze=0.1] - Fog density above the bank, as a fraction of below
  * @param {number} [opts.noiseScale=0.15] - Spatial frequency of the fog patches (1/world units)
  * @param {number} [opts.maxDistance=40] - How far rays march when they hit nothing
  * @param {number} [opts.steps=12] - Raymarch samples per pixel (jittered, so few are needed)
@@ -154,6 +158,9 @@ export function createWinter(renderer, scene, camera, opts = {}) {
         density = 0.06,
         floor = -3,
         height = 4,
+        ceiling = null,
+        ceilingSoftness = 0.4,
+        aboveHaze = 0.1,
         noiseScale = 0.15,
         maxDistance = 40,
         steps = 12,
@@ -229,6 +236,9 @@ export function createWinter(renderer, scene, camera, opts = {}) {
             uTime: { value: 0 },
             uDensity: { value: density },
             uFloor: { value: floor },
+            uCeiling: { value: ceiling ?? 1e6 },
+            uCeilingSoft: { value: ceilingSoftness },
+            uAboveHaze: { value: aboveHaze },
             uHeight: { value: height },
             uScale: { value: noiseScale },
             uWind: { value: wind },
@@ -245,6 +255,7 @@ export function createWinter(renderer, scene, camera, opts = {}) {
             uniform vec3 uCamPos, uWind;
             uniform vec2 uFullSize;
             uniform float uTime, uDensity, uFloor, uHeight, uScale, uMaxDist, uKick, uFlowPeriod;
+            uniform float uCeiling, uCeilingSoft, uAboveHaze;
             ${ROTOR_FLOW_GLSL}
             ${viewDistanceGLSL}
 
@@ -257,7 +268,6 @@ export function createWinter(renderer, scene, camera, opts = {}) {
             // the noise, each pushed back along the local flow for up to one period then reset, crossfaded so
             // neither reset shows. Plus fog stirred up where a rotor wake spreads along the ground.
             float density(vec3 p) {
-                float h = exp(-max(p.z - uFloor, 0.0) / uHeight);
                 vec3 q = p * uScale - uWind * uScale * uTime;
                 float kick;
                 vec3 flow = rotorFlow(p, kick) * uScale * uFlowPeriod;
@@ -265,6 +275,10 @@ export function createWinter(renderer, scene, camera, opts = {}) {
                 float t2 = fract(t1 + 0.5);
                 float w1 = 1.0 - abs(2.0 * t1 - 1.0);
                 float n = w1 * fogNoise(q - flow * t1) + (1.0 - w1) * fogNoise(q - flow * t2 + vec3(31.4));
+                float h = exp(-max(p.z - uFloor, 0.0) / uHeight);
+                // Fog bank: full below a wavy ceiling (the same noise lifts and lowers it), thin haze above
+                float top = uCeiling + (n - 0.5) * 4.0 * uCeilingSoft;
+                h *= mix(uAboveHaze, 1.0, 1.0 - smoothstep(top - uCeilingSoft, top + uCeilingSoft, p.z));
                 return uDensity * (h * (0.25 + smoothstep(0.3, 0.9, n)) + uKick * kick * n);
             }
 
@@ -284,12 +298,26 @@ export function createWinter(renderer, scene, camera, opts = {}) {
                 vec4 far = uProjInv * vec4(uv * 2.0 - 1.0, 1.0, 1.0);
                 vec3 dir = normalize((uCamWorld * vec4(far.xyz / far.w, 0.0)).xyz);
 
+                // March only the part of the ray inside the fog bank (below the highest its wavy top can reach), so
+                // every step lands where the detail is and the bank's edge stays sharp; the thin haze above it is
+                // added in one go, at its density at the camera's height (it's smooth up there)
+                float zMax = uCeiling + 3.0 * uCeilingSoft;
+                float s0 = 0.0, s1 = dist;
+                if (abs(dir.z) > 1e-4) {
+                    float sCross = (zMax - uCamPos.z) / dir.z;
+                    if (dir.z < 0.0) s0 = clamp(sCross, 0.0, dist);
+                    else s1 = clamp(sCross, 0.0, dist);
+                } else if (uCamPos.z > zMax) {
+                    s1 = 0.0;
+                }
+                float above = dist - max(s1 - s0, 0.0);
+                float optical = above * uDensity * uAboveHaze * 0.75 * exp(-max(uCamPos.z - uFloor, 0.0) / uHeight);
+
                 // Jittered march (interleaved gradient noise) so few steps don't band
-                float stepLen = dist / float(STEPS);
+                float stepLen = max(s1 - s0, 0.0) / float(STEPS);
                 float jitter = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
-                float optical = 0.0;
                 for (int i = 0; i < STEPS; i++) {
-                    optical += density(uCamPos + dir * (float(i) + jitter) * stepLen) * stepLen;
+                    optical += density(uCamPos + dir * (s0 + (float(i) + jitter) * stepLen)) * stepLen;
                 }
                 gl_FragColor = vec4(exp(-optical), dist, 0.0, 1.0);
             }
@@ -318,18 +346,19 @@ export function createWinter(renderer, scene, camera, opts = {}) {
             void main() {
                 float dist = viewDistance(vUv, texture2D(tDepth, vUv).x);
 
-                // Depth-aware upsample: bilinear weights over the 4 nearest fog texels, each scaled down by how far
-                // its marched distance is from this pixel's, so a line doesn't take the sky's fog or vice versa
+                // Depth-aware upsample: a 4x4 tent over the nearest fog texels (wide enough to average out the march's
+                // per-texel jitter), each weight scaled down by how far its marched distance is from this pixel's,
+                // so a line doesn't take the sky's fog or vice versa
                 vec2 f = vUv * uFogSize - 0.5;
                 ivec2 b = ivec2(floor(f));
                 vec2 fr = f - floor(f);
                 ivec2 last = ivec2(uFogSize) - 1;
                 float T = 0.0, wsum = 0.0;
-                for (int j = 0; j < 2; j++) {
-                    for (int i = 0; i < 2; i++) {
+                for (int j = -1; j < 3; j++) {
+                    for (int i = -1; i < 3; i++) {
                         vec2 s = texelFetch(tFog, clamp(b + ivec2(i, j), ivec2(0), last), 0).xy;
-                        float bilinear = (i == 0 ? 1.0 - fr.x : fr.x) * (j == 0 ? 1.0 - fr.y : fr.y);
-                        float w = bilinear * (exp(-abs(s.y - dist) / (0.05 * dist + 0.05)) + 1e-4);
+                        vec2 tent = max(1.0 - abs(vec2(i, j) - fr) * 0.5, 0.0);
+                        float w = tent.x * tent.y * (exp(-abs(s.y - dist) / (0.05 * dist + 0.05)) + 1e-4);
                         T += w * s.x;
                         wsum += w;
                     }
