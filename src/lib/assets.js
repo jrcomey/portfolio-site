@@ -78,7 +78,7 @@ export const ASSETS = {
 
 	// Photography images
 	photography: {
-		cooks_bay: `${base}/assets/photography/cooks_bay_2.JPG`,
+		cooks_bay: `${base}/assets/photography/cooks_bay_2_web.jpg`,
 		cooks_bay_alt: `${base}/assets/photography/cooks_bay.jpg`,
 		hawaii_canyon: `${base}/assets/photography/hawaii_canyon.JPG`,
 		fern_closeup: `${base}/assets/photography/fern_closeup.jpg`,
@@ -87,7 +87,7 @@ export const ASSETS = {
 
 	// Common/shared assets
 	common: {
-		profile: `${base}/assets/profile.JPG`,
+		profile: `${base}/assets/profile_web.jpg`,
 		moon: `${base}/assets/moon_pic.JPG`,
 		moon_alt: `${base}/assets/moon_pic.jpg`
 	},
