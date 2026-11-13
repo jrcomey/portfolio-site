@@ -5,10 +5,11 @@
     import { base } from '$app/paths';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { createVectorMaterials, createSolidWireframeMesh, createPhosphorPersistence, vectorStyle } from '$lib/three-utils.js';
+    import { createWinter } from '$lib/winter.js';
 
 
     let container;
-    let scene, camera, renderer, animationFrameId, phosphor;
+    let scene, camera, renderer, animationFrameId, phosphor, winter;
     
 
     onMount(() => {
@@ -172,6 +173,14 @@
     const loader = new OBJLoader();
     const Gloader = new GLTFLoader();
 
+    // Rotor speed in RPM, by elapsed time so it's the same on 60 and 120 Hz displays.
+    // A 2-blade prop looks like it reverses past ~900 RPM at 60 fps (90 deg/frame).
+    const propellerRPM = 150;
+    // Motion blur: faded copies of each prop's edge lines trailing behind the blade, spread over the
+    // angle it turns while a camera shutter is open for blurShutter seconds (45 deg at 150 RPM)
+    const blurCopies = 6;
+    const blurShutter = 1 / 20;  // [s]
+
     function createPropellerGroup(config, scale) {
         const propellerGroup = new THREE.Group();
         
@@ -186,6 +195,24 @@
                     materials
                 );
                 propellerGroup.add(solidWireframeProp);
+
+                // Blur copies share the edge geometry; lines only, so they don't hide anything
+                const edges = [];
+                solidWireframeProp.traverse((o) => { if (o.isLineSegments) edges.push(o); });
+                const sweep = propellerRPM / 60 * 2 * Math.PI * blurShutter;
+                const direction = config.clockwise ? 1 : -1;
+                for (let i = 1; i <= blurCopies; i++) {
+                    const material = new THREE.LineBasicMaterial({
+                        color: config.color,
+                        transparent: true,
+                        opacity: 0.5 * (1 - i / (blurCopies + 1)),
+                        depthWrite: false
+                    });
+                    const copy = new THREE.Group();
+                    for (const e of edges) copy.add(new THREE.LineSegments(e.geometry, material));
+                    copy.rotation.z = -direction * sweep * i / blurCopies;
+                    propellerGroup.add(copy);
+                }
             }
         });
         
@@ -264,6 +291,26 @@
                     });
 
                     scene.add(aircraftGroup);
+
+                    // Pull the fog and snow through the rotors: one disk per coaxial pair, prop-sized
+                    if (winter) {
+                        aircraftGroup.updateMatrixWorld(true);
+                        const radius = new THREE.Box3().setFromObject(propellerGeometry)
+                            .getSize(new THREE.Vector3()).x / 2 * scale;
+                        const disks = new Map();
+                        for (const prop of propellers) {
+                            const p = prop.getWorldPosition(new THREE.Vector3());
+                            const key = `${p.x.toFixed(2)},${p.y.toFixed(2)}`;
+                            const disk = disks.get(key) ?? { center: new THREE.Vector3(), count: 0 };
+                            disk.center.add(p);
+                            disk.count++;
+                            disks.set(key, disk);
+                        }
+                        winter.setRotors([...disks.values()].map(({ center, count }) => ({
+                            center: center.divideScalar(count),
+                            radius
+                        })));
+                    }
                 },
                 function(xhr) {
                     console.log('Aircraft loading:', (xhr.loaded / xhr.total * 100) + '% loaded');
@@ -281,11 +328,22 @@
         }
     );
 
-    if (style.phosphor) {
+    // Winter weather (volumetric fog + snow), title screen only; ?winter=0 turns it off
+    if (new URLSearchParams(location.search).get('winter') !== '0') {
+        winter = createWinter(renderer, scene, camera, {
+            ground: -1.27,      // helipad top: Rooftop.obj's Helipad at roof_group's z offset
+            density: 0.18,      // thick enough to swallow the far roof and most of the sky
+            height: 6,          // reaches up past the rotors
+            kick: 5,
+            snowCount: 8000,
+            snowOpacity: 0.8,
+            streak: 0.1
+        });
+    } else if (style.phosphor) {
         phosphor = createPhosphorPersistence(renderer, style.phosphor);
     }
 
-    let propellerSpeed = 0.01;  // Adjust for faster/slower rotation
+    let lastFrame = performance.now();
 
 
     function animate() {
@@ -299,11 +357,16 @@
         
         // // Rotate propellers
         // Rotate propellers according to their direction
+        const now = performance.now();
+        const dt = Math.min((now - lastFrame) / 1000, 0.1);
+        lastFrame = now;
         propellers.forEach(propGroup => {
             const direction = propGroup.userData.clockwise ? 1 : -1;
-            propGroup.rotation.z += propellerSpeed * direction;
+            propGroup.rotation.z += propellerRPM / 60 * 2 * Math.PI * dt * direction;
         });
-        if (phosphor) {
+        if (winter) {
+            winter.render();
+        } else if (phosphor) {
             phosphor.render(scene, camera);
         } else {
             renderer.render( scene, camera);
@@ -322,6 +385,9 @@
     }
     if (phosphor) {
       phosphor.dispose();
+    }
+    if (winter) {
+      winter.dispose();
     }
     if (renderer) {
       renderer.dispose();
