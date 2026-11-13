@@ -65,7 +65,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         display: flex;
         flex-direction: column;

@@ -1,3 +1,5 @@
+<title>Gust Reduction System</title>
+
 <script>
     import { base } from '$app/paths';
     import Header from '../../Header.svelte';
@@ -54,7 +56,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         display: flex;
         flex-direction: column;

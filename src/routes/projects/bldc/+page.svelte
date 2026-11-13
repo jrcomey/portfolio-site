@@ -1,4 +1,4 @@
-<title>Tricopter Dynamics Model</title>
+<title>Brushless DC Motor Model</title>
 
 <script>
     import Header from '../../Header.svelte';
@@ -12,8 +12,9 @@
     import {
         colors,
         createBasicScene,
-        createFresnelMaterials,
-        createWireframeFresnelMesh,
+        createVectorMaterials,
+        vectorStyle,
+        createSolidWireframeMesh,
         normalizeGeometry,
         disposeScene
     } from '$lib/three-utils.js';
@@ -26,7 +27,11 @@
 
     onMount(() => {
         // Initialize scene using utility
+        // Shared retro vector look (vectorStyleDefaults in three-utils.js).
+        // Per-page tweaks go here, e.g. vectorStyle({ phosphor: null })
+        const style = vectorStyle();
         const sceneSetup = createBasicScene(container, {
+            style,
             fov: 20,
             cameraPosition: new THREE.Vector3(4, 4, 4),
             cameraTarget: new THREE.Vector3(0, 0, 0),
@@ -35,6 +40,7 @@
         scene = sceneSetup.scene;
         camera = sceneSetup.camera;
         renderer = sceneSetup.renderer;
+        const render = sceneSetup.render;
         const camera_target_pos = new THREE.Vector3(0, 0, 0);
 
         // Store propeller references for animation
@@ -42,7 +48,7 @@
         const loader = new OBJLoader();
 
         function animate() {
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
 
             // Rotate propellers according to their direction
             let prop_ticker = 0;
@@ -72,7 +78,7 @@
 
             // tail_group.rotation.z = 0;
             // controls.update();
-            renderer.render( scene, camera);
+            render();
             ticker += 1;
             if (ticker >= ticker_max) {
                 ticker = 0
@@ -90,9 +96,9 @@
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
                             normalizeGeometry(child.geometry);
-                            const mesh = createWireframeFresnelMesh(
+                            const mesh = createSolidWireframeMesh(
                                 child.geometry,
-                                createFresnelMaterials(colors.green)
+                                createVectorMaterials(colors.green, style)
                             );
                             stator_group.add(mesh);
                             stator_group.scale.setScalar(0.75);
@@ -110,9 +116,9 @@
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
                             normalizeGeometry(child.geometry);
-                            const mesh = createWireframeFresnelMesh(
+                            const mesh = createSolidWireframeMesh(
                                 child.geometry,
-                                createFresnelMaterials(colors.green)
+                                createVectorMaterials(colors.green, style)
                             );
                             rotor_group.add(mesh);
                             rotor_group.scale.setScalar(1.0);
@@ -521,7 +527,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         /* align-content: center; */
         display: flex;

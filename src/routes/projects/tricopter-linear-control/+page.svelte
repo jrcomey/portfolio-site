@@ -1,4 +1,4 @@
-<title>Tricopter Dynamics Model</title>
+<title>Tricopter Linear Control</title>
 
 <script>
     import Header from '../../Header.svelte';
@@ -12,22 +12,27 @@
     import {
         colors,
         createBasicScene,
-        createFresnelMaterials,
-        createWireframeFresnelMesh,
+        createVectorMaterials,
+        vectorStyle,
+        createSolidWireframeMesh,
         normalizeGeometry,
         disposeScene
     } from '$lib/three-utils.js';
 
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
-    const pos_plot = `${base}/assets/trifecta/trifecta_0_pos_plot.png`;
-    const att_plot = `${base}/assets/trifecta/trifecta_0_att_plot.png`;
+    const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
+    const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
 
     let container;
     let scene, camera, renderer, animationFrameId;
 
     onMount(() => {
         // Initialize scene using utility
+        // Shared retro vector look (vectorStyleDefaults in three-utils.js).
+        // Per-page tweaks go here, e.g. vectorStyle({ phosphor: null })
+        const style = vectorStyle();
         const sceneSetup = createBasicScene(container, {
+            style,
             fov: 30,
             cameraPosition: new THREE.Vector3(4, 4, 4),
             cameraTarget: new THREE.Vector3(0, 0, 0),
@@ -36,6 +41,7 @@
         scene = sceneSetup.scene;
         camera = sceneSetup.camera;
         renderer = sceneSetup.renderer;
+        const render = sceneSetup.render;
         const camera_target_pos = new THREE.Vector3(0, 0, 0);
 
         // Store propeller references for animation
@@ -45,7 +51,7 @@
         const loader = new OBJLoader();
 
         function animate() {
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
 
             // Rotate propellers according to their direction
             let prop_ticker = 0;
@@ -69,15 +75,15 @@
             }
 
             camera.position.set(
-                35*Math.sin(ticker/360 - 3.5*Math.PI/4),
-                35*Math.cos(ticker/360 - 3.5*Math.PI/4),
+                35*Math.sin(2*Math.PI*ticker/ticker_max - 3.5*Math.PI/4),
+                35*Math.cos(2*Math.PI*ticker/ticker_max - 3.5*Math.PI/4),
                 25,
             );
             camera.lookAt(camera_target_pos);
 
             // tail_group.rotation.z = 0;
             // controls.update();
-            renderer.render( scene, camera);
+            render();
             ticker += 1;
             if (ticker >= ticker_max) {
                 ticker = 0
@@ -95,9 +101,9 @@
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
                             normalizeGeometry(child.geometry);
-                            const solidWireframeMesh = createWireframeFresnelMesh(
+                            const solidWireframeMesh = createSolidWireframeMesh(
                                         child.geometry,
-                                        createFresnelMaterials(colors.green)
+                                        createVectorMaterials(colors.green, style)
                                     );
                         stator_group.add(solidWireframeMesh);
                         stator_group.scale.setScalar(0.75);
@@ -116,9 +122,9 @@
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
                             normalizeGeometry(child.geometry);
-                            const solidWireframeMesh = createWireframeFresnelMesh(
+                            const solidWireframeMesh = createSolidWireframeMesh(
                                         child.geometry,
-                                        createFresnelMaterials(colors.green)
+                                        createVectorMaterials(colors.green, style)
                                     );
                         rotor_group.add(solidWireframeMesh);
                         rotor_group.scale.setScalar(1.0);
@@ -133,9 +139,9 @@
                                 prop_geom.traverse((child) => {
                                     if (child instanceof THREE.Mesh) {
                                         // normalizeGeometry(child.geometry);
-                                        const solidWireframeMesh = createWireframeFresnelMesh(
+                                        const solidWireframeMesh = createSolidWireframeMesh(
                                                     child.geometry,
-                                                    createFresnelMaterials(colors.green)
+                                                    createVectorMaterials(colors.green, style)
                                                 );
                                     prop_group.add(solidWireframeMesh);
                                     prop_group.scale.setScalar(3.0);
@@ -165,9 +171,9 @@
                 top_shell_geom.traverse((child) => {
                     if (child instanceof THREE.Mesh) {
                         normalizeGeometry(child.geometry);
-                        const solidWireframeMesh = createWireframeFresnelMesh(
+                        const solidWireframeMesh = createSolidWireframeMesh(
                                     child.geometry,
-                                    createFresnelMaterials(colors.green)
+                                    createVectorMaterials(colors.green, style)
                                 );
                     top_shell_group.add(solidWireframeMesh);
                     }
@@ -183,9 +189,9 @@
                         bot_shell_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
                                 normalizeGeometry(child.geometry);
-                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                const solidWireframeMesh = createSolidWireframeMesh(
                                             child.geometry,
-                                            createFresnelMaterials(colors.green)
+                                            createVectorMaterials(colors.green, style)
                                         );
                             bot_shell_group.add(solidWireframeMesh);
                             bot_shell_group.scale.setScalar(4.18);
@@ -207,9 +213,9 @@
                         front_arm_l_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
                                 normalizeGeometry(child.geometry);
-                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                const solidWireframeMesh = createSolidWireframeMesh(
                                             child.geometry,
-                                            createFresnelMaterials(colors.green)
+                                            createVectorMaterials(colors.green, style)
                                         );
                             front_arm_l_group.add(solidWireframeMesh);
                             front_arm_l_group.scale.setScalar(3.8);
@@ -229,9 +235,9 @@
                         front_arm_l_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
                                 normalizeGeometry(child.geometry);
-                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                const solidWireframeMesh = createSolidWireframeMesh(
                                             child.geometry,
-                                            createFresnelMaterials(colors.green)
+                                            createVectorMaterials(colors.green, style)
                                         );
                             front_arm_l_group.add(solidWireframeMesh);
                             front_arm_l_group.scale.setScalar(3.8);
@@ -251,9 +257,9 @@
                         back_slide_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
                                 normalizeGeometry(child.geometry);
-                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                const solidWireframeMesh = createSolidWireframeMesh(
                                             child.geometry,
-                                            createFresnelMaterials(colors.green)
+                                            createVectorMaterials(colors.green, style)
                                         );
                             back_slide_group.add(solidWireframeMesh);
                             back_slide_group.scale.setScalar(3.0);
@@ -276,9 +282,9 @@
                         tail_gear_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
                                 normalizeGeometry(child.geometry);
-                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                const solidWireframeMesh = createSolidWireframeMesh(
                                             child.geometry,
-                                            createFresnelMaterials(colors.green)
+                                            createVectorMaterials(colors.green, style)
                                         );
                             tail_gear_group.add(solidWireframeMesh);
                             tail_gear_group.scale.setScalar(0.54);
@@ -299,9 +305,9 @@
                         tail_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
                                 normalizeGeometry(child.geometry);
-                                const solidWireframeMesh = createWireframeFresnelMesh(
+                                const solidWireframeMesh = createSolidWireframeMesh(
                                             child.geometry,
-                                            createFresnelMaterials(colors.green)
+                                            createVectorMaterials(colors.green, style)
                                         );
                             tail_piece_geom.add(solidWireframeMesh);
                             tail_piece_geom.scale.setScalar(1.25);
@@ -351,7 +357,7 @@
 
         let propellerSpeed = 0.08;  // Adjust for faster/slower rotation
         let ticker = 0;
-        const ticker_max = 3_600;
+        const ticker_max = 2_520;  // one camera orbit; multiple of 360 so the tail swing loops cleanly
 
         animate()
 
@@ -708,7 +714,7 @@
     section {
         background-size: cover;
         position: relative;
-        z-index: -10;
+        z-index: 0;
         min-height: 90vh;
         /* align-content: center; */
         display: flex;

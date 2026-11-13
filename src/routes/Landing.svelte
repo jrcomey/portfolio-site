@@ -4,17 +4,27 @@
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { createVectorMaterials, createSolidWireframeMesh, createPhosphorPersistence, vectorStyle } from '$lib/three-utils.js';
+    import { createWinter } from '$lib/winter.js';
 
 
     let container;
-    let scene, camera, renderer, animationFrameId;
+    let scene, camera, renderer, animationFrameId, phosphor, winter;
     
 
     onMount(() => {
     // Initialize scene
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    // Shared retro vector look (vectorStyleDefaults in three-utils.js).
+    // Per-page tweaks go here, e.g. vectorStyle({ phosphor: null })
+    const style = vectorStyle();
+
+    renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        stencil: true,                          // for edge glow
+        preserveDrawingBuffer: !!style.phosphor // trails draw over the previous frame
+    });
     
     // Set size and append to container
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -98,22 +108,8 @@
     const blue = 0x3333FF;
     const red = 0xFF3333;
     const green = 0x4AF626   ;
-    const black = 0x000000;
-    // Create two materials for the solid wireframe effect
-    const bodyMaterials = {
-        solid: new THREE.MeshBasicMaterial({
-            color: black,
-            polygonOffset: true,
-            polygonOffsetFactor: 1,
-            polygonOffsetUnits: 1
-        }),
-        wireframe: new THREE.MeshBasicMaterial({
-            color: green,
-            wireframe: true,
-            wireframeLinewidth: 1
-        }),
-        // fresnel: FresnelRimMaterial(green),
-    };
+
+    const bodyMaterials = createVectorMaterials(green, style);
 
     // Store propeller references for animation
     const propellers = [];
@@ -172,54 +168,24 @@
 
 
 
-    // Function to create materials for a specific color
-    function createPropellerMaterials(color) {
-        return {
-            solid: new THREE.MeshBasicMaterial({
-                color: black,
-                polygonOffset: true,
-                polygonOffsetFactor: 1,
-                polygonOffsetUnits: 1
-            }),
-            wireframe: new THREE.MeshBasicMaterial({
-                color: color,
-                wireframe: true,
-                wireframeLinewidth: 1
-            }),
-            // fresnel: FresnelRimMaterial(color)
-        };
-    }
-
-    // Function to create a solid wireframe mesh from a geometry
-    function createSolidWireframeMesh(geometry, materials, scale = 1.0001) {
-        const group = new THREE.Group();
-        
-        // Create the solid mesh
-        const solidMesh = new THREE.Mesh(geometry, materials.solid);
-        group.add(solidMesh);
-        
-        // Create a slightly larger wireframe mesh
-        const wireframeGeometry = geometry.clone();
-        wireframeGeometry.scale(scale, scale, scale);
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, materials.wireframe);
-        group.add(wireframeMesh);
-
-        // const fresnel_geometry = geometry.clone();
-        // const fresnelMesh = new THREE.Mesh(fresnel_geometry, materials.fresnel);
-        // group.add(fresnelMesh);
-        
-        return group;
-    }
 
     let propellerGeometry = null;
     const loader = new OBJLoader();
     const Gloader = new GLTFLoader();
 
+    // Rotor speed in RPM, by elapsed time so it's the same on 60 and 120 Hz displays.
+    // A 2-blade prop looks like it reverses past ~900 RPM at 60 fps (90 deg/frame).
+    const propellerRPM = 60;
+    // Motion blur: faded copies of each prop's edge lines trailing behind the blade, spread over the
+    // angle it turns while a camera shutter is open for blurShutter seconds (18 deg at 60 RPM)
+    const blurCopies = 6;
+    const blurShutter = 1 / 20;  // [s]
+
     function createPropellerGroup(config, scale) {
         const propellerGroup = new THREE.Group();
         
         // Create materials for this specific propeller
-        const materials = createPropellerMaterials(config.color);
+        const materials = createVectorMaterials(config.color, style);
         
         // Clone the loaded propeller geometry and create solid wireframe
         propellerGeometry.traverse((child) => {
@@ -229,6 +195,24 @@
                     materials
                 );
                 propellerGroup.add(solidWireframeProp);
+
+                // Blur copies share the edge geometry; lines only, so they don't hide anything
+                const edges = [];
+                solidWireframeProp.traverse((o) => { if (o.isLineSegments) edges.push(o); });
+                const sweep = propellerRPM / 60 * 2 * Math.PI * blurShutter;
+                const direction = config.clockwise ? 1 : -1;
+                for (let i = 1; i <= blurCopies; i++) {
+                    const material = new THREE.LineBasicMaterial({
+                        color: config.color,
+                        transparent: true,
+                        opacity: 0.5 * (1 - i / (blurCopies + 1)),
+                        depthWrite: false
+                    });
+                    const copy = new THREE.Group();
+                    for (const e of edges) copy.add(new THREE.LineSegments(e.geometry, material));
+                    copy.rotation.z = -direction * sweep * i / blurCopies;
+                    propellerGroup.add(copy);
+                }
             }
         });
         
@@ -307,6 +291,26 @@
                     });
 
                     scene.add(aircraftGroup);
+
+                    // Pull the fog and snow through the rotors: one disk per coaxial pair, prop-sized
+                    if (winter) {
+                        aircraftGroup.updateMatrixWorld(true);
+                        const radius = new THREE.Box3().setFromObject(propellerGeometry)
+                            .getSize(new THREE.Vector3()).x / 2 * scale;
+                        const disks = new Map();
+                        for (const prop of propellers) {
+                            const p = prop.getWorldPosition(new THREE.Vector3());
+                            const key = `${p.x.toFixed(2)},${p.y.toFixed(2)}`;
+                            const disk = disks.get(key) ?? { center: new THREE.Vector3(), count: 0 };
+                            disk.center.add(p);
+                            disk.count++;
+                            disks.set(key, disk);
+                        }
+                        winter.setRotors([...disks.values()].map(({ center, count }) => ({
+                            center: center.divideScalar(count),
+                            radius
+                        })));
+                    }
                 },
                 function(xhr) {
                     console.log('Aircraft loading:', (xhr.loaded / xhr.total * 100) + '% loaded');
@@ -324,11 +328,29 @@
         }
     );
 
-    let propellerSpeed = 0.01;  // Adjust for faster/slower rotation
+    // Winter weather (volumetric fog + snow), title screen only; ?winter=0 turns it off
+    if (new URLSearchParams(location.search).get('winter') !== '0') {
+        winter = createWinter(renderer, scene, camera, {
+            ground: -1.27,      // helipad top: Rooftop.obj's Helipad at roof_group's z offset
+            density: 0.25,      // thick inside the bank
+            height: 6,
+            ceiling: -0.4,      // fog bank top at the aircraft's belly: gear and pad in it, rotors above
+            ceilingSoftness: 0.25,
+            aboveHaze: 0.12,
+            kick: 5,
+            snowCount: 8000,
+            snowOpacity: 0.8,
+            streak: 0.1
+        });
+    } else if (style.phosphor) {
+        phosphor = createPhosphorPersistence(renderer, style.phosphor);
+    }
+
+    let lastFrame = performance.now();
 
 
     function animate() {
-        requestAnimationFrame( animate);
+        animationFrameId = requestAnimationFrame( animate);
         // Rotate aircraft (if desired)
         // scene.children.forEach(child => {
         //     if (child instanceof THREE.Group) {
@@ -338,21 +360,37 @@
         
         // // Rotate propellers
         // Rotate propellers according to their direction
+        const now = performance.now();
+        const dt = Math.min((now - lastFrame) / 1000, 0.1);
+        lastFrame = now;
         propellers.forEach(propGroup => {
             const direction = propGroup.userData.clockwise ? 1 : -1;
-            propGroup.rotation.z += propellerSpeed * direction;
+            propGroup.rotation.z += propellerRPM / 60 * 2 * Math.PI * dt * direction;
         });
-        renderer.render( scene, camera);
+        if (winter) {
+            winter.render();
+        } else if (phosphor) {
+            phosphor.render(scene, camera);
+        } else {
+            renderer.render( scene, camera);
+        }
     }
 
     animate()
 
+    return () => window.removeEventListener('resize', handleResize);
   });
 
   onDestroy(() => {
     // Clean up Three.js resources
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
+    }
+    if (phosphor) {
+      phosphor.dispose();
+    }
+    if (winter) {
+      winter.dispose();
     }
     if (renderer) {
       renderer.dispose();
@@ -389,7 +427,8 @@
             <!-- <h1>JACK RHYS COMEY</h1> -->
             <h1>Jack Rhys Comey</h1>
             <p>Guidance, Navigation, and Control Engineer</p>
-            <p>Currently at: Lockheed Martin Space</p>
+            <p>Currently at: Anduril</p>
+            <p>Previously at: Lockheed Martin Space</p>
             <p>2021 NASA ARMD University Design Challenge Winner</p>
     </div>
     <br>
@@ -400,7 +439,7 @@
         <p>M.S. UCLA: Aerospace Engineering (exp. 2027)</p>
         <p>B.S. UC Davis: Aerospace Science and Engineering</p>
         <p>B.S. UC Davis: Mechanical Engineering</p>
-        <p>4 years of Industry Experience</p>
+        <p>5 years of Industry Experience</p>
         <!-- <hr> -->
     </div>
     <br>

@@ -178,7 +178,6 @@
 
     .big-project-description h3 {
         font-style: italic;
-        /* font-variant: small-caps; */
     }
 
     .project-image-backdrop-white {
