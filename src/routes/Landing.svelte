@@ -5,7 +5,7 @@
     import { base } from '$app/paths';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { createVectorMaterials, createSolidWireframeMesh, createPhosphorPersistence, vectorStyle } from '$lib/three-utils.js';
-    import { createWinter } from '$lib/winter.js';
+    import { createWinter, kelvinToColor } from '$lib/winter.js';
 
 
     let container;
@@ -336,8 +336,23 @@
             height: 6,          // reaches up past the rotors
             kick: 5,
             snowCount: 8000,
-            snowOpacity: 0.8,
-            streak: 0.1
+            snowOpacity: 0.45,  // dim in the dark, bright where the lights catch it
+            streak: 0.1,
+            // Dark winter night: near-black blue fog, floodlights on the helipad corners
+            // uplighting the aircraft (two behind it, two in front), lightning
+            fogColor: 0x121a26,
+            spots: [
+                [5.0, 1.6], [-3.0, 1.6], [-3.3, -8.5], [5.0, -8.5]
+            ].map(([x, y]) => {
+                const position = new THREE.Vector3(x, y, -1.2);
+                return { position, direction: new THREE.Vector3(0, 0, 0.8).sub(position) };
+            }),
+            spotAngle: 18,
+            spotColor: kelvinToColor(6000),
+            spotIntensity: 25,
+            spotFog: 0.35,      // beams in the fog stay subtle; the models take most of the light
+            lineGain: 3,
+            lineWhite: 0.5
         });
     } else if (style.phosphor) {
         phosphor = createPhosphorPersistence(renderer, style.phosphor);
