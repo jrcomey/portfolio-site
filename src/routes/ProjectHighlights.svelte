@@ -203,10 +203,25 @@
     }
 
     .gallery {
-        background-image: url("/assets/photography/cooks_bay_2.JPG");
         align-content: center;
-        background-size: cover;
         position: relative;
+        isolation: isolate;     /* keeps the ::before backdrop behind this section's content */
+        overflow: hidden;
+    }
+
+    /* Reduced-resolution photo (1600 px, the 6000 px original is 14 MB), blurred slightly so the low
+       resolution doesn't show. On a pseudo-element so the blur doesn't touch the content; scaled up a
+       touch so the blur doesn't pull in transparent edges. */
+    .gallery::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image: url("/assets/photography/cooks_bay_2_web.jpg");
+        background-size: cover;
+        background-position: center;
+        filter: blur(2px);
+        transform: scale(1.02);
     }
 
     .dark {

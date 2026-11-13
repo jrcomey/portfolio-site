@@ -1,7 +1,7 @@
 <script>
 import { base } from '$app/paths';
 
-let profile_pic = `${base}/assets/profile.JPG`;
+let profile_pic = `${base}/assets/profile_web.jpg`;  // 800 px; the 4000 px original is 9.7 MB
 
 
 
@@ -90,6 +90,7 @@ let profile_pic = `${base}/assets/profile.JPG`;
   .about-grid img {
     object-fit: scale-down;
     width: 80%;
+    filter: blur(0.75px);  /* softens the reduced resolution */
     border: 10%;
     border-radius: 10%;
     padding: 5%;
