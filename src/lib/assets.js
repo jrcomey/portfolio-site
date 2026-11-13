@@ -87,7 +87,7 @@ export const ASSETS = {
 
 	// Common/shared assets
 	common: {
-		profile: `${base}/assets/profile_web.jpg`,
+		profile: `${base}/assets/profile.JPG`,
 		moon: `${base}/assets/moon_pic.JPG`,
 		moon_alt: `${base}/assets/moon_pic.jpg`
 	},
