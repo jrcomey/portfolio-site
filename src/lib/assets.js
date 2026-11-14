@@ -95,6 +95,7 @@ export const ASSETS = {
 	// 3D models (shared across pages)
 	models: {
 		blizzard_obj: `${base}/assets/blizzard.obj`,
+		blizzard_glb: `${base}/assets/blizzard.glb`,
 		prop_obj: `${base}/assets/prop.obj`
 	}
 };
