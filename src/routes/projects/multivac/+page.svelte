@@ -6,7 +6,7 @@
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
-    import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { base } from '$app/paths';
     import {
         colors,
@@ -61,7 +61,7 @@
         ];
 
         let propellerGeometry = null;
-        const loader = new OBJLoader();
+        const gltfLoader = new GLTFLoader();
 
         function createPropellerGroup(config, scale) {
             const propellerGroup = new THREE.Group();
@@ -86,14 +86,14 @@
 
 
     // Modified loading sequence
-    loader.load(
-        `${base}/assets/prop.obj`,
-        function(propObj) {
+    gltfLoader.load(
+        `${base}/assets/prop.glb`,
+        function({ scene: propObj }) {
             propellerGeometry = propObj;
             
-            loader.load(
-                `${base}/assets/blizzard.obj`,
-                function(aircraftBody) {
+            gltfLoader.load(
+                `${base}/assets/blizzard.glb`,
+                function({ scene: aircraftBody }) {
                     const aircraftGroup = new THREE.Group();
                     
                     aircraftBody.traverse((child) => {

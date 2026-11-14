@@ -6,7 +6,6 @@
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
-    import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { base } from '$app/paths';
     import {
@@ -56,7 +55,6 @@
         ];
 
         let propellerGeometry = null;
-        const loader = new OBJLoader();
         const gltfLoader = new GLTFLoader();
 
         function createPropellerGroup(config, scale) {
@@ -80,9 +78,9 @@
             return propellerGroup;
         }
 
-        loader.load(
-            `${base}/assets/prop.obj`,
-            function(propObj) {
+        gltfLoader.load(
+            `${base}/assets/prop.glb`,
+            function({ scene: propObj }) {
                 propellerGeometry = propObj;
 
                 gltfLoader.load(
