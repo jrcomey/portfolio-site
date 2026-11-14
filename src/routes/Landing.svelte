@@ -258,9 +258,9 @@
         function(propObj) {
             propellerGeometry = propObj;
             
-            loader.load(
-                `${base}/assets/blizzard.obj`,
-                function(aircraftBody) {
+            Gloader.load(
+                `${base}/assets/blizzard.glb`,  // binary of blizzard.obj: same mesh, 0.56 MB instead of 2.1
+                function({ scene: aircraftBody }) {
                     const aircraftGroup = new THREE.Group();
                     
                     aircraftBody.traverse((child) => {
