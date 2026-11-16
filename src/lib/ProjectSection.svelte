@@ -50,7 +50,8 @@
       display: flex;
       flex-direction: column-reverse;
     }
-    .image-reel :global(img) {
+    .image-reel :global(img),
+    .image-reel :global(video) {
       max-height: 50vh;
       width: auto;
       max-width: 100%;
@@ -69,7 +70,8 @@
     align-content: center;
   }
 
-  .image-reel :global(img) {
+  .image-reel :global(img),
+  .image-reel :global(video) {
     width: 100%;
     object-fit: contain;
     aspect-ratio: 1;

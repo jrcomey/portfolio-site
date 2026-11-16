@@ -22,7 +22,7 @@
     const cadplot = `${base}/assets/trifecta/trifecta_cad.png`;
     const pos_plot = `${base}/assets/trifecta/Trifecta_0_pos_plot.png`;
     const att_plot = `${base}/assets/trifecta/Trifecta_0_att_plot.png`;
-    const cube_plot = `${base}/assets/trifecta/run_full_plot_anim.gif`;
+    const cube_plot = `${base}/assets/trifecta/run_full_plot_anim.mp4`;  // H.264 of the 9.9 MB GIF: 1 MB, same frames
 
     let container;
     let scene, camera, renderer, animationFrameId;
@@ -705,7 +705,7 @@
 
     <ProjectSection imagePosition="left">
         <div slot="image">
-            <img src={cube_plot} alt="CubeGif" />
+            <video src={cube_plot} autoplay loop muted playsinline aria-label="Waypoint guidance demo"></video>
         </div>
         <div slot="description">
             <p>Here's a little demo with some waypoint guidance added. </p>
