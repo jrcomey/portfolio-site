@@ -7,7 +7,7 @@
 
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
-    import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { base } from '$app/paths';
     import {
         colors,
@@ -48,7 +48,7 @@
         const propellers = [];
         const tail_anim = [];
 
-        const loader = new OBJLoader();
+        const gltfLoader = new GLTFLoader();
 
         function animate() {
             animationFrameId = requestAnimationFrame(animate);
@@ -94,9 +94,9 @@
             const motor_group = new THREE.Group();
 
             // Stator
-            loader.load(
-                `${base}/assets/trifecta/stator.obj`,
-                function(prop_geom) {
+            gltfLoader.load(
+                `${base}/assets/trifecta/stator.glb`,
+                function({ scene: prop_geom }) {
                     const stator_group = new THREE.Group();
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
@@ -115,9 +115,9 @@
             );
 
             // Rotor + Prop
-            loader.load(
-                `${base}/assets/trifecta/rotor.obj`,
-                function(prop_geom) {
+            gltfLoader.load(
+                `${base}/assets/trifecta/rotor.glb`,
+                function({ scene: prop_geom }) {
                     const rotor_group = new THREE.Group();
                     prop_geom.traverse((child) => {
                         if (child instanceof THREE.Mesh) {
@@ -132,9 +132,9 @@
 
                         // Load prop object
                         // Front L Prop
-                        loader.load(
-                            `${base}/assets/prop.obj`,
-                            function(prop_geom) {
+                        gltfLoader.load(
+                            `${base}/assets/prop.glb`,
+                            function({ scene: prop_geom }) {
                                 const prop_group = new THREE.Group();
                                 prop_geom.traverse((child) => {
                                     if (child instanceof THREE.Mesh) {
@@ -160,9 +160,9 @@
             return motor_group;
         }
 
-        loader.load(
-            `${base}/assets/trifecta/TopShell.obj`,
-            function(top_shell_geom) {
+        gltfLoader.load(
+            `${base}/assets/trifecta/TopShell.glb`,
+            function({ scene: top_shell_geom }) {
                 // propellerGeometry = tail_geom;
                 const trifecta_group = new THREE.Group();
                 const top_shell_group = new THREE.Group();
@@ -182,9 +182,9 @@
                 top_shell_group.scale.setScalar(4.5);
                 trifecta_group.add(top_shell_group);
                 // Bottom Shell
-                loader.load(
-                    `${base}/assets/trifecta/BotShell.obj`,
-                    function(bot_shell_geom) {
+                gltfLoader.load(
+                    `${base}/assets/trifecta/BotShell.glb`,
+                    function({ scene: bot_shell_geom }) {
                         const bot_shell_group = new THREE.Group()
                         bot_shell_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
@@ -206,9 +206,9 @@
                 );
 
                 // Front L Arm
-                loader.load(
-                    `${base}/assets/trifecta/FrontArmL.obj`,
-                    function(front_arm_l_geom) {
+                gltfLoader.load(
+                    `${base}/assets/trifecta/FrontArmL.glb`,
+                    function({ scene: front_arm_l_geom }) {
                         const front_arm_l_group = new THREE.Group();
                         front_arm_l_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
@@ -228,9 +228,9 @@
                 );
 
                 // Front R Arm
-                loader.load(
-                    `${base}/assets/trifecta/FrontArmR.obj`,
-                    function(front_arm_l_geom) {
+                gltfLoader.load(
+                    `${base}/assets/trifecta/FrontArmR.glb`,
+                    function({ scene: front_arm_l_geom }) {
                         const front_arm_l_group = new THREE.Group();
                         front_arm_l_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
@@ -250,9 +250,9 @@
                 );
 
                 // Back Slide Arm
-                loader.load(
-                    `${base}/assets/trifecta/BackSlide.obj`,
-                    function(back_slide_geom) {
+                gltfLoader.load(
+                    `${base}/assets/trifecta/BackSlide.glb`,
+                    function({ scene: back_slide_geom }) {
                         const back_slide_group = new THREE.Group();
                         back_slide_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
@@ -275,9 +275,9 @@
 
                 const tail_group = new THREE.Group();
                 // Tail Gear
-                loader.load(
-                    `${base}/assets/trifecta/TailGear.obj`,
-                    function(tail_gear_geom) {
+                gltfLoader.load(
+                    `${base}/assets/trifecta/TailGear.glb`,
+                    function({ scene: tail_gear_geom }) {
                         const tail_gear_group = new THREE.Group();
                         tail_gear_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {
@@ -298,9 +298,9 @@
                 );
 
                 // Tail Rotor Mount
-                loader.load(
-                    `${base}/assets/trifecta/Tail.obj`,
-                    function(tail_geom) {
+                gltfLoader.load(
+                    `${base}/assets/trifecta/Tail.glb`,
+                    function({ scene: tail_geom }) {
                         const tail_piece_geom = new THREE.Group();
                         tail_geom.traverse((child) => {
                             if (child instanceof THREE.Mesh) {

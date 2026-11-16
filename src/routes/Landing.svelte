@@ -1,7 +1,6 @@
 <script>
     import * as THREE from 'three';
     import { onMount, onDestroy } from 'svelte';
-    import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import { base } from '$app/paths';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { createVectorMaterials, createSolidWireframeMesh, createPhosphorPersistence, vectorStyle } from '$lib/three-utils.js';
@@ -170,8 +169,7 @@
 
 
     let propellerGeometry = null;
-    const loader = new OBJLoader();
-    const Gloader = new GLTFLoader();
+    const gltfLoader = new GLTFLoader();
 
     // Rotor speed in RPM, by elapsed time so it's the same on 60 and 120 Hz displays.
     // A 2-blade prop looks like it reverses past ~900 RPM at 60 fps (90 deg/frame).
@@ -228,9 +226,9 @@
         return propellerGroup;
     }
 
-    loader.load(
-        `${base}/assets/blizzard/Rooftop.obj`,
-        function(roof_geom) {
+    gltfLoader.load(
+        `${base}/assets/blizzard/Rooftop.glb`,
+        function({ scene: roof_geom }) {
             const roof_group = new THREE.Group();
             roof_geom.traverse((child) => {
                if (child instanceof THREE.Mesh) {
@@ -253,12 +251,12 @@
 
 
     // Modified loading sequence
-    loader.load(
-        `${base}/assets/prop.obj`,
-        function(propObj) {
+    gltfLoader.load(
+        `${base}/assets/prop.glb`,
+        function({ scene: propObj }) {
             propellerGeometry = propObj;
             
-            Gloader.load(
+            gltfLoader.load(
                 `${base}/assets/blizzard.glb`,  // binary of blizzard.obj: same mesh, 0.56 MB instead of 2.1
                 function({ scene: aircraftBody }) {
                     const aircraftGroup = new THREE.Group();

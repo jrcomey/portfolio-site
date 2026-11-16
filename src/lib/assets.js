@@ -11,7 +11,7 @@ export const ASSETS = {
 			carpet_plot: `${base}/assets/blizzard/carpet_plot.png`,
 			impulse_response: `${base}/assets/blizzard/impulse_response.png`,
 			monte_carlo: `${base}/assets/blizzard/monte-carlo.png`,
-			rooftop_obj: `${base}/assets/blizzard/Rooftop.obj`
+			rooftop_glb: `${base}/assets/blizzard/Rooftop.glb`
 		},
 		multivac: {
 			process: `${base}/assets/basic-sixdof-process.png`,
@@ -26,15 +26,15 @@ export const ASSETS = {
 			att_plot: `${base}/assets/trifecta/Trifecta_0_att_plot.png`,
 			render_screenshot: `${base}/assets/trifecta/render_screenshot.png`,
 			// 3D model parts
-			stator_obj: `${base}/assets/trifecta/stator.obj`,
-			rotor_obj: `${base}/assets/trifecta/rotor.obj`,
-			top_shell_obj: `${base}/assets/trifecta/TopShell.obj`,
-			bot_shell_obj: `${base}/assets/trifecta/BotShell.obj`,
-			front_arm_l_obj: `${base}/assets/trifecta/FrontArmL.obj`,
-			front_arm_r_obj: `${base}/assets/trifecta/FrontArmR.obj`,
-			back_slide_obj: `${base}/assets/trifecta/BackSlide.obj`,
-			tail_gear_obj: `${base}/assets/trifecta/TailGear.obj`,
-			tail_obj: `${base}/assets/trifecta/Tail.obj`
+			stator_glb: `${base}/assets/trifecta/stator.glb`,
+			rotor_glb: `${base}/assets/trifecta/rotor.glb`,
+			top_shell_glb: `${base}/assets/trifecta/TopShell.glb`,
+			bot_shell_glb: `${base}/assets/trifecta/BotShell.glb`,
+			front_arm_l_glb: `${base}/assets/trifecta/FrontArmL.glb`,
+			front_arm_r_glb: `${base}/assets/trifecta/FrontArmR.glb`,
+			back_slide_glb: `${base}/assets/trifecta/BackSlide.glb`,
+			tail_gear_glb: `${base}/assets/trifecta/TailGear.glb`,
+			tail_glb: `${base}/assets/trifecta/Tail.glb`
 		},
 		bldc: {
 			motor_pic: `${base}/assets/bldc/motor_pic.png`,
@@ -94,8 +94,7 @@ export const ASSETS = {
 
 	// 3D models (shared across pages)
 	models: {
-		blizzard_obj: `${base}/assets/blizzard.obj`,
 		blizzard_glb: `${base}/assets/blizzard.glb`,
-		prop_obj: `${base}/assets/prop.obj`
+		prop_glb: `${base}/assets/prop.glb`
 	}
 };
